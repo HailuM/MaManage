@@ -32,6 +32,7 @@ public class NetUtils {
 
     /**
      * 登录接口
+     *
      * @param userName
      * @param pwd
      * @param callback
@@ -66,14 +67,14 @@ public class NetUtils {
 
                     callback.onSuccess(xmlrs.split(";")[0]);
                     //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     callback.onError(new RuntimeException("登录失败"));
                 }
 
             }
 
             @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
+            public void onError(Throwable ex, boolean isCallBack) {
                 callback.onError(ex);
 
             }
@@ -95,6 +96,7 @@ public class NetUtils {
 
     /**
      * 下载订单表头
+     *
      * @param userOID
      * @param callback
      */
@@ -108,7 +110,6 @@ public class NetUtils {
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
         xml = xml.replace("(userOID)", userOID);
-
 
 
         String url = ip + URL_MOBILE_DOWNLOADORDERINFO;
@@ -127,7 +128,7 @@ public class NetUtils {
 
                     callback.onError(new RuntimeException(xmlrs));
 
-                }else{
+                } else {
 
                     callback.onSuccess(JSON.parseObject(xmlrs));
                 }
@@ -135,7 +136,7 @@ public class NetUtils {
             }
 
             @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
+            public void onError(Throwable ex, boolean isCallBack) {
                 callback.onError(ex);
 
             }
@@ -157,10 +158,11 @@ public class NetUtils {
 
     /**
      * 下载订单表体
+     *
      * @param userOID
-     * @param callback
+     *
      */
-    public static void Mobile_DownloadOrderMaterial(final String userOID,final String orderId,final String rktokenStr, final MaCallback.ArrayInfoCallBack callback) {
+    public static JSONArray Mobile_DownloadOrderMaterial(final String userOID, final String orderId, final String rktokenStr ) throws Throwable {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -184,56 +186,73 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderMaterialResult", result);
-                if (xmlrs.startsWith("false")) {
 
-                    callback.onError(new RuntimeException(xmlrs));
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderMaterialResult", result);
+        if (xmlrs.startsWith("false")) {
 
-                }else{
+            return null;
 
-                    JSONArray array =  JSON.parseArray(xmlrs);
-                    if(array.size() > 0)
-                    {
-                        callback.onSuccess(JSON.parseArray(xmlrs));
-                    }else{
-                        callback.onError(new RuntimeException("下载失败"));
-                    }
-                }
+        } else {
 
+            JSONArray array = JSON.parseArray(xmlrs);
+            if (array.size() > 0) {
+                return array;
+            } else {
+               return null;
             }
+        }
 
-            @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
-                callback.onError(ex);
 
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
+//        x.http().post(params, new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String result) {
+//                String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderMaterialResult", result);
+//                if (xmlrs.startsWith("false")) {
+//
+//                    callback.onError(new RuntimeException(xmlrs));
+//
+//                }else{
+//
+//                    JSONArray array =  JSON.parseArray(xmlrs);
+//                    if(array.size() > 0)
+//                    {
+//                        callback.onSuccess(JSON.parseArray(xmlrs));
+//                    }else{
+//                        callback.onError(new RuntimeException("下载失败"));
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable ex ,boolean isCallBack) {
+//                callback.onError(ex);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException cex) {
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//
+//            }
+//        });
 
 
     }
 
 
-
-
     /**
      * 下载订单领料商
+     *
      * @param userOID
-     * @param callback
+
      */
-    public static void Mobile_DownloadOrderconsumer(final String userOID,final String orderId,final String rktokenStr, final MaCallback.ArrayInfoCallBack callback) {
+    public static JSONArray Mobile_DownloadOrderconsumer(final String userOID, final String orderId, final String rktokenStr ) throws Throwable {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -257,52 +276,29 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderconsumerResult", result);
-                if (xmlrs.startsWith("false")) {
+        String result = x.http().postSync(params,String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderconsumerResult", result);
+        if (xmlrs.startsWith("false")) {
 
-                    callback.onError(new RuntimeException(xmlrs));
+           return null;
 
-                }else{
+        } else {
 
-                    JSONArray array =  JSON.parseArray(xmlrs);
-                    if(array.size() > 0)
-                    {
-                        callback.onSuccess(JSON.parseArray(xmlrs));
-                    }else{
-                        callback.onError(new RuntimeException("下载失败"));
-                    }
-                }
-
+            JSONArray array = JSON.parseArray(xmlrs);
+            if (array.size() > 0) {
+                return JSON.parseArray(xmlrs);
+            } else {
+               return null;
             }
-
-            @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
-                callback.onError(ex);
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
+        }
 
 
     }
 
 
-
-
     /**
      * 下载入库表头
+     *
      * @param userOID
      * @param callback
      */
@@ -316,7 +312,6 @@ public class NetUtils {
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
         xml = xml.replace("(userOID)", userOID);
-
 
 
         String url = ip + URL_MOBILE_DOWNLOADRECEIVEINFO;
@@ -335,7 +330,7 @@ public class NetUtils {
 
                     callback.onError(new RuntimeException(xmlrs));
 
-                }else{
+                } else {
 
                     callback.onSuccess(JSON.parseObject(xmlrs));
                 }
@@ -343,7 +338,7 @@ public class NetUtils {
             }
 
             @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
+            public void onError(Throwable ex, boolean isCallBack) {
                 callback.onError(ex);
 
             }
@@ -365,10 +360,11 @@ public class NetUtils {
 
     /**
      * 下载入库单表体
+     *
      * @param userOID
      * @param callback
      */
-    public static void Mobile_DownloadReceiveMaterial(final String userOID,final String receiveId,final String cktokenStr, final MaCallback.ArrayInfoCallBack callback) {
+    public static void Mobile_DownloadReceiveMaterial(final String userOID, final String receiveId, final String cktokenStr, final MaCallback.ArrayInfoCallBack callback) {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -400,13 +396,12 @@ public class NetUtils {
 
                     callback.onError(new RuntimeException(xmlrs));
 
-                }else{
+                } else {
 
-                    JSONArray array =  JSON.parseArray(xmlrs);
-                    if(array.size() > 0)
-                    {
+                    JSONArray array = JSON.parseArray(xmlrs);
+                    if (array.size() > 0) {
                         callback.onSuccess(JSON.parseArray(xmlrs));
-                    }else{
+                    } else {
                         callback.onError(new RuntimeException("下载失败"));
                     }
                 }
@@ -414,7 +409,7 @@ public class NetUtils {
             }
 
             @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
+            public void onError(Throwable ex, boolean isCallBack) {
                 callback.onError(ex);
 
             }
@@ -434,14 +429,13 @@ public class NetUtils {
     }
 
 
-
-
     /**
      * 下载入库单领料商
+     *
      * @param userOID
      * @param callback
      */
-    public static void Mobile_DownloadReceiveconsumer(final String userOID,final String receiveId,final String cktokenStr, final MaCallback.ArrayInfoCallBack callback) {
+    public static void Mobile_DownloadReceiveconsumer(final String userOID, final String receiveId, final String cktokenStr, final MaCallback.ArrayInfoCallBack callback) {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -473,13 +467,12 @@ public class NetUtils {
 
                     callback.onError(new RuntimeException(xmlrs));
 
-                }else{
+                } else {
 
-                    JSONArray array =  JSON.parseArray(xmlrs);
-                    if(array.size() > 0)
-                    {
+                    JSONArray array = JSON.parseArray(xmlrs);
+                    if (array.size() > 0) {
                         callback.onSuccess(JSON.parseArray(xmlrs));
-                    }else{
+                    } else {
                         callback.onError(new RuntimeException("下载失败"));
                     }
                 }
@@ -487,7 +480,7 @@ public class NetUtils {
             }
 
             @Override
-            public void onError(Throwable ex ,boolean isCallBack) {
+            public void onError(Throwable ex, boolean isCallBack) {
                 callback.onError(ex);
 
             }

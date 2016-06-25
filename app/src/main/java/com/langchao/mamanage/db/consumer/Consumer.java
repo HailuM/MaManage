@@ -16,11 +16,12 @@
 package com.langchao.mamanage.db.consumer;
 
 
+import com.langchao.mamanage.db.order.Pu_order;
+
 import org.xutils.DbManager;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
-import org.xutils.sample.db.order.Pu_order;
 
 /**
  * Author: wyouflf
