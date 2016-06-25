@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">MaManage</string>
+
+    <string name="no_internet">网络连接错误~！</string>
+    <string name="generic_server_down">连接服务器失败~！</string>
+    <string name="generic_error">网络异常,请稍后再试~！</string>
+    <string name="generic_error_404">请求地址不存在~！</string>
+    <!--通用-->
+    <string name="next">下一步</string>
+    <!--用户-->
+    <string name="login">登录</string>
+    <string name="hintuser">请输入用户名</string>
+    <string name="hintpassword">请输入密码</string>
+    <string name="autologin">自动登录</string>
+    <string name="forgetpassword">忘记密码？</string>
+    <string name="server">服务器配置</string>
+    <string name="serveradress">服务器地址:</string>
+    <string name="logout">注销</string>
+
+    <!--主页-->
+    <string name="newgoods">新物资系统</string>
+    <string name="Syncin">同步入库</string>
+    <string name="directout">直入直出</string>
+    <string name="instorage">入库</string>
+    <string name="Syncout">同步出库</string>
+    <string name="supplement">补打</string>
+    <string name="outstorage">出库</string>
+    <string name="set">参数设置</string>
+
+    <!--参数设置-->
+</resources>
