@@ -47,7 +47,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageView3"
+                    android:id="@+id/imageViewTbrk"
                     android:src="@mipmap/syncin" />
 
                 <TextView
@@ -69,7 +69,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageView4"
+                    android:id="@+id/imageViewdirectout"
                     android:src="@mipmap/directout" />
 
                 <TextView
@@ -91,7 +91,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageView5"
+                    android:id="@+id/imageViewinstorage"
                     android:src="@mipmap/instorage" />
 
                 <TextView
@@ -121,7 +121,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageView10"
+                    android:id="@+id/imageViewsyncout"
                     android:src="@mipmap/syncout" />
 
                 <TextView
@@ -143,7 +143,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageView11"
+                    android:id="@+id/imageViewoutstorage"
                     android:src="@mipmap/outstorage" />
 
                 <TextView
@@ -165,7 +165,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageView12"
+                    android:id="@+id/imageViewsupplement"
                     android:src="@mipmap/supplement" />
 
                 <TextView

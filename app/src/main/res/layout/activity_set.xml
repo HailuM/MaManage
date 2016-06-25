@@ -258,7 +258,7 @@
             android:layout_width="match_parent"
             android:layout_height="90px"
             android:text="@string/logout"
-            android:id="@+id/outStorage"
+            android:id="@+id/outStorage2"
             android:layout_margin="40px"
             android:gravity="center"
             app:bootstrapBrand="danger"
@@ -267,7 +267,7 @@
             app:showOutline="false"
             app:roundedCorners="true"
             android:layout_marginTop="47dp"
-            android:layout_below="@+id/checkBox"
+            android:layout_below="@+id/checkBoxAutoLogin"
             android:layout_centerHorizontal="true" />
     </LinearLayout>
 
