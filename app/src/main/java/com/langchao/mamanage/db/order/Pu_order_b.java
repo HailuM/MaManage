@@ -84,6 +84,7 @@ public class Pu_order_b {
     private double rkQty;
 
 
+    //当前选择数量
     private double curQty;
 
     public double getCurQty() {
