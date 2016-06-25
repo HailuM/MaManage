@@ -258,7 +258,7 @@
             android:layout_width="match_parent"
             android:layout_height="90px"
             android:text="@string/logout"
-            android:id="@+id/outStorage2"
+            android:id="@+id/logOut"
             android:layout_margin="40px"
             android:gravity="center"
             app:bootstrapBrand="danger"
