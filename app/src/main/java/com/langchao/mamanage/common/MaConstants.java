@@ -4,6 +4,7 @@ package com.langchao.mamanage.common;
  * Created by miaohl on 2016/6/25.
  */
 public class MaConstants {
+    public static final String CLOSE = "CLOSEALL";
     /**
      * 参数保存文件名
      */
