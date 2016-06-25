@@ -105,12 +105,15 @@ public class MaDAO {
 
                         final Pu_order pu_order = JSON.parseObject(order.toJSONString(),Pu_order.class);
 
+
                         //查询表体物料
 
                         try {
                             JSONArray jsonArray = NetUtils.Mobile_DownloadOrderMaterial(userOID,pu_order.getId(),tokenStr );
                             List<Pu_order_b> list =  JSON.parseArray(jsonArray.toJSONString(), Pu_order_b.class);
                             Toast.makeText(x.app(),"开始同步明细:"+list.size()+"条",Toast.LENGTH_LONG).show();
+                            //保存
+                            new MaDAO().save(pu_order,list);
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
@@ -120,6 +123,7 @@ public class MaDAO {
                             JSONArray jsonArray =   NetUtils.Mobile_DownloadOrderconsumer(userOID,pu_order.getId(),tokenStr );
                             List<Consumer> consumerList  =  JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
                             Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
+                            new MaDAO().save(consumerList);
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
