@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.activity.dirout.DiroutListActivity;
 import com.langchao.mamanage.activity.main.SetActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
@@ -75,7 +76,7 @@ public class MainActivity extends AutoLayoutActivity {
     ProgressDialog progressDialog = null;
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set,R.id.imageViewTbrk}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set,R.id.imageViewTbrk,R.id.imageViewdirectout}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -95,7 +96,10 @@ public class MainActivity extends AutoLayoutActivity {
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
-
+            case R.id.imageViewdirectout:
+                intent.setClass(this, DiroutListActivity.class);
+                startActivity(intent);
+                break;
 
         }
     }

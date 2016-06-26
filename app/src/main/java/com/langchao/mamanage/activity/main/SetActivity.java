@@ -68,7 +68,7 @@ public class SetActivity extends AutoLayoutActivity {
                 intent.setAction(MaConstants.CLOSE); // 说明动作
                 sendBroadcast(intent);// 该函数用于发送广播
                 finish();
-                SetActivity.this.finish();
+                //SetActivity.this.finish();
                 intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 break;
