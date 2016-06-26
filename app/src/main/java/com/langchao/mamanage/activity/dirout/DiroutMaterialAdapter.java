@@ -80,6 +80,8 @@ public class DiroutMaterialAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if(null == blist)
+            return 0;
         return blist.size();
     }
 

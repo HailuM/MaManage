@@ -55,6 +55,8 @@ public class DiroutOrderAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if(null == pu_orderList)
+            return 0;
         return pu_orderList.size();
     }
 
