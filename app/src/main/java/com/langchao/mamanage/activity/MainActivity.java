@@ -1,6 +1,7 @@
 package com.langchao.mamanage.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -70,6 +71,9 @@ public class MainActivity extends AutoLayoutActivity {
         }
     };
 
+
+    ProgressDialog progressDialog = null;
+
     //点击事件
     @Event(value = {R.id.service, R.id.set,R.id.imageViewTbrk}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
@@ -83,11 +87,16 @@ public class MainActivity extends AutoLayoutActivity {
                 startActivity(intent);
                 break;
             case R.id.imageViewTbrk:
+
+                    //ProgressDialog.show(this,"同步入库数据","开始同步",false,true);
+
                 try {
-                    new MaDAO().syncData(readUserId());
+                    new MaDAO().syncData(readUserId(),MainActivity.this);
                 } catch (DbException e) {
-                    Toast.makeText(x.app(),"同步失败",Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
                 }
+
+
         }
     }
 
