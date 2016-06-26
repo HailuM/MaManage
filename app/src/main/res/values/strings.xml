@@ -27,5 +27,16 @@
     <string name="outstorage">出库</string>
     <string name="set">参数设置</string>
 
+    <string name="typeorder">请输入订单号</string>
+    <string name="supplier">供方：</string>
+    <string name="main_material">主要材料：</string>
+    <string name="building">楼栋：</string>
+
+    <string name="supply">供方</string>
+    <string name="build">楼栋</string>
+    <string name="order_no">订单号</string>
+    <string name="contact">收货联系人</string>
+    <string name="getter">领用商</string>
+
     <!--参数设置-->
 </resources>

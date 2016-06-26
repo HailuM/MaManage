@@ -290,6 +290,6 @@
     <color name="title">#0073C6</color>
 
     <color name="background">#EFEFEA</color>
-
+    <color name="black">#000000</color>
 
 </resources>
