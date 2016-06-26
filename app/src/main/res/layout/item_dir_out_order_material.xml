@@ -1,158 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:padding="@dimen/activity_horizontal_margin"
-              android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/activity_horizontal_margin">
+
     <LinearLayout
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <ImageView
-            android:layout_width="30dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/add"
             android:id="@+id/img_m_add"
-            android:layout_height="30dp"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/add" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="4dp">
+        android:layout_marginLeft="4dp"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <TextView android:layout_width="0dp"
-                      android:layout_gravity="center_vertical"
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="材料名称1"/>
+                android:textColor="@color/gray"
+                android:text="材料名称1" />
+
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="热镀桥架连接片"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/tv_dir_out_order_m_name"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="3">
 
                 <TextView
-                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_dir_out_order_m_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:textColor="@color/orangered"
-                    android:id="@+id/tv_dir_out_order_m_add"
-                    android:layout_alignParentRight="true"/>
-                <EditText
-                    android:layout_marginRight="8dp"
                     android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/orangered"
-                    android:id="@+id/et_dir_out_order_m_num"
-                    android:layout_toLeftOf="@+id/tv_dir_out_order_m_add"
-                    android:layout_height="wrap_content"/>
+                    android:text="热镀桥架连接片"
+                    android:textColor="@color/black" />
+
                 <TextView
-                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_dir_out_order_m_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-"
-                    android:layout_toLeftOf="@+id/et_dir_out_order_m_num"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:text="+"
+                    android:textColor="@color/orangered" />
+
+                <EditText
+                    android:id="@+id/et_dir_out_order_m_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:digits="0,1,2,3,4,5,6,7,8,9,."
+                    android:focusable="false"
                     android:layout_marginRight="8dp"
-                    android:textColor="@color/orangered"
-                    android:id="@+id/tv_dir_out_order_m_del"/>
+                    android:layout_toLeftOf="@+id/tv_dir_out_order_m_add"
+                    android:textColor="@color/orangered" />
+
+                <TextView
+                    android:id="@+id/tv_dir_out_order_m_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@+id/et_dir_out_order_m_num"
+                    android:text="-"
+                    android:textColor="@color/orangered" />
             </RelativeLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <TextView android:layout_width="0dp"
-                      android:layout_gravity="center_vertical"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
+
+            <TextView
                 android:id="@+id/tv_dir_out_order_1"
-                      android:text="规格型号"/>
-            <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="综合"
-                android:layout_centerVertical="true"
-                android:id="@+id/tv_dir_out_order_m_model"/>
-            <TextView android:layout_width="0dp"
                 android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="订单剩余数"/>
+                android:text="规格型号"
+                android:textColor="@color/gray" />
+
             <TextView
+                android:id="@+id/tv_dir_out_order_m_model"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:layout_weight="1"
+                android:text="综合"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_dir_out_order_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/gray"
+                android:text="订单剩余数" />
+
+            <TextView
+                android:id="@+id/tv_dir_out_order_m_qty"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_weight="1"
                 android:text="0"
-                android:layout_centerVertical="true"
-                android:id="@+id/tv_dir_out_order_m_qty"/>
+                android:textColor="@color/black" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
-            <TextView android:layout_width="0dp"
-                      android:layout_gravity="center_vertical"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:text="单位"/>
+
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="综合"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/gray"
+                android:text="单位" />
+
+            <TextView
+                android:id="@+id/tv_dir_out_order_m_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:id="@+id/tv_dir_out_order_m_unit"/>
-            <TextView android:layout_width="0dp"
-                      android:layout_gravity="center_vertical"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:text="品牌"/>
+                android:layout_weight="1"
+                android:text="综合"
+                android:textColor="@color/black" />
+
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="综合"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/gray"
+                android:text="品牌" />
+
+            <TextView
+                android:id="@+id/tv_dir_out_order_m_brand"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:id="@+id/tv_dir_out_order_m_brand"/>
+                android:layout_weight="1"
+                android:text="综合"
+                android:textColor="@color/black" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
-            <TextView android:layout_width="0dp"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:text="备注"/>
+
             <TextView
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/gray"
+                android:text="备注" />
+
+            <TextView
+                android:id="@+id/tv_dir_out_order_m_note"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="综合备注内容测试,综合备注内容测试,综合备注内容测试,综合备注内容测试,综合备注内容测试"
-                android:layout_centerVertical="true"
-                android:singleLine="false"
-                android:maxLines="2"
                 android:ellipsize="end"
-                android:id="@+id/tv_dir_out_order_m_note"/>
+                android:maxLines="2"
+                android:singleLine="false"
+                android:text="综合备注内容测试,综合备注内容测试,综合备注内容测试,综合备注内容测试,综合备注内容测试"
+                android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 

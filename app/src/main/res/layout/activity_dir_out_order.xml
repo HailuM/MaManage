@@ -18,7 +18,7 @@
             android:src="@mipmap/arrow_left"/>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -186,7 +186,7 @@
                 android:id="@+id/tv_dir_out_order_choose"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="已选品种:1"
+                android:text="已选品种：0"
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:layout_centerVertical="true"

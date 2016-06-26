@@ -17,12 +17,12 @@
             android:src="@mipmap/arrow_left"/>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/directout"
+            android:text="直入直出确认"
             android:textColor="@color/white"
             android:textSize="@dimen/textsize"/>
 
@@ -155,12 +155,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/getter"
+                android:layout_gravity="center_vertical"
                 android:textSize="16sp"/>
 
             <Spinner
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:textColor="@color/black"
                 android:id="@+id/sp_dir_out_get"></Spinner>
         </LinearLayout>
 
@@ -201,7 +203,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="已选品种:1"
+                android:text="已选品种：0"
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:id="@+id/tv_dir_out_choose"
