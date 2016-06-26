@@ -84,7 +84,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout2"
+            android:layout_below="@+id/linearLayoutClear"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="20px"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:text="清除离线数据"
                 android:textSize="@dimen/textsize"
-                android:id="@+id/textView18"
+                android:id="@+id/textViewClear"
                 android:layout_gravity="center"
                 android:layout_margin="30px" />
 
