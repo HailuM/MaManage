@@ -1,10 +1,6 @@
-package com.langchao.mamanage.activity.dirout;
+package com.langchao.mamanage.activity.icoutbill;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.langchao.mamanage.R;
-import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
@@ -108,23 +103,7 @@ public class DiroutOrderActivity extends AppCompatActivity {
 
         adapter =   new DiroutMaterialAdapter(this, list);
         lvOrderMaterial.setAdapter(adapter);
-        // 在当前的activity中注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MaConstants.FRESH);
-        registerReceiver(this.broadcastReceiver, filter); // 注册
     }
-    // 写一个广播的内部类，当收到动作时，结束activity
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //unregisterReceiver(this); // 这句话必须要写要不会报错，不写虽然能关闭，会报一堆错
-            Pu_order_b order_b = (Pu_order_b) intent.getExtras().getSerializable("order");
-            adapter.update(order_b);
-            adapter.notifyDataSetChanged();
-
-
-        }
-    };
 
     public void updateTotalNum(int count){
 

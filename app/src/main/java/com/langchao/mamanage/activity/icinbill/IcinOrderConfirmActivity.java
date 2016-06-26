@@ -1,4 +1,4 @@
-package com.langchao.mamanage.activity.dirout;
+package com.langchao.mamanage.activity.icinbill;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,7 +30,7 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_confirm)
-public class DiroutOrderConfirmActivity extends AppCompatActivity {
+public class IcinOrderConfirmActivity extends AppCompatActivity {
 
     @ViewInject(R.id.tv_dir_out_no)
     TextView tvOrderNo;//订单号
@@ -51,20 +50,22 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
     TextView tvOrderChoose;
 
 
-
-    DiroutConfirmAdapter adapter = null;
+    @ViewInject(R.id.textViewTitle)
+    private TextView textViewTitle;
+    IcinConfirmAdapter adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
 
+        textViewTitle.setText("入库确认");
 
         Pu_order_agg orderAgg = (Pu_order_agg) this.getIntent().getExtras().getSerializable("order");
 
 
         Pu_order order = orderAgg.getPu_order();
-        order.setType("zc");
+        order.setType("rk");
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
         tvOrderContact.setText(order.getName());
@@ -85,7 +86,7 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
         tvOrderChoose.setText("已选品种："+ list.size());
 
 
-        adapter =   new DiroutConfirmAdapter(this, list);
+        adapter =   new IcinConfirmAdapter(this, list);
         lvOrderMaterial.setAdapter(adapter);
     }
 

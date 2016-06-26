@@ -1,6 +1,5 @@
-package com.langchao.mamanage.activity.dirout;
+package com.langchao.mamanage.activity.icinbill;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +19,8 @@ import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
+import com.langchao.mamanage.dialog.AlertForResult;
+import com.langchao.mamanage.dialog.PopCallBack;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -33,7 +34,7 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_order)
-public class DiroutOrderActivity extends AppCompatActivity {
+public class IcinOrderActivity extends AppCompatActivity {
     @ViewInject(R.id.tv_dir_out_order_no)
     TextView tvOrderNo;//订单号
     @ViewInject(R.id.tv_dir_out_order_supply)
@@ -51,8 +52,9 @@ public class DiroutOrderActivity extends AppCompatActivity {
     @ViewInject(R.id.cb_dir_out_order_choose)
     CheckBox cbOrderChoose;
 
-
-    DiroutMaterialAdapter adapter = null;
+    @ViewInject(R.id.textViewTitle)
+    private TextView textViewTitle;
+    IcinMaterialAdapter adapter = null;
 
 
     @Event(value = {R.id.cb_dir_out_order_choose }, type = View.OnClickListener.class)
@@ -63,6 +65,10 @@ public class DiroutOrderActivity extends AppCompatActivity {
             adapter.unChooseAll();
         }
     }
+
+
+
+
     @Event(value = {R.id.img_dir_out_order_choose}, type = View.OnClickListener.class)
     private void chooseConfirm(View v){
        if(adapter.choosedList == null || adapter.choosedList.size() == 0){
@@ -72,7 +78,7 @@ public class DiroutOrderActivity extends AppCompatActivity {
            Pu_order_agg agg = new Pu_order_agg();
            agg.setPu_order(order);
            agg.setPu_order_bs(adapter.choosedList);
-           Intent intent = new Intent(this, DiroutOrderConfirmActivity.class);
+           Intent intent = new Intent(this, IcinOrderConfirmActivity.class);
 
 
            Bundle bundle = new Bundle();
@@ -90,6 +96,7 @@ public class DiroutOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        textViewTitle.setText("入库选择");
 
           order = (Pu_order) this.getIntent().getExtras().getSerializable("order");
 
@@ -106,26 +113,25 @@ public class DiroutOrderActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        adapter =   new DiroutMaterialAdapter(this, list);
+        adapter =   new IcinMaterialAdapter(this, list);
         lvOrderMaterial.setAdapter(adapter);
         // 在当前的activity中注册广播
         IntentFilter filter = new IntentFilter();
         filter.addAction(MaConstants.FRESH);
         registerReceiver(this.broadcastReceiver, filter); // 注册
     }
+
     // 写一个广播的内部类，当收到动作时，结束activity
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //unregisterReceiver(this); // 这句话必须要写要不会报错，不写虽然能关闭，会报一堆错
+           // unregisterReceiver(this); // 这句话必须要写要不会报错，不写虽然能关闭，会报一堆错
+
             Pu_order_b order_b = (Pu_order_b) intent.getExtras().getSerializable("order");
             adapter.update(order_b);
             adapter.notifyDataSetChanged();
-
-
         }
     };
-
     public void updateTotalNum(int count){
 
         tvOrderChoose.setText("已选品种："+count);

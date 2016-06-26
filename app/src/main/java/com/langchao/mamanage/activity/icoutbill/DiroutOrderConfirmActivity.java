@@ -1,4 +1,4 @@
-package com.langchao.mamanage.activity.dirout;
+package com.langchao.mamanage.activity.icoutbill;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -64,7 +63,6 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
 
 
         Pu_order order = orderAgg.getPu_order();
-        order.setType("zc");
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
         tvOrderContact.setText(order.getName());

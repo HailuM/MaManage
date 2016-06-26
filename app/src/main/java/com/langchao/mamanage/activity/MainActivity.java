@@ -1,9 +1,11 @@
 package com.langchao.mamanage.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.StrictMode;
@@ -11,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.activity.dirout.DiroutListActivity;
+import com.langchao.mamanage.activity.icinbill.IcinListActivity;
 import com.langchao.mamanage.activity.main.SetActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
@@ -54,7 +59,7 @@ public class MainActivity extends AutoLayoutActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         x.view().inject(this);
         // 在当前的activity中注册广播
@@ -76,7 +81,7 @@ public class MainActivity extends AutoLayoutActivity {
     ProgressDialog progressDialog = null;
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set,R.id.imageViewTbrk,R.id.imageViewdirectout}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set, R.id.imageViewTbrk, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -89,10 +94,10 @@ public class MainActivity extends AutoLayoutActivity {
                 break;
             case R.id.imageViewTbrk:
 
-                    //ProgressDialog.show(this,"同步入库数据","开始同步",false,true);
+                //ProgressDialog.show(this,"同步入库数据","开始同步",false,true);
 
                 try {
-                    new MaDAO().syncData(readUserId(),MainActivity.this);
+                    new MaDAO().syncData(readUserId(), MainActivity.this);
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -101,9 +106,19 @@ public class MainActivity extends AutoLayoutActivity {
                 intent.setClass(this, DiroutListActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.imageViewinstorage:
+                intent.setClass(this, IcinListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.imageViewoutstorage:
+
+                intent.setClass(this, DiroutListActivity.class);
+                startActivity(intent);
+                break;
 
         }
     }
+
 
     // 按两次返回键退出
     public boolean onKeyDown(int keyCode, KeyEvent event) {

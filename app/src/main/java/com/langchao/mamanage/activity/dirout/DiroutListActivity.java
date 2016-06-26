@@ -43,6 +43,7 @@ public class DiroutListActivity extends AppCompatActivity {
 
         try {
             pu_orderList = new MaDAO().queryPuOrder(null,null);
+
         } catch (DbException e) {
             e.printStackTrace();
         }

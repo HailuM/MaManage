@@ -86,8 +86,27 @@ public class MaDAO {
         if(null == supplier){
             supplier = "";
         }
-        db.findAll(Pu_order.class);
-        return db.selector(Pu_order.class).where("number","like","%"+orderno+"%").and("supplier","like","%"+supplier+"%").findAll();
+        List<Pu_order> list2 = db.selector(Pu_order.class).where("number","like","%"+orderno+"%").and("supplier","like","%"+supplier+"%").and("type","=",null).findAll();
+
+        List<Pu_order> list  = db.selector(Pu_order.class).where("number","like","%"+orderno+"%").and("supplier","like","%"+supplier+"%").and("type","=","zc").findAll();
+        list.addAll(list2);
+        return list ;
+    }
+
+    public List<Pu_order> queryPuOrderForRk(String orderno,String supplier) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        if(null == orderno){
+            orderno = "";
+        }
+        if(null == supplier){
+            supplier = "";
+        }
+
+        List<Pu_order> list = db.selector(Pu_order.class).where("number","like","%"+orderno+"%").and("supplier","like","%"+supplier+"%").and("type","=",null).findAll();
+
+        List<Pu_order> list2 = db.selector(Pu_order.class).where("number","like","%"+orderno+"%").and("supplier","like","%"+supplier+"%").and("type","=","rk").findAll();
+        list.addAll(list2);
+        return list ;
     }
 
     public List<Pu_order_b> queryOrderDetail(String orderId) throws DbException {
@@ -276,5 +295,10 @@ public class MaDAO {
         db.dropTable(Ic_diroutbill_b.class);
 
         Toast.makeText(x.app(), "清除离线数据成功", Toast.LENGTH_LONG).show();
+    }
+
+    public List<Consumer> findConsumers(String id) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return  db.selector(Consumer.class).where("Orderid","=",id).findAll();
     }
 }

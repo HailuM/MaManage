@@ -21,13 +21,15 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
+
 /**
  * Author: wyouflf
  * Date: 13-7-29
  * Time: 下午5:04
  */
 @Table(name = "pu_order_b")
-public class Pu_order_b {
+public class Pu_order_b implements Serializable{
 
 
 
@@ -83,6 +85,15 @@ public class Pu_order_b {
     @Column(name = "rkQty")
     private double rkQty;
 
+    private int position;//当前位置 LIST中
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int cusor) {
+        this.position = cusor;
+    }
 
     //当前选择数量
     private double curQty;

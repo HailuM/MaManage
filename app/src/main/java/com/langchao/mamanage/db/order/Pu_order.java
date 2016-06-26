@@ -45,6 +45,16 @@ public class Pu_order implements Serializable{
     @Column(name = "addr")
     private String Addr;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Column(name = "type")
+    private String type;
 
     public String getName() {
         return name;

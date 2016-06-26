@@ -1,4 +1,4 @@
-package com.langchao.mamanage.activity.dirout;
+package com.langchao.mamanage.activity.icinbill;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,16 +23,21 @@ import java.util.List;
 /**
  * Created by wongsuechang on 2016/6/26.
  */
-public class DiroutMaterialAdapter extends BaseAdapter {
+public class IcinMaterialAdapter extends BaseAdapter {
 
-    private DiroutOrderActivity context;
+    private IcinOrderActivity context;
     List<Pu_order_b> blist = new ArrayList<>();
 
     List<Pu_order_b> choosedList = new ArrayList<>();
 
-    public DiroutMaterialAdapter(DiroutOrderActivity diroutOrderActivity, List<Pu_order_b> list) {
+    public IcinMaterialAdapter(IcinOrderActivity diroutOrderActivity, List<Pu_order_b> list) {
         context = diroutOrderActivity;
         blist = list;
+    }
+
+    public void update(Pu_order_b order_b) {
+        int posion = order_b.getPosition();
+        blist.get(posion).setCurQty(order_b.getCurQty());
     }
 
     class ViewHolder {
@@ -64,14 +69,13 @@ public class DiroutMaterialAdapter extends BaseAdapter {
         public BaseAdapter baseAdapter;
 
 
-
         @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
         private void numClick(View v){
             AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > pu_order_b.getLimitQty()){
-                        num = pu_order_b.getLimitQty();
+                    if(num > pu_order_b.getSourceQty()){
+                        num = pu_order_b.getSourceQty();
                     }
                     if(num > 0) {
                         pu_order_b.setCurQty(num);
@@ -84,20 +88,23 @@ public class DiroutMaterialAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < pu_order_b.getLimitQty()) {
+            if(pu_order_b.getCurQty() < pu_order_b.getSourceQty()) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
             }
         }
         @Event(value = {R.id.img_m_add }, type = View.OnClickListener.class)
         private void choose(View v){
+
+
+
             if(!choosedList.contains(pu_order_b)) {
 
                 AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
                     @Override
                     public void setNum(double num) {
-                        if(num > pu_order_b.getLimitQty()){
-                            num = pu_order_b.getLimitQty();
+                        if(num > pu_order_b.getSourceQty()){
+                            num = pu_order_b.getSourceQty();
                         }
                         if(num > 0) {
                             pu_order_b.setCurQty(num);
@@ -119,10 +126,7 @@ public class DiroutMaterialAdapter extends BaseAdapter {
             }
         }
     }
-    public void update(Pu_order_b order_b) {
-        int posion = order_b.getPosition();
-        blist.get(posion).setCurQty(order_b.getCurQty());
-    }
+
     public void chooseAll(){
         choosedList.clear();
         for(Pu_order_b b : blist){
@@ -180,7 +184,6 @@ public class DiroutMaterialAdapter extends BaseAdapter {
         }
 
         Pu_order_b order_b = blist.get(position);
-        order_b.setPosition(position);
         _Holder.tvBrand.setText(order_b.getBrand());
         _Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
         _Holder.tvModel.setText(order_b.getModel());
