@@ -69,6 +69,30 @@ public class Ic_outbill_b {
     @Column(name = "sourceid")
     private String sourceId;
 
+    //领料商ID
+    @Column(name = "consumerid")
+    private String consumerId;
+
+    //领料商名称
+    @Column(name = "consumername")
+    private String consumerName;
+
+    public String getConsumerId() {
+        return consumerId;
+    }
+
+    public void setConsumerId(String consumerId) {
+        this.consumerId = consumerId;
+    }
+
+    public String getConsumerName() {
+        return consumerName;
+    }
+
+    public void setConsumerName(String consumerName) {
+        this.consumerName = consumerName;
+    }
+
     public String getSourceId() {
         return sourceId;
     }
