@@ -11,8 +11,10 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.activity.LoginActivity;
 import com.langchao.mamanage.activity.ServiceActivity;
 import com.langchao.mamanage.common.MaConstants;
+import com.langchao.mamanage.db.MaDAO;
 import com.zhy.autolayout.AutoLayoutActivity;
 
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -44,10 +46,12 @@ public class SetActivity extends AutoLayoutActivity {
 
         user.setText(readUserName());
         ip.setText(readIp());
+
+
     }
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set,R.id.logOut}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set,R.id.logOut,R.id.textViewClear}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -67,6 +71,13 @@ public class SetActivity extends AutoLayoutActivity {
                 SetActivity.this.finish();
                 intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.textViewClear://清除离线数据
+                try {
+                    new MaDAO().clearData();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

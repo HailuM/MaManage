@@ -10,6 +10,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.activity.MainActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.consumer.Consumer;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
+import com.langchao.mamanage.db.ic_out.Ic_outbill;
+import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
 import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order;
@@ -255,5 +259,22 @@ public class MaDAO {
             }
         });
 
+    }
+
+    public void clearData() throws DbException {
+        DbManager db = x.getDb(daoConfig);
+
+        db.dropTable(Pu_order.class);
+        db.dropTable(Pu_order_b.class);
+        db.dropTable(Ic_inbill.class);
+        db.dropTable(Ic_inbill_b.class);
+        db.dropTable(Consumer.class);
+
+        db.dropTable(Ic_outbill.class);
+        db.dropTable(Ic_outbill_b.class);
+        db.dropTable(Ic_diroutbill.class);
+        db.dropTable(Ic_diroutbill_b.class);
+
+        Toast.makeText(x.app(), "清除离线数据成功", Toast.LENGTH_LONG).show();
     }
 }

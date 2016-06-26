@@ -55,7 +55,7 @@ public class RefreshListView extends ListView implements OnScrollListener {
 		footerView = LayoutInflater.from(getContext()).inflate(R.layout.activity_listview_refresh_footer, null);
 		
 		measureView(footerView);		// 测量一下脚布局的高度
-		
+
 		footerViewHeight = footerView.getMeasuredHeight();
 		
 		footerView.setPadding(0, -footerViewHeight, 0, 0);		// 隐藏脚布局
