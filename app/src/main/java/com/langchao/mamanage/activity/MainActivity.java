@@ -96,6 +96,7 @@ public class MainActivity extends AutoLayoutActivity {
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
+                break;
             case R.id.imageViewdirectout:
                 intent.setClass(this, DiroutListActivity.class);
                 startActivity(intent);
