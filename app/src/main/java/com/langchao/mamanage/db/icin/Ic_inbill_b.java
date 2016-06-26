@@ -83,6 +83,17 @@ public class Ic_inbill_b {
     @Column(name = "sourceid")
     private String sourceId;
 
+    @Column(name = "createtype")
+    private String createType;
+
+    public String getCreateType() {
+        return createType;
+    }
+
+    public void setCreateType(String createType) {
+        this.createType = createType;
+    }
+
     public String getSourceId() {
         return sourceId;
     }

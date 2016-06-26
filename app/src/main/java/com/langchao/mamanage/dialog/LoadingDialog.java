@@ -46,6 +46,11 @@ public class LoadingDialog extends Dialog {
 
     }
 
+    public void setText(String msg){
+        TextView tipTextView = (TextView) this.findViewById(R.id.tipTextView);
+        tipTextView.setText(msg);
+    }
+
     public void dismiss() {
         loadingDialog.dismiss();
     }

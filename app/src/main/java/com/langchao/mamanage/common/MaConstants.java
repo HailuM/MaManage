@@ -5,6 +5,7 @@ package com.langchao.mamanage.common;
  */
 public class MaConstants {
     public static final String CLOSE = "CLOSEALL";
+    public static final String TYPE_SYNC = "SYNC";
     /**
      * 参数保存文件名
      */

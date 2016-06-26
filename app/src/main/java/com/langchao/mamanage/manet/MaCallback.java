@@ -18,7 +18,7 @@ public interface MaCallback {
 
 
     public interface MainInfoCallBack extends MaCallback{
-        void onSuccess(JSONObject jsonObject)  ;
+        void onSuccess(JSONObject jsonObject) throws InterruptedException;
 
         void onError(Throwable ex);
     }
