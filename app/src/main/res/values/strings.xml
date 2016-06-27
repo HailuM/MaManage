@@ -19,7 +19,7 @@
 
     <!--主页-->
     <string name="newgoods">新物资系统</string>
-    <string name="Syncin">同步入库</string>
+    <string name="Syncin">同步出库</string>
     <string name="directout">直入直出</string>
     <string name="instorage">入库</string>
     <string name="Syncout">同步出库</string>
