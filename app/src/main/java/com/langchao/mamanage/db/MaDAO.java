@@ -2,6 +2,7 @@ package com.langchao.mamanage.db;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.database.Cursor;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -95,6 +96,7 @@ public class MaDAO {
 
     public List<Pu_order> queryPuOrderForRk(String orderno,String supplier) throws DbException {
         DbManager db = x.getDb(daoConfig);
+
         if(null == orderno){
             orderno = "";
         }
