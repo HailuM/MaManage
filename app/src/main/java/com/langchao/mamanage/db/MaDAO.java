@@ -16,8 +16,10 @@ import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
 import com.langchao.mamanage.db.icin.Ic_inbill;
+import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order;
+import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.LoadingDialog;
 import com.langchao.mamanage.manet.MaCallback;
@@ -56,7 +58,7 @@ public class MaDAO {
                     // or
                     // db.dropDb();
                 }
-            });
+            }).setAllowTransaction(true);
 
     public void save(Pu_order pu_order, List<Pu_order_b> pu_order_b) throws DbException {
         DbManager db = x.getDb(daoConfig);
@@ -302,5 +304,46 @@ public class MaDAO {
     public List<Consumer> findConsumers(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
         return  db.selector(Consumer.class).where("Orderid","=",id).findAll();
+    }
+
+    /**
+     * 保存入库单
+     * @param inbillAgg
+     * @param orderAgg
+     */
+    public void saveInBill(Ic_inbill_agg inbillAgg, Pu_order_agg orderAgg) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        db.save(inbillAgg.getIc_inbill());
+        db.save(inbillAgg.getIc_inbill_bList());
+        db.saveOrUpdate(orderAgg.getPu_order());
+        db.saveOrUpdate(orderAgg.getPu_order_bs());
+
+        db.findAll(Ic_inbill.class);
+        db.findAll(Ic_inbill_b.class);
+
+        db.findAll(Pu_order.class);
+
+        db.findAll(Pu_order_b.class);
+    }
+
+    public List<Ic_inbill> queryInbillForCk(String  orderno, String supplier) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+
+        if(null == orderno){
+            orderno = "";
+        }
+        if(null == supplier){
+            supplier = "";
+        }
+
+        List<Ic_inbill> list = db.selector(Ic_inbill.class).where("number","like","%"+orderno+"%").and("supplier","like","%"+supplier+"%").findAll();
+
+
+        return list ;
+    }
+
+    public List<Ic_inbill_b> queryInbillDetail(String id) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return db.selector(Ic_inbill_b.class).where("orderid","=",id).findAll();
     }
 }

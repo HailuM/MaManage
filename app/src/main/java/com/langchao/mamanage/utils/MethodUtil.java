@@ -3,6 +3,9 @@ package com.langchao.mamanage.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.langchao.mamanage.common.MaConstants;
+
+import java.util.Date;
 import java.util.Map;
 
 public class MethodUtil {
@@ -57,5 +60,32 @@ public class MethodUtil {
             editor.remove(value.toString());
         }
         editor.commit();
+    }
+
+    /**
+     * 生成一个单号
+     * @return
+     */
+    public static String  generateNo(Context content,String type){
+        Date date = new Date(System.currentTimeMillis());
+        Integer year = date.getYear();
+        Integer month = date.getMonth();
+        Integer day = date.getDay();
+
+        Integer no = content.getSharedPreferences(MaConstants.FILENAME, 0).getInt("NO_"+type,0);
+
+
+        no = no + 1;
+        String newno = year.toString() + month.toString() + day.toString() + "-"+no.toString();
+
+        SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
+        // 存入键值对
+        editor.putInt("NO_"+type, no);
+
+
+        // 将内存中的数据写到XML文件中去
+        editor.commit();
+
+        return newno;
     }
 }

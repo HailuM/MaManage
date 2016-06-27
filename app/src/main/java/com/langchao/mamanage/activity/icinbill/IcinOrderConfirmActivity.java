@@ -13,14 +13,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.converter.MaConvert;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.consumer.Consumer;
+import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -42,6 +45,8 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
     TextView tvOrderContact;//联系人
     @ViewInject(R.id.sp_dir_out_get)
     Spinner spOrderGet;//领用商
+    @ViewInject(R.id.tv_dir_out_get)
+    TextView tvOrderGet;//联系人
     @ViewInject(R.id.lv_dir_out_m)
     ListView lvOrderMaterial;
     @ViewInject(R.id.img_dir_out_choose)
@@ -54,14 +59,40 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
     private TextView textViewTitle;
     IcinConfirmAdapter adapter = null;
 
+
+    Pu_order_agg orderAgg = null;
+
+    /**
+     * 确认后保存数据
+     *
+     * @param v
+     */
+    @Event(value = {R.id.img_dir_out_choose}, type = View.OnClickListener.class)
+    private void confirm(View v) {
+          buildInBill();
+    }
+
+    private void buildInBill() {
+        Ic_inbill_agg inbillAgg =  MaConvert.convertOrderToInbill(this,orderAgg);
+
+        try {
+            new MaDAO().saveInBill(inbillAgg,orderAgg);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        this.finish();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-
+        spOrderGet.setVisibility(View.GONE);
+        tvOrderGet.setVisibility(View.GONE);
         textViewTitle.setText("入库确认");
 
-        Pu_order_agg orderAgg = (Pu_order_agg) this.getIntent().getExtras().getSerializable("order");
+        orderAgg = (Pu_order_agg) this.getIntent().getExtras().getSerializable("order");
 
 
         Pu_order order = orderAgg.getPu_order();
@@ -74,19 +105,17 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
         List<Consumer> consumers = null;
         try {
             consumers = new MaDAO().findConsumers(order.getId());
-            spOrderGet.setAdapter(new ConsumerAdapter(this,consumers));
+            spOrderGet.setAdapter(new ConsumerAdapter(this, consumers));
         } catch (DbException e) {
             e.printStackTrace();
         }
 
 
-
-
         List<Pu_order_b> list = orderAgg.getPu_order_bs();
-        tvOrderChoose.setText("已选品种："+ list.size());
+        tvOrderChoose.setText("已选品种：" + list.size());
 
 
-        adapter =   new IcinConfirmAdapter(this, list);
+        adapter = new IcinConfirmAdapter(this, list);
         lvOrderMaterial.setAdapter(adapter);
     }
 
@@ -113,16 +142,16 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
         public long getItemId(int position) {
             return position;
         }
+
         /**
          * 下面是重要代码
          */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater _LayoutInflater= LayoutInflater.from(mContext);
-            convertView=_LayoutInflater.inflate(R.layout.item_consumer, null);
-            if(convertView!=null)
-            {
-                TextView _TextView1=(TextView)convertView.findViewById(R.id.tc_consumer);
+            LayoutInflater _LayoutInflater = LayoutInflater.from(mContext);
+            convertView = _LayoutInflater.inflate(R.layout.item_consumer, null);
+            if (convertView != null) {
+                TextView _TextView1 = (TextView) convertView.findViewById(R.id.tc_consumer);
 
                 _TextView1.setText(mList.get(position).getName());
 

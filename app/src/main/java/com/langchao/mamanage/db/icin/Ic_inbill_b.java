@@ -21,13 +21,15 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
+
 /**
  * Author: wyouflf
  * Date: 13-7-29
  * Time: 下午5:04
  */
 @Table(name = "ic_inbill_b")
-public class Ic_inbill_b {
+public class Ic_inbill_b implements Serializable {
 
 
 
@@ -85,6 +87,26 @@ public class Ic_inbill_b {
 
     @Column(name = "createtype")
     private String createType;
+
+    private double curQty;
+
+    public double getCurQty() {
+        return curQty;
+    }
+
+    public void setCurQty(double curQty) {
+        this.curQty = curQty;
+    }
+
+    Integer position;
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 
     public String getCreateType() {
         return createType;

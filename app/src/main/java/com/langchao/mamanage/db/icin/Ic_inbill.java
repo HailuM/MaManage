@@ -5,6 +5,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Time: 下午7:06
  */
 @Table(name = "ic_inbill")
-public class Ic_inbill {
+public class Ic_inbill implements Serializable{
 
     /**
      * {

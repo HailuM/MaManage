@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.activity.dirout.DiroutListActivity;
 import com.langchao.mamanage.activity.icinbill.IcinListActivity;
+import com.langchao.mamanage.activity.icoutbill.IcoutListActivity;
 import com.langchao.mamanage.activity.main.SetActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
@@ -112,7 +113,7 @@ public class MainActivity extends AutoLayoutActivity {
                 break;
             case R.id.imageViewoutstorage:
 
-                intent.setClass(this, DiroutListActivity.class);
+                intent.setClass(this, IcoutListActivity.class);
                 startActivity(intent);
                 break;
 

@@ -5,10 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.db.MaDAO;
-import com.langchao.mamanage.db.order.Pu_order;
+import com.langchao.mamanage.db.icin.Ic_inbill;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -21,9 +22,9 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_list)
-public class DiroutListActivity extends AppCompatActivity {
+public class IcoutListActivity extends AppCompatActivity {
 
-    private List<Pu_order> pu_orderList = null;
+    private List<Ic_inbill> ic_inbills = null;
 
     @ViewInject((R.id.img_dir_out_list_search))
     private ImageView imgSearch;
@@ -32,6 +33,9 @@ public class DiroutListActivity extends AppCompatActivity {
     private EditText etSearch;
 
 
+    @ViewInject(R.id.textViewTitle)
+    private TextView textViewTitle;
+
     @ViewInject(R.id.lv_dir_out_order)
     private ListView lvOrder;
 
@@ -39,15 +43,17 @@ public class DiroutListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-
+        textViewTitle.setText("出库办理");
 
         try {
-            pu_orderList = new MaDAO().queryPuOrder(null,null);
+            ic_inbills = new MaDAO().queryInbillForCk(null,null);
 
         } catch (DbException e) {
             e.printStackTrace();
         }
 
-        lvOrder.setAdapter(new DiroutOrderAdapter(this,pu_orderList));
+        lvOrder.setAdapter(new IcoutInbillAdapter(this, ic_inbills));
+
+
     }
 }

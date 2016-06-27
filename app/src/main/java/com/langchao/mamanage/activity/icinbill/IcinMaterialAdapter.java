@@ -78,6 +78,9 @@ public class IcinMaterialAdapter extends BaseAdapter {
                         num = pu_order_b.getSourceQty();
                     }
                     if(num > 0) {
+                        if(num > (pu_order_b.getSourceQty()-pu_order_b.getRkQty())){
+                            num = pu_order_b.getSourceQty()-pu_order_b.getRkQty();
+                        }
                         pu_order_b.setCurQty(num);
 
                         notifyDataSetChanged();
@@ -88,7 +91,7 @@ public class IcinMaterialAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < pu_order_b.getSourceQty()) {
+            if(pu_order_b.getCurQty() < (pu_order_b.getSourceQty()-pu_order_b.getRkQty())) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
             }
@@ -107,6 +110,9 @@ public class IcinMaterialAdapter extends BaseAdapter {
                             num = pu_order_b.getSourceQty();
                         }
                         if(num > 0) {
+                            if(num > (pu_order_b.getSourceQty()-pu_order_b.getRkQty())){
+                                num = pu_order_b.getSourceQty()-pu_order_b.getRkQty();
+                            }
                             pu_order_b.setCurQty(num);
                             choosedList.add(pu_order_b);
                             context.updateTotalNum(choosedList.size());
@@ -185,7 +191,7 @@ public class IcinMaterialAdapter extends BaseAdapter {
 
         Pu_order_b order_b = blist.get(position);
         _Holder.tvBrand.setText(order_b.getBrand());
-        _Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
+        _Holder.leftQty.setText((order_b.getSourceQty()-order_b.getRkQty()-order_b.getCurQty() )+"" );
         _Holder.tvModel.setText(order_b.getModel());
         _Holder.tvName.setText(order_b.getName());
         _Holder.tvNum.setText(order_b.getCurQty()+"");

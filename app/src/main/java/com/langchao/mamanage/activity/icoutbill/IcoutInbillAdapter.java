@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.order.Pu_order;
 
 import org.xutils.view.annotation.ViewInject;
@@ -21,13 +22,13 @@ import java.util.List;
 /**
  * Created by wongsuechang on 2016/6/26.
  */
-public class DiroutOrderAdapter extends BaseAdapter {
+public class IcoutInbillAdapter extends BaseAdapter {
 
-    private List<Pu_order> pu_orderList = new ArrayList<>();
+    private List<Ic_inbill> inbills = new ArrayList<>();
 
-    public DiroutOrderAdapter(Context context, List<Pu_order> list) {
+    public IcoutInbillAdapter(Context context, List<Ic_inbill> list) {
         this.context = context;
-        pu_orderList = list;
+        inbills = list;
     }
 
     private Context context;
@@ -44,7 +45,7 @@ public class DiroutOrderAdapter extends BaseAdapter {
         @ViewInject(R.id.tv_dir_out_order_building)
         public TextView tvBuilding;
 
-        public Pu_order pu_order;
+        public Ic_inbill inbill;
 
 
     }
@@ -54,14 +55,14 @@ public class DiroutOrderAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(null == pu_orderList)
+        if(null == inbills)
             return 0;
-        return pu_orderList.size();
+        return inbills.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return pu_orderList.get(position);
+        return inbills.get(position);
     }
 
     @Override
@@ -81,12 +82,12 @@ public class DiroutOrderAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     ViewHolder  Holder = (ViewHolder) view.getTag();
-                    Pu_order pu_order = Holder.pu_order;
-                    Intent intent = new Intent(context, DiroutOrderActivity.class);
+                    Ic_inbill ic_in = Holder.inbill;
+                    Intent intent = new Intent(context, IcoutInbillActivity.class);
 
 
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("order", pu_order);
+                    bundle.putSerializable("ic_inbill", ic_in);
 
                     intent.putExtras(bundle);
 
@@ -97,15 +98,15 @@ public class DiroutOrderAdapter extends BaseAdapter {
             _Holder = (ViewHolder) convertView.getTag();
         }
 
-        Pu_order order = pu_orderList.get(position);
-        if(null != order){
-            _Holder.tvOrderId.setText(order.getNumber());
-            _Holder.tvBuilding.setText(order.getAddr());
-            _Holder.tvMaterial.setText(order.getMaterialDesc());
-            _Holder.tvSupplier.setText(order.getSupplier());
-            _Holder.tvOrderTime.setText(order.getDate().toString());
+        Ic_inbill icInbill = inbills.get(position);
+        if(null != icInbill){
+            _Holder.tvOrderId.setText(icInbill.getNumber());
+            _Holder.tvBuilding.setText(icInbill.getAddr());
+            _Holder.tvMaterial.setText(icInbill.getMaterialDesc());
+            _Holder.tvSupplier.setText(icInbill.getSupplier());
+            _Holder.tvOrderTime.setText(icInbill.getDate().toString());
         }
-        _Holder.pu_order = order;
+        _Holder.inbill = icInbill;
 
         return convertView;
     }

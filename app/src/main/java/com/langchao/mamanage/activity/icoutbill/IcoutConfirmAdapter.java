@@ -1,5 +1,7 @@
 package com.langchao.mamanage.activity.icoutbill;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.order.Pu_order_b;
+import com.langchao.mamanage.dialog.AlertForResult;
+import com.langchao.mamanage.dialog.PopCallBack;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -21,14 +26,14 @@ import java.util.List;
 /**
  * Created by wongsuechang on 2016/6/26.
  */
-public class DiroutConfirmAdapter extends BaseAdapter {
+public class IcoutConfirmAdapter extends BaseAdapter {
 
-    private DiroutOrderConfirmActivity context;
+    private IcoutInbillConfirmActivity context;
     List<Pu_order_b> blist = new ArrayList<>();
 
 
 
-    public DiroutConfirmAdapter(DiroutOrderConfirmActivity diroutOrderActivity, List<Pu_order_b> list) {
+    public IcoutConfirmAdapter(IcoutInbillConfirmActivity diroutOrderActivity, List<Pu_order_b> list) {
         context = diroutOrderActivity;
         blist = list;
     }
@@ -57,15 +62,35 @@ public class DiroutConfirmAdapter extends BaseAdapter {
         @ViewInject(R.id.tv_dir_out_order_left)
         TextView tvleft;
 
+
+
         public Pu_order_b pu_order_b;
 
         public BaseAdapter baseAdapter;
 
+        @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
+        private void numClick(View v){
+            AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
+                @Override
+                public void setNum(double num) {
+                    if(num > pu_order_b.getSourceQty()){
+                        num = pu_order_b.getSourceQty();
+                    }
+                    if(num > 0) {
+                        pu_order_b.setCurQty(num);
+
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < pu_order_b.getLimitQty()) {
+            if(pu_order_b.getCurQty() < pu_order_b.getSourceQty()) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
+                notice(pu_order_b);
             }
         }
 
@@ -75,7 +100,18 @@ public class DiroutConfirmAdapter extends BaseAdapter {
             if(pu_order_b.getCurQty() > 1) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
+                notice(pu_order_b);
             }
+        }
+
+        private void notice(Pu_order_b pu_order_b){
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("ic_inbill", pu_order_b);
+
+            intent.putExtras(bundle);
+            intent.setAction(MaConstants.FRESH); // 说明动作
+            context.sendBroadcast(intent);// 该函数用于发送广播
         }
     }
 

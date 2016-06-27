@@ -62,12 +62,12 @@
 //                        JSONObject order = (JSONObject) orderArray.get(i);
 //
 //
-////                        Pu_order pu_order = new Pu_order();
-////                        pu_order.setId(order.getString("id"));
-////                        pu_order.setMaterialDesc("materialDesc");
-////                        pu_order.setNumber(order.getString("number"));
-////                        pu_order.setAddr(order.getString("Addr"));
-////                        pu_order.setSupplier(order.getString("order"));
+////                        Pu_order inbill = new Pu_order();
+////                        inbill.setId(order.getString("id"));
+////                        inbill.setMaterialDesc("materialDesc");
+////                        inbill.setNumber(order.getString("number"));
+////                        inbill.setAddr(order.getString("Addr"));
+////                        inbill.setSupplier(order.getString("order"));
 //
 //                        final Ic_inbill ic_inbill = JSON.parseObject(order.toJSONString(),Ic_inbill.class);
 //
