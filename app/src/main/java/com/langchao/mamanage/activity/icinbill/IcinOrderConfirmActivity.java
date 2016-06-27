@@ -80,6 +80,7 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
+        setResult(RESULT_OK);
         this.finish();
 
     }

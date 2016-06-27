@@ -2,6 +2,10 @@ package com.langchao.mamanage.converter;
 
 import android.content.Context;
 
+import com.langchao.mamanage.activity.icoutbill.IcoutInbillConfirmActivity;
+import com.langchao.mamanage.db.ic_out.Ic_outbill;
+import com.langchao.mamanage.db.ic_out.Ic_outbill_agg;
+import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
 import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
@@ -54,6 +58,28 @@ public class MaConvert {
 
     }
 
+    public static Ic_outbill_b convert(Ic_inbill_b inbill_b, double num, String id) {
+        Ic_outbill_b outbill_b = new Ic_outbill_b();
+        outbill_b.setOrderid(id);
+        outbill_b.setOrderentryid(UUID.randomUUID().toString());
+        outbill_b.setSourceId(inbill_b.getOrderid());
+        outbill_b.setSourcebId(inbill_b.getOrderentryid());
+
+
+        outbill_b.setNote(inbill_b.getNote());
+        outbill_b.setBrand(inbill_b.getBrand());
+        outbill_b.setModel(inbill_b.getModel());
+        outbill_b.setUnit(inbill_b.getUnit());
+        outbill_b.setName(inbill_b.getName());
+
+
+        outbill_b.setSourceQty(num);
+
+
+        return outbill_b;
+
+    }
+
     public static Ic_inbill_agg convertOrderToInbill(Context content, Pu_order_agg orderAgg) {
 
         String id = UUID.randomUUID().toString();
@@ -85,9 +111,41 @@ public class MaConvert {
 
     public static String getDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd H:m:s");
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
+
         Calendar c1 = Calendar.getInstance();
         c1.setTime(new Date());
         return format.format(c1.getTime());
+    }
+
+    public static Ic_outbill_agg convertInbilToOut(IcoutInbillConfirmActivity content, Ic_inbill_agg inbillAgg) {
+
+        Ic_outbill_agg agg = new Ic_outbill_agg();
+
+        String id = UUID.randomUUID().toString();
+
+        Ic_outbill head = new Ic_outbill();
+        Ic_inbill orderHead = inbillAgg.getIc_inbill();
+        head.setAddr(orderHead.getAddr());
+
+
+        head.setDate(getDate());
+        head.setId(id);
+        head.setMaterialDesc(orderHead.getMaterialDesc());
+        head.setNumber(MethodUtil.generateNo(content, "ICOUT"));
+        head.setSupplier(orderHead.getSupplier());
+
+        List<Ic_outbill_b> blist = new ArrayList<>();
+        for (Ic_inbill_b item : inbillAgg.getIc_inbill_bList()) {
+
+            if(item.getCurQty() > 0) {
+                blist.add(convert(item, item.getCurQty(), id));
+                item.setCkQty(item.getCkQty() + item.getCurQty());
+            }
+
+        }
+        agg.setIc_outbill(head);
+        agg.setIc_outbill_bs(blist);
+
+        return agg;
     }
 }

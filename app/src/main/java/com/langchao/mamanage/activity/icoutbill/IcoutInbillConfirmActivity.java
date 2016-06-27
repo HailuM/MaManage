@@ -16,10 +16,12 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.converter.MaConvert;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.consumer.Consumer;
+import com.langchao.mamanage.db.ic_out.Ic_outbill_agg;
+import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_agg;
+import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
-import com.langchao.mamanage.db.order.Pu_order_b;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -60,7 +62,7 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
     IcoutConfirmAdapter adapter = null;
 
 
-    Pu_order_agg orderAgg = null;
+    Ic_inbill_agg inbillAgg = null;
 
     /**
      * 确认后保存数据
@@ -69,17 +71,19 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
      */
     @Event(value = {R.id.img_dir_out_choose}, type = View.OnClickListener.class)
     private void confirm(View v) {
-          buildInBill();
-    }
-
-    private void buildInBill() {
-        Ic_inbill_agg inbillAgg =  MaConvert.convertOrderToInbill(this,orderAgg);
-
         try {
-            new MaDAO().saveInBill(inbillAgg,orderAgg);
+            buildOutBill();
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+    private void buildOutBill() throws DbException {
+        Ic_outbill_agg outbillAgg = MaConvert.convertInbilToOut(this, this.inbillAgg);
+
+
+        new MaDAO().saveOutBill(outbillAgg, this.inbillAgg);
+        setResult(RESULT_OK);
         this.finish();
 
     }
@@ -88,18 +92,16 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        spOrderGet.setVisibility(View.GONE);
-        tvOrderGet.setVisibility(View.GONE);
+
         textViewTitle.setText("出库确认");
 
-        orderAgg = (Pu_order_agg) this.getIntent().getExtras().getSerializable("ic_inbill");
+        inbillAgg = (Ic_inbill_agg) this.getIntent().getExtras().getSerializable("ic_inbill");
 
 
-        Pu_order order = orderAgg.getPu_order();
-        order.setType("rk");
+        Ic_inbill order = inbillAgg.getIc_inbill();
+
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
-        tvOrderContact.setText(order.getName());
 
 
         List<Consumer> consumers = null;
@@ -111,7 +113,7 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
         }
 
 
-        List<Pu_order_b> list = orderAgg.getPu_order_bs();
+        List<Ic_inbill_b> list = inbillAgg.getIc_inbill_bList();
         tvOrderChoose.setText("已选品种：" + list.size());
 
 

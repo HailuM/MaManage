@@ -67,24 +67,24 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         TextView tv_dir_out_order_left;
 
 
-        public Ic_inbill_b pu_order_b;
+        public Ic_inbill_b ic_bill_b;
 
         public BaseAdapter baseAdapter;
 
 
         @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
         private void numClick(View v){
-            AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
+            AlertForResult.popUp( ic_bill_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > pu_order_b.getSourceQty()){
-                        num = pu_order_b.getSourceQty();
+                    if(num > ic_bill_b.getSourceQty()){
+                        num = ic_bill_b.getSourceQty();
                     }
                     if(num > 0) {
-                        if(num > (pu_order_b.getSourceQty()-pu_order_b.getCkQty())){
-                            num = pu_order_b.getSourceQty()-pu_order_b.getCkQty();
+                        if(num > (ic_bill_b.getSourceQty()-ic_bill_b.getCkQty())){
+                            num = ic_bill_b.getSourceQty()-ic_bill_b.getCkQty();
                         }
-                        pu_order_b.setCurQty(num);
+                        ic_bill_b.setCurQty(num);
 
                         notifyDataSetChanged();
                     }
@@ -94,8 +94,8 @@ public class IcoutMaterialAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < (pu_order_b.getSourceQty()-pu_order_b.getCkQty())) {
-                pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
+            if(ic_bill_b.getCurQty() < (ic_bill_b.getSourceQty()-ic_bill_b.getCkQty())) {
+                ic_bill_b.setCurQty(ic_bill_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
             }
         }
@@ -104,20 +104,20 @@ public class IcoutMaterialAdapter extends BaseAdapter {
 
 
 
-            if(!choosedList.contains(pu_order_b)) {
+            if(!choosedList.contains(ic_bill_b)) {
 
-                AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
+                AlertForResult.popUp( ic_bill_b.getCurQty(),context,new PopCallBack() {
                     @Override
                     public void setNum(double num) {
-                        if(num > pu_order_b.getSourceQty()){
-                            num = pu_order_b.getSourceQty();
+                        if(num > ic_bill_b.getSourceQty()){
+                            num = ic_bill_b.getSourceQty();
                         }
                         if(num > 0) {
-                            if(num > (pu_order_b.getSourceQty()-pu_order_b.getCkQty())){
-                                num = pu_order_b.getSourceQty()-pu_order_b.getCkQty();
+                            if(num > (ic_bill_b.getSourceQty()-ic_bill_b.getCkQty())){
+                                num = ic_bill_b.getSourceQty()-ic_bill_b.getCkQty();
                             }
-                            pu_order_b.setCurQty(num);
-                            choosedList.add(pu_order_b);
+                            ic_bill_b.setCurQty(num);
+                            choosedList.add(ic_bill_b);
                             context.updateTotalNum(choosedList.size());
                             notifyDataSetChanged();
                         }
@@ -129,8 +129,8 @@ public class IcoutMaterialAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_del }, type = View.OnClickListener.class)
         private void sub(View v){
-            if(pu_order_b.getCurQty() > 1) {
-                pu_order_b.setCurQty(pu_order_b.getCurQty() - 1);
+            if(ic_bill_b.getCurQty() > 1) {
+                ic_bill_b.setCurQty(ic_bill_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
             }
         }
@@ -193,6 +193,7 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         }
         _Holder.tv_dir_out_order_left.setText("入库剩余数");
         Ic_inbill_b order_b = blist.get(position);
+        order_b.setPosition(position);
         _Holder.tvBrand.setText(order_b.getBrand());
         _Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
         _Holder.tvModel.setText(order_b.getModel());
@@ -201,7 +202,7 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         _Holder.tvNote.setText(order_b.getNote());
         _Holder.tvUnit.setText(order_b.getUnit());
 
-        _Holder.pu_order_b = order_b;
+        _Holder.ic_bill_b = order_b;
         _Holder.baseAdapter = this;
         return convertView;
     }

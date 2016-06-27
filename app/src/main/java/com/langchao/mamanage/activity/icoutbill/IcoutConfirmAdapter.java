@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.common.MaConstants;
-import com.langchao.mamanage.db.order.Pu_order_b;
+import com.langchao.mamanage.db.icin.Ic_inbill_b; 
 import com.langchao.mamanage.dialog.AlertForResult;
 import com.langchao.mamanage.dialog.PopCallBack;
 
@@ -29,11 +29,11 @@ import java.util.List;
 public class IcoutConfirmAdapter extends BaseAdapter {
 
     private IcoutInbillConfirmActivity context;
-    List<Pu_order_b> blist = new ArrayList<>();
+    List<Ic_inbill_b> blist = new ArrayList<>();
 
 
 
-    public IcoutConfirmAdapter(IcoutInbillConfirmActivity diroutOrderActivity, List<Pu_order_b> list) {
+    public IcoutConfirmAdapter(IcoutInbillConfirmActivity diroutOrderActivity, List<Ic_inbill_b> list) {
         context = diroutOrderActivity;
         blist = list;
     }
@@ -64,20 +64,20 @@ public class IcoutConfirmAdapter extends BaseAdapter {
 
 
 
-        public Pu_order_b pu_order_b;
+        public Ic_inbill_b inbill_b;
 
         public BaseAdapter baseAdapter;
 
         @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
         private void numClick(View v){
-            AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
+            AlertForResult.popUp( inbill_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > pu_order_b.getSourceQty()){
-                        num = pu_order_b.getSourceQty();
+                    if(num > inbill_b.getSourceQty()){
+                        num = inbill_b.getSourceQty();
                     }
                     if(num > 0) {
-                        pu_order_b.setCurQty(num);
+                        inbill_b.setCurQty(num);
 
                         notifyDataSetChanged();
                     }
@@ -87,27 +87,27 @@ public class IcoutConfirmAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < pu_order_b.getSourceQty()) {
-                pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
+            if(inbill_b.getCurQty() < inbill_b.getSourceQty()) {
+                inbill_b.setCurQty(inbill_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
-                notice(pu_order_b);
+                notice(inbill_b);
             }
         }
 
 
         @Event(value = {R.id.tv_dir_out_order_m_del }, type = View.OnClickListener.class)
         private void sub(View v){
-            if(pu_order_b.getCurQty() > 1) {
-                pu_order_b.setCurQty(pu_order_b.getCurQty() - 1);
+            if(inbill_b.getCurQty() > 1) {
+                inbill_b.setCurQty(inbill_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
-                notice(pu_order_b);
+                notice(inbill_b);
             }
         }
 
-        private void notice(Pu_order_b pu_order_b){
+        private void notice(Ic_inbill_b inbill_b){
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("ic_inbill", pu_order_b);
+            bundle.putSerializable("ic_inbill", inbill_b);
 
             intent.putExtras(bundle);
             intent.setAction(MaConstants.FRESH); // 说明动作
@@ -152,7 +152,7 @@ public class IcoutConfirmAdapter extends BaseAdapter {
             _Holder = (ViewHolder) convertView.getTag();
         }
 
-        Pu_order_b order_b = blist.get(position);
+        Ic_inbill_b order_b = blist.get(position);
         _Holder.tvBrand.setText(order_b.getBrand());
         //_Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
         _Holder.tvModel.setText(order_b.getModel());
@@ -162,7 +162,7 @@ public class IcoutConfirmAdapter extends BaseAdapter {
         _Holder.tvUnit.setText(order_b.getUnit());
         _Holder.tvleft.setVisibility(View.INVISIBLE);
         _Holder.leftQty.setVisibility(View.INVISIBLE);
-        _Holder.pu_order_b = order_b;
+        _Holder.inbill_b = order_b;
         _Holder.baseAdapter = this;
         return convertView;
     }

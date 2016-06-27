@@ -21,13 +21,15 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
+
 /**
  * Author: wyouflf
  * Date: 13-7-29
  * Time: 下午5:04
  */
 @Table(name = "ic_outbill_b")
-public class Ic_outbill_b {
+public class Ic_outbill_b implements Serializable {
 
 
 

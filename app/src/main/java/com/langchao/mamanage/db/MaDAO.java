@@ -14,6 +14,7 @@ import com.langchao.mamanage.db.consumer.Consumer;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
+import com.langchao.mamanage.db.ic_out.Ic_outbill_agg;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
 import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_agg;
@@ -29,7 +30,9 @@ import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by miaohl on 2016/6/25.
@@ -116,6 +119,18 @@ public class MaDAO {
     public List<Pu_order_b> queryOrderDetail(String orderId) throws DbException {
         DbManager db = x.getDb(daoConfig);
         return db.selector(Pu_order_b.class).where("orderid","=",orderId).findAll();
+    }
+
+    public List<Pu_order_b> queryOrderDetailForIn(String orderId) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid","=",orderId).findAll();
+        List<Pu_order_b> newlist = new ArrayList<>();
+        for(Pu_order_b orderb : list){
+            if(orderb.getSourceQty()-orderb.getRkQty() > 0){
+                newlist.add(orderb);
+            }
+        }
+        return newlist;
     }
 
     public void syncData(String userId, final MainActivity mainActivity ) throws DbException {
@@ -240,6 +255,9 @@ public class MaDAO {
                             for (Ic_inbill_b icb:list
                                  ) {
                                 icb.setCreateType(MaConstants.TYPE_SYNC);
+                                if(null == icb.getOrderentryid() || icb.getOrderentryid().trim().length() ==0) {
+                                    icb.setOrderentryid(UUID.randomUUID().toString());
+                                }
                             }
                             //保存
                             new MaDAO().save(ic_inbill,list);
@@ -318,12 +336,7 @@ public class MaDAO {
         db.saveOrUpdate(orderAgg.getPu_order());
         db.saveOrUpdate(orderAgg.getPu_order_bs());
 
-        db.findAll(Ic_inbill.class);
-        db.findAll(Ic_inbill_b.class);
 
-        db.findAll(Pu_order.class);
-
-        db.findAll(Pu_order_b.class);
     }
 
     public List<Ic_inbill> queryInbillForCk(String  orderno, String supplier) throws DbException {
@@ -345,5 +358,20 @@ public class MaDAO {
     public List<Ic_inbill_b> queryInbillDetail(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
         return db.selector(Ic_inbill_b.class).where("orderid","=",id).findAll();
+    }
+
+    public void saveOutBill(Ic_outbill_agg outbillAgg, Ic_inbill_agg inbillAgg) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        db.save(outbillAgg.getIc_outbill());
+        db.save(outbillAgg.getIc_outbill_bs());
+        db.saveOrUpdate(inbillAgg.getIc_inbill());
+        db.saveOrUpdate(inbillAgg.getIc_inbill_bList());
+
+        db.findAll(Ic_inbill.class);
+        db.findAll(Ic_inbill_b.class);
+
+        db.findAll(Pu_order.class);
+
+        db.findAll(Pu_order_b.class);
     }
 }

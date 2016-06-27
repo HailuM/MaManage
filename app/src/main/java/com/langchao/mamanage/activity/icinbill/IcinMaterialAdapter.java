@@ -26,9 +26,9 @@ import java.util.List;
 public class IcinMaterialAdapter extends BaseAdapter {
 
     private IcinOrderActivity context;
-    List<Pu_order_b> blist = new ArrayList<>();
+    public List<Pu_order_b> blist = new ArrayList<>();
 
-    List<Pu_order_b> choosedList = new ArrayList<>();
+    public List<Pu_order_b> choosedList = new ArrayList<>();
 
     public IcinMaterialAdapter(IcinOrderActivity diroutOrderActivity, List<Pu_order_b> list) {
         context = diroutOrderActivity;
@@ -136,8 +136,10 @@ public class IcinMaterialAdapter extends BaseAdapter {
     public void chooseAll(){
         choosedList.clear();
         for(Pu_order_b b : blist){
-            b.setCurQty(b.getSourceQty()-b.getCkQty());
-            choosedList.add(b);
+            if(b.getSourceQty()-b.getRkQty() > 0) {
+                b.setCurQty(b.getSourceQty() - b.getRkQty());
+                choosedList.add(b);
+            }
         }
         context.updateTotalNum(choosedList.size());
         notifyDataSetChanged();
