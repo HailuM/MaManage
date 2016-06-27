@@ -24,14 +24,14 @@ import java.util.List;
  */
 public class IcoutInbillAdapter extends BaseAdapter {
 
-    private List<Ic_inbill> inbills = new ArrayList<>();
+    public List<Ic_inbill> inbills = new ArrayList<>();
 
-    public IcoutInbillAdapter(Context context, List<Ic_inbill> list) {
+    public IcoutInbillAdapter(IcoutListActivity context, List<Ic_inbill> list) {
         this.context = context;
         inbills = list;
     }
 
-    private Context context;
+    private IcoutListActivity context;
 
     class ViewHolder {
         @ViewInject(R.id.tv_dir_out_order_id)
@@ -91,7 +91,7 @@ public class IcoutInbillAdapter extends BaseAdapter {
 
                     intent.putExtras(bundle);
 
-                    context.startActivity(intent);
+                    context.startActivityForResult(intent,0);
                 }
             });
         } else {

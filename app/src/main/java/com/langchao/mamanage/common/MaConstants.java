@@ -21,4 +21,8 @@ public class MaConstants {
     public static String PARA_USERID = "userid";
 
     public static String PARA_AUTOLOGIN = "autologin";
+
+    public static String STATUS_TEMP = "temp";
+
+    public static String STATUS_NORMAL = "normal";
 }

@@ -97,10 +97,15 @@ public class IcinOrderActivity extends AppCompatActivity {
                 List<Pu_order_b> list = null;
                 try {
                     list = new MaDAO().queryOrderDetailForIn(order.getId());
+
                     adapter.blist = list;
                     adapter.choosedList = new ArrayList<>();
                     updateTotalNum(0);
                     adapter.notifyDataSetChanged();
+                    if(null == list || list.size() == 0){
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }

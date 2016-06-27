@@ -23,14 +23,14 @@ import java.util.List;
  */
 public class IcinOrderAdapter extends BaseAdapter {
 
-    private List<Pu_order> pu_orderList = new ArrayList<>();
+    public List<Pu_order> pu_orderList = new ArrayList<>();
 
-    public IcinOrderAdapter(Context context, List<Pu_order> list) {
+    public IcinOrderAdapter(IcinListActivity context, List<Pu_order> list) {
         this.context = context;
         pu_orderList = list;
     }
 
-    private Context context;
+    private IcinListActivity context;
 
     class ViewHolder {
         @ViewInject(R.id.tv_dir_out_order_id)
@@ -90,7 +90,7 @@ public class IcinOrderAdapter extends BaseAdapter {
 
                     intent.putExtras(bundle);
 
-                    context.startActivity(intent);
+                    context.startActivityForResult(intent,0);
                 }
             });
         } else {

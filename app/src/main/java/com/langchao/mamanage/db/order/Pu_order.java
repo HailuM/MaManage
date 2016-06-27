@@ -56,6 +56,10 @@ public class Pu_order implements Serializable{
     @Column(name = "type")
     private String type;
 
+    //是否直出完成
+    @Column(name = "zcwc")
+    private boolean zcwc;
+
     public String getName() {
         return name;
     }

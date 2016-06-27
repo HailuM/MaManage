@@ -21,13 +21,15 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
+
 /**
  * Author: wyouflf
  * Date: 13-7-29
  * Time: 下午5:04
  */
 @Table(name = "ic_diroutbill_b")
-public class Ic_diroutbill_b {
+public class Ic_diroutbill_b implements Serializable {
 
 
 
@@ -76,6 +78,17 @@ public class Ic_diroutbill_b {
     //领料商名称
     @Column(name = "consumername")
     private String consumerName;
+
+    @Column(name = "status")
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getConsumerId() {
         return consumerId;

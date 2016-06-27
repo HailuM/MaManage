@@ -30,7 +30,27 @@ public class Ic_outbill implements Serializable {
     @Column(name = "addr")
     private String Addr;
 
+    @Column(name = "consumername")
+    private String consumername;
 
+    public String getConsumername() {
+        return consumername;
+    }
+
+    public void setConsumername(String consumername) {
+        this.consumername = consumername;
+    }
+
+    public String getConsumerid() {
+        return consumerid;
+    }
+
+    public void setConsumerid(String consumerid) {
+        this.consumerid = consumerid;
+    }
+
+    @Column(name = "consumerid")
+    private String consumerid;
 
 
     @Column(name = "time")

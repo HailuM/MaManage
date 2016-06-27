@@ -100,6 +100,10 @@ public class IcoutInbillActivity extends AppCompatActivity {
                     adapter.choosedList = new ArrayList<>();
                     updateTotalNum(0);
                     adapter.notifyDataSetChanged();
+                    if(null == list || list.size() == 0){
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }

@@ -79,8 +79,15 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
     }
 
     private void buildOutBill() throws DbException {
-        Ic_outbill_agg outbillAgg = MaConvert.convertInbilToOut(this, this.inbillAgg);
 
+
+        Ic_outbill_agg outbillAgg = MaConvert.convertInbilToOut(this, this.inbillAgg);
+        if(null != ((Consumer)spOrderGet.getSelectedItem())){
+            String consumerid = ((Consumer)spOrderGet.getSelectedItem()).getConsumerid();
+            String consumername = ((Consumer)spOrderGet.getSelectedItem()).getName();
+            outbillAgg.getIc_outbill().setConsumerid(consumerid);
+            outbillAgg.getIc_outbill().setConsumername(consumername);
+        }
 
         new MaDAO().saveOutBill(outbillAgg, this.inbillAgg);
         setResult(RESULT_OK);
@@ -103,17 +110,20 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
 
-
+        List<Ic_inbill_b> list = inbillAgg.getIc_inbill_bList();
         List<Consumer> consumers = null;
         try {
             consumers = new MaDAO().findConsumers(order.getId());
+            if(null == consumers || consumers.size() == 0){
+                consumers = new MaDAO().findConsumers(list.get(0).getSourceId());
+            }
             spOrderGet.setAdapter(new ConsumerAdapter(this, consumers));
         } catch (DbException e) {
             e.printStackTrace();
         }
 
 
-        List<Ic_inbill_b> list = inbillAgg.getIc_inbill_bList();
+
         tvOrderChoose.setText("已选品种：" + list.size());
 
 

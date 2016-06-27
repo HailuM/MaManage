@@ -5,6 +5,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Time: 下午7:06
  */
 @Table(name = "ic_diroutbill")
-public class Ic_diroutbill {
+public class Ic_diroutbill implements Serializable {
 
      
     @Column(name = "id", isId = true)
@@ -29,8 +30,38 @@ public class Ic_diroutbill {
     @Column(name = "addr")
     private String Addr;
 
+    @Column(name = "consumerid")
+    private String consumerid;
 
+    public String getConsumername() {
+        return consumername;
+    }
 
+    public void setConsumername(String consumername) {
+        this.consumername = consumername;
+    }
+
+    public String getConsumerid() {
+        return consumerid;
+    }
+
+    public void setConsumerid(String consumerid) {
+        this.consumerid = consumerid;
+    }
+
+    @Column(name = "consumername")
+    private String consumername;
+
+    @Column(name = "status")
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @Column(name = "time")
     private Date time;

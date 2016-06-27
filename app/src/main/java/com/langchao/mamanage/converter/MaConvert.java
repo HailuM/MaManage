@@ -2,7 +2,11 @@ package com.langchao.mamanage.converter;
 
 import android.content.Context;
 
+import com.langchao.mamanage.activity.dirout.DiroutOrderConfirmActivity;
 import com.langchao.mamanage.activity.icoutbill.IcoutInbillConfirmActivity;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_agg;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_agg;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
@@ -110,7 +114,8 @@ public class MaConvert {
     }
 
     public static String getDate() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         Calendar c1 = Calendar.getInstance();
         c1.setTime(new Date());
@@ -147,5 +152,56 @@ public class MaConvert {
         agg.setIc_outbill_bs(blist);
 
         return agg;
+    }
+
+    public static Ic_diroutbill_agg convertPuorderToDirOut(DiroutOrderConfirmActivity content, Pu_order_agg orderAgg) {
+        Ic_diroutbill_agg agg = new Ic_diroutbill_agg();
+        String id = UUID.randomUUID().toString();
+
+        Ic_diroutbill head = new Ic_diroutbill();
+        Pu_order orderHead = orderAgg.getPu_order();
+        head.setAddr(orderHead.getAddr());
+
+
+        head.setDate(getDate());
+        head.setId(id);
+        head.setMaterialDesc(orderHead.getMaterialDesc());
+        head.setNumber(MethodUtil.generateNo(content, "ICDIROUT"));
+        head.setSupplier(orderHead.getSupplier());
+
+        List<Ic_diroutbill_b> blist = new ArrayList<>();
+        for (Pu_order_b item : orderAgg.getPu_order_bs()) {
+
+            if(item.getCurQty() > 0) {
+                blist.add(convertToDir(item, item.getCurQty(), id));
+                item.setCkQty(item.getCkQty() + item.getCurQty());
+            }
+
+        }
+        agg.setIc_diroutbill(head);
+        agg.setIc_diroutbill_bs(blist);
+        return agg;
+    }
+
+    public static Ic_diroutbill_b convertToDir(Pu_order_b pu_order_b, double num, String id) {
+        Ic_diroutbill_b ic_inbill_b = new Ic_diroutbill_b();
+        ic_inbill_b.setOrderid(id);
+        ic_inbill_b.setOrderentryid(UUID.randomUUID().toString());
+        ic_inbill_b.setSourceId(pu_order_b.getOrderid());
+        ic_inbill_b.setSourcebId(pu_order_b.getOrderentryid());
+
+
+        ic_inbill_b.setNote(pu_order_b.getNote());
+        ic_inbill_b.setBrand(pu_order_b.getBrand());
+        ic_inbill_b.setModel(pu_order_b.getModel());
+        ic_inbill_b.setUnit(pu_order_b.getUnit());
+        ic_inbill_b.setName(pu_order_b.getName());
+
+
+        ic_inbill_b.setSourceQty(num);
+
+
+        return ic_inbill_b;
+
     }
 }

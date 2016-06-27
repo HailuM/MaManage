@@ -1,5 +1,6 @@
 package com.langchao.mamanage.activity.icinbill;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
@@ -39,6 +40,7 @@ public class IcinListActivity extends AppCompatActivity {
     @ViewInject(R.id.lv_dir_out_order)
     private ListView lvOrder;
 
+    IcinOrderAdapter adapter = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +54,27 @@ public class IcinListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        lvOrder.setAdapter(new IcinOrderAdapter(this,pu_orderList));
+        adapter = new IcinOrderAdapter(this,pu_orderList);
+        lvOrder.setAdapter(adapter);
 
 
+    }
+
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case RESULT_OK:
+                try {
+                    pu_orderList = new MaDAO().queryPuOrderForRk(null,null);
+                    adapter.pu_orderList = pu_orderList;
+                    adapter.notifyDataSetChanged();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

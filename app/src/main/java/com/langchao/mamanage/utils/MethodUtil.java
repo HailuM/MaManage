@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.langchao.mamanage.common.MaConstants;
+import com.langchao.mamanage.converter.MaConvert;
 
 import java.util.Date;
 import java.util.Map;
@@ -67,16 +68,13 @@ public class MethodUtil {
      * @return
      */
     public static String  generateNo(Context content,String type){
-        Date date = new Date(System.currentTimeMillis());
-        Integer year = date.getYear();
-        Integer month = date.getMonth();
-        Integer day = date.getDay();
+
 
         Integer no = content.getSharedPreferences(MaConstants.FILENAME, 0).getInt("NO_"+type,0);
 
 
         no = no + 1;
-        String newno = year.toString() + month.toString() + day.toString() + "-"+no.toString();
+        String newno = MaConvert.getDate() + "-"+no.toString();
 
         SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
         // 存入键值对
