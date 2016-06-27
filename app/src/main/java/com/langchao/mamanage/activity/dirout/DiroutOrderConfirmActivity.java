@@ -120,7 +120,7 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
             outbillAgg.getIc_diroutbill().setConsumerid(consumername);
         }
 
-        new MaDAO().saveDirOutBill(outbillAgg, this.orderAgg);
+        new MaDAO().saveDirOutBillTemp(outbillAgg, this.orderAgg);
         setResult(RESULT_OK);
         this.finish();
 

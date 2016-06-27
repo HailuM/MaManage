@@ -27,6 +27,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,8 +81,35 @@ public class DiroutOrderActivity extends AppCompatActivity {
 
            intent.putExtras(bundle);
 
-           this.startActivity(intent);
+           this.startActivityForResult(intent,0);
        }
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case RESULT_OK:
+                List<Pu_order_b> list = null;
+                try {
+                    list = new MaDAO().queryOrderDetail(order.getId());
+
+                    adapter.blist = list;
+                    adapter.choosedList = new ArrayList<>();
+                    updateTotalNum(0);
+                    adapter.notifyDataSetChanged();
+                    if(null == list || list.size() == 0){
+                        //完成了  修改单据为正常
+                        new MaDAO().updateTempDirToNormal();
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     Pu_order order = null;

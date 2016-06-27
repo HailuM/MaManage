@@ -86,4 +86,34 @@ public class MethodUtil {
 
         return newno;
     }
+
+    public static void saveOrderToken(Context content,String token){
+        SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
+        // 存入键值对
+        editor.putString("ordertoken", token);
+
+
+        // 将内存中的数据写到XML文件中去
+        editor.commit();
+    }
+
+    public static void saveInbillToken(Context content,String token){
+        SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
+        // 存入键值对
+        editor.putString("inbilltoken", token);
+
+
+        // 将内存中的数据写到XML文件中去
+        editor.commit();
+    }
+
+    public static String getOrderToken(Context content){
+        return  content.getSharedPreferences(MaConstants.FILENAME, 0).getString("ordertoken" ,"");
+
+    }
+
+    public static String getInbillToken(Context content){
+        return  content.getSharedPreferences(MaConstants.FILENAME, 0).getString("inbilltoken" ,"");
+
+    }
 }

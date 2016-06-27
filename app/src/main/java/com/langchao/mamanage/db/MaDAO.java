@@ -2,6 +2,7 @@ package com.langchao.mamanage.db;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.Cursor;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.LoadingDialog;
 import com.langchao.mamanage.manet.MaCallback;
 import com.langchao.mamanage.manet.NetUtils;
+import com.langchao.mamanage.utils.MethodUtil;
 
 import org.xutils.DbManager;
 import org.xutils.common.util.KeyValue;
@@ -96,7 +98,7 @@ public class MaDAO {
             supplier = "";
         }
         List<String> orderIdList = new ArrayList<>();
-        Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where limitQty > ckQty");
+        Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > ckQty");
         while (cursor.moveToNext()) {
             String orderId = cursor.getString(0);
             orderIdList.add(orderId);
@@ -141,7 +143,14 @@ public class MaDAO {
 
     public List<Pu_order_b> queryOrderDetail(String orderId) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        return db.selector(Pu_order_b.class).where("orderid", "=", orderId).findAll();
+        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).findAll();
+        List<Pu_order_b> newlist = new ArrayList<>();
+        for (Pu_order_b orderb : list) {
+            if (orderb.getSourceQty() - orderb.getCkQty() > 0) {
+                newlist.add(orderb);
+            }
+        }
+        return newlist;
     }
 
     public List<Pu_order_b> queryOrderDetailForIn(String orderId) throws DbException {
@@ -212,6 +221,11 @@ public class MaDAO {
                 JSONObject receiveObject = NetUtils.Mobile_downloadReceiveInfo(userOID);
 
                 String reToken = receiveObject.getString("tokenStr");
+
+                MethodUtil.saveOrderToken(mainActivity,tokenStr);
+                MethodUtil.saveInbillToken(mainActivity,reToken);
+
+
                 if (null == receiveObject) {
                     Toast.makeText(x.app(), "下载入库单失败", Toast.LENGTH_LONG).show();
 //                    dialog.dismiss();
@@ -419,7 +433,7 @@ public class MaDAO {
      *
      * @param outbillAgg
      */
-    public void saveDirOutBillTemp(Ic_diroutbill_agg outbillAgg) throws DbException {
+    public void saveDirOutBillTemp(Ic_diroutbill_agg outbillAgg,Pu_order_agg order) throws DbException {
         DbManager db = x.getDb(daoConfig);
         db.save(outbillAgg.getIc_diroutbill());
         outbillAgg.getIc_diroutbill().setStatus(MaConstants.STATUS_TEMP);
@@ -427,6 +441,8 @@ public class MaDAO {
             b.setStatus(MaConstants.STATUS_TEMP);
         }
         db.save(outbillAgg.getIc_diroutbill_bs());
+        db.saveOrUpdate(order.getPu_order());
+        db.saveOrUpdate(order.getPu_order_bs());
 
     }
 
@@ -440,8 +456,51 @@ public class MaDAO {
         db.delete(Ic_diroutbill_b.class, WhereBuilder.b("status", "=", MaConstants.STATUS_TEMP));
     }
 
-    public void updateTempDitToNormal() throws DbException {
+    public void updateTempDirToNormal() throws DbException {
         DbManager db = x.getDb(daoConfig);
-        db.update(Ic_diroutbill.class, WhereBuilder.b("status", "=", MaConstants.STATUS_TEMP),new KeyValue("status",MaConstants.STATUS_NORMAL));
+        db.executeUpdateDelete("update ic_diroutbill set status = '"+MaConstants.STATUS_NORMAL+"' where status = '"+MaConstants.STATUS_TEMP+"'");
+        db.executeUpdateDelete("update ic_diroutbill_b set status = '"+MaConstants.STATUS_NORMAL+"' where status = '"+MaConstants.STATUS_TEMP+"'");
+//        db.update(Ic_diroutbill.class, WhereBuilder.b("status", "=", MaConstants.STATUS_TEMP),new KeyValue("status",MaConstants.STATUS_NORMAL));
+//        db.update(Ic_diroutbill_b.class, WhereBuilder.b("status", "=", MaConstants.STATUS_TEMP),new KeyValue("status",MaConstants.STATUS_NORMAL));
+       // db.findAll(Ic_diroutbill_b.class);
+    }
+
+
+
+
+
+
+
+
+    public void updateDataToServer(Context context) throws DbException {
+
+        String ordertoken = MethodUtil.getOrderToken(context);
+
+        String inbilltoken = MethodUtil.getInbillToken(context);
+
+        DbManager db = x.getDb(daoConfig);
+        List<Ic_inbill_b> ic_inbill_bs =  db.findAll(Ic_inbill_b.class);
+        List<Ic_diroutbill_b> ic_diroutbill_bs = db.findAll(Ic_diroutbill_b.class);
+        List<Ic_outbill_b> ic_outbill_bs =  db.findAll(Ic_outbill_b.class);
+
+        for(Ic_inbill_b ic_inbill_b : ic_inbill_bs){
+            if(!ic_inbill_b.getCreateType().equals(MaConstants.TYPE_SYNC)){
+                //过滤同步过来的入库单
+                //upload to server
+            }
+        }
+        for(Ic_diroutbill_b ic_diroutbill_b : ic_diroutbill_bs){
+            if(ic_diroutbill_b.getStatus().equals(MaConstants.STATUS_NORMAL)){
+                //正常状态的才可以上传
+                //upload to server
+            }
+        }
+
+        for(Ic_outbill_b ic_outbill_b : ic_outbill_bs){
+
+                //upload to server
+
+        }
+
     }
 }
