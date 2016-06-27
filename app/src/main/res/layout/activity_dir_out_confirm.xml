@@ -156,6 +156,7 @@
                 android:layout_weight="1"
                 android:text="@string/getter"
                 android:layout_gravity="center_vertical"
+                android:id="@+id/tv_dir_out_get"
                 android:textSize="16sp"/>
 
             <Spinner

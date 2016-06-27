@@ -35,7 +35,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:textColor="@color/gray"
-                android:text="材料名称1" />
+                android:text="材料名称" />
 
             <RelativeLayout
                 android:layout_width="0dp"
