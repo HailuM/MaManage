@@ -53,7 +53,7 @@
                 <TextView
                     android:layout_width="67dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/Syncin"
+                    android:text="同步入库"
                     android:gravity="center"
                     android:textSize="@dimen/textsize"
                     android:id="@+id/textView2" />
