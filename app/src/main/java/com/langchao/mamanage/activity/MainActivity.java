@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 /**
  * @author fei
@@ -82,7 +84,7 @@ public class MainActivity extends AutoLayoutActivity {
     ProgressDialog progressDialog = null;
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set, R.id.imageViewTbrk, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set, R.id.imageViewTbrk, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewsyncout}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -97,10 +99,11 @@ public class MainActivity extends AutoLayoutActivity {
 
                 //ProgressDialog.show(this,"同步入库数据","开始同步",false,true);
 
+
                 try {
-                    new MaDAO().syncData(readUserId(), MainActivity.this);
-                } catch (DbException e) {
-                    e.printStackTrace();
+                    new MaDAO().syncRk(readUserId(), MainActivity.this);
+                } catch (Exception e) {
+                   Toast.makeText(this,"同步入库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.imageViewdirectout:
@@ -115,6 +118,14 @@ public class MainActivity extends AutoLayoutActivity {
 
                 intent.setClass(this, IcoutListActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.imageViewsyncout:
+
+                try {
+                    new MaDAO().syncCk(readUserId(), MainActivity.this);
+                } catch (Exception e) {
+                    Toast.makeText(this,"同步入库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
+                }
                 break;
 
         }

@@ -1,12 +1,21 @@
 package com.langchao.mamanage.manet;
 
+import android.app.ProgressDialog;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.langchao.mamanage.activity.MainActivity;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
+import com.langchao.mamanage.db.ic_out.Ic_outbill;
+import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
+import com.langchao.mamanage.db.icin.Ic_inbill_b;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.util.List;
 
 /**
  * Created by miaohl on 2016/6/24.
@@ -29,6 +38,22 @@ public class NetUtils {
     public static String URL_MOBILE_DOWNLOADRECEIVEMATERIAL = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_DownloadReceiveMaterial";
 
     public static String URL_MOBILE_DOWNLOADRECEIVECONSUMER = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_DownloadReceiveconsumer";
+
+
+    public static String URL_MOBILE_UPLOADZRZCINFO = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadZRZCInfo";
+
+    public static String URL_MOBILE_UPLOADRKINFO = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadrkInfo";
+
+    public static String URL_MOBILE_UPLOADCKINFO = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadckInfo";
+
+    public static String URL_MOBILE_DOWNLOADORDERCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_DownLoadOrderComplete";
+
+    public static String URL_MOBILE_DOWNLOADRECEIVECOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_DownLoadReceiveComplete";
+
+    public static String URL_MOBILE_UPLOADRKCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadrkComplete";
+
+    public static String URL_MOBILE_UPLOADCKCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadckComplete";
+
 
 
     /**
@@ -99,9 +124,8 @@ public class NetUtils {
      * 下载订单表头
      *
      * @param userOID
-     * @param callback
      */
-    public static void Mobile_DownloadOrderInfo(final String userOID, final MaCallback.MainInfoCallBack callback) {
+    public static JSONObject Mobile_DownloadOrderInfo(final String userOID) throws Throwable {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -121,41 +145,17 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderInfoResult", result);
-                if (xmlrs.startsWith("false")) {
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderInfoResult", result);
+        if (xmlrs.startsWith("false")) {
 
-                    callback.onError(new RuntimeException(xmlrs));
+            return null;
 
-                } else {
+        } else {
 
-                    try {
-                        callback.onSuccess(JSON.parseObject(xmlrs));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+            return JSON.parseObject(xmlrs);
 
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isCallBack) {
-                callback.onError(ex);
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
+        }
 
 
     }
@@ -165,9 +165,8 @@ public class NetUtils {
      * 下载订单表体
      *
      * @param userOID
-     *
      */
-    public static JSONArray Mobile_DownloadOrderMaterial(final String userOID, final String orderId, final String rktokenStr ) throws Throwable {
+    public static JSONArray Mobile_DownloadOrderMaterial(final String userOID, final String orderId, final String rktokenStr) throws Throwable {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -204,7 +203,7 @@ public class NetUtils {
             if (array.size() > 0) {
                 return array;
             } else {
-               return null;
+                return null;
             }
         }
 
@@ -255,9 +254,8 @@ public class NetUtils {
      * 下载订单领料商
      *
      * @param userOID
-
      */
-    public static JSONArray Mobile_DownloadOrderconsumer(final String userOID, final String orderId, final String rktokenStr ) throws Throwable {
+    public static JSONArray Mobile_DownloadOrderconsumer(final String userOID, final String orderId, final String rktokenStr) throws Throwable {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -281,11 +279,11 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params,String.class);
+        String result = x.http().postSync(params, String.class);
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderconsumerResult", result);
         if (xmlrs.startsWith("false")) {
 
-           return null;
+            return null;
 
         } else {
 
@@ -293,7 +291,7 @@ public class NetUtils {
             if (array.size() > 0) {
                 return JSON.parseArray(xmlrs);
             } else {
-               return null;
+                return null;
             }
         }
 
@@ -305,9 +303,8 @@ public class NetUtils {
      * 下载入库表头
      *
      * @param userOID
-     *
      */
-    public static JSONObject Mobile_downloadReceiveInfo(final String userOID)   {
+    public static JSONObject Mobile_downloadReceiveInfo(final String userOID) {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -329,11 +326,11 @@ public class NetUtils {
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
         String result = null;
         try {
-            result = x.http().postSync(params,String.class);
+            result = x.http().postSync(params, String.class);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        if(null == result){
+        if (null == result) {
             return null;
         }
         String xmlrs = NetUtils.getValueFromXML("Mobile_downloadReceiveInfoResult", result);
@@ -354,9 +351,8 @@ public class NetUtils {
      * 下载入库单表体
      *
      * @param userOID
-
      */
-    public static JSONArray Mobile_DownloadReceiveMaterial(final String userOID, final String receiveId, final String cktokenStr ) {
+    public static JSONArray Mobile_DownloadReceiveMaterial(final String userOID, final String receiveId, final String cktokenStr) {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -386,7 +382,7 @@ public class NetUtils {
         } catch (Throwable throwable) {
             return null;
         }
-        if(null == result){
+        if (null == result) {
             return null;
         }
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadReceiveMaterialResult", result);
@@ -401,9 +397,8 @@ public class NetUtils {
      * 下载入库单领料商
      *
      * @param userOID
-
      */
-    public static JSONArray  Mobile_DownloadReceiveconsumer(final String userOID, final String receiveId, final String cktokenStr ) {
+    public static JSONArray Mobile_DownloadReceiveconsumer(final String userOID, final String receiveId, final String cktokenStr) {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -431,7 +426,7 @@ public class NetUtils {
             String result = x.http().postSync(params, String.class);
             String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadReceiveconsumerResult", result);
             JSONArray array = JSON.parseArray(xmlrs);
-            return  array;
+            return array;
         } catch (Throwable throwable) {
             return null;
         }
@@ -439,11 +434,298 @@ public class NetUtils {
     }
 
 
+    public  static boolean uploadZrzc(Ic_diroutbill_b bill, String rkToken, String userId) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_uploadZRZCInfo xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <rktokenStr>(rktokenStr)</rktokenStr>\n" +
+                "      <jsonData>(jsonData)</jsonData>\n" +
+                "    </Mobile_uploadZRZCInfo>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+        JSONObject jo = new JSONObject();
+        jo.put("orderid", bill.getSourceId());
+        jo.put("preparertime", bill.getTime());
+        jo.put("consumerid", bill.getConsumerId());
+        jo.put("orderEntryid", bill.getSourcebId());
+        jo.put("zrzcid", bill.getOrderentryid());
+        jo.put("qty", bill.getSourceQty());
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(rktokenStr)", rkToken);
+        xml = xml.replace("(jsonData)", jo.toJSONString());
+
+        String url = ip + URL_MOBILE_UPLOADZRZCINFO;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadZRZCInfoResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+    }
+
     public static String getValueFromXML(String field, String xml) {
         int start = xml.indexOf("<" + field + ">") + ("<" + field + ">").length();
 
         int end = xml.indexOf("</" + field + ">");
 
         return xml.substring(start, end);
+    }
+
+    public static boolean uploadInbill(Ic_inbill_b bill, String rkToken, String userId) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_uploadrkInfo xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <rktokenStr>(rktokenStr)</rktokenStr>\n" +
+                "      <jsonData>(jsonData)</jsonData>\n" +
+                "    </Mobile_uploadrkInfo>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+        JSONObject jo = new JSONObject();
+        jo.put("orderid", bill.getSourceId());
+        jo.put("preparertime", bill.getTime());
+
+        jo.put("orderEntryid", bill.getSourcebId());
+        jo.put("receiveid", bill.getOrderentryid());
+        jo.put("qty", bill.getSourceQty());
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(rktokenStr)", rkToken);
+        xml = xml.replace("(jsonData)", jo.toJSONString());
+
+        String url = ip + URL_MOBILE_UPLOADRKINFO;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadrkInfoResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+    }
+
+
+    public static boolean uploadOutbill(Ic_outbill_b bill, String ckToken, String userId, String type) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_uploadckInfo xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <cktokenStr>(cktokenStr)</cktokenStr>\n" +
+                "      <jsonData>(jsonData)</jsonData>\n" +
+                "      <type>(type)</type>\n" +
+                "    </Mobile_uploadckInfo>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+        JSONObject jo = new JSONObject();
+        jo.put("orderid", bill.getSourceId());
+        jo.put("preparertime", bill.getTime());
+        jo.put("deliverNo", bill.getNumber());
+        jo.put("consumerid", bill.getConsumerId());
+        jo.put("orderEntryid", bill.getSourcebId());
+        jo.put("deliverid", bill.getOrderentryid());
+        jo.put("qty", bill.getSourceQty());
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(cktokenStr)", ckToken);
+        xml = xml.replace("(jsonData)", jo.toJSONString());
+        xml = xml.replace("(type)", type);
+
+        String url = ip + URL_MOBILE_UPLOADCKINFO;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadckInfoResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+    }
+
+    public static boolean Mobile_DownLoadOrderComplete(String userId,String rktokenStr) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_DownLoadOrderComplete xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <rktokenStr>(rktokenStr)</rktokenStr>\n" +
+                "    </Mobile_DownLoadOrderComplete>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(rktokenStr)", rktokenStr);
+
+        String url = ip + URL_MOBILE_DOWNLOADORDERCOMPLETE;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadckCompleteResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+
+    }
+
+
+    public static boolean Mobile_DownLoadReceiveComplete(String userId,String cktokenStr) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_DownLoadReceiveComplete xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <cktokenStr>(cktokenStr)</cktokenStr>\n" +
+                "    </Mobile_DownLoadReceiveComplete>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(cktokenStr)", cktokenStr);
+
+        String url = ip + URL_MOBILE_DOWNLOADRECEIVECOMPLETE;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_DownLoadReceiveCompleteResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+
+    }
+
+
+
+    public static boolean Mobile_uploadrkComplete(String userId,String rktokenStr,int zrzcBillCount,int rkBillCount,int ckBillCount) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_uploadrkComplete xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <rktokenStr>(rktokenStr)</rktokenStr>\n" +
+                "      <zrzcBillCount>(zrzcBillCount)</zrzcBillCount>\n" +
+                "      <rkBillCount>(rkBillCount)</rkBillCount>\n" +
+                "      <ckBillCount>(ckBillCount)</ckBillCount>\n" +
+                "    </Mobile_uploadrkComplete>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(rktokenStr)", rktokenStr);
+        xml = xml.replace("(zrzcBillCount)", zrzcBillCount+"");
+        xml = xml.replace("(rkBillCount)", rkBillCount+"");
+        xml = xml.replace("(ckBillCount)", ckBillCount+"");
+
+        String url = ip + URL_MOBILE_UPLOADRKCOMPLETE;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadrkCompleteResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+
+    }
+
+
+
+
+    public static boolean Mobile_uploadckComplete(String userId,String cktokenStr,int ckBillCount) throws Throwable {
+        String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <Mobile_uploadckComplete xmlns=\"http://tempuri.org/\">\n" +
+                "      <userOID>(userOID)</userOID>\n" +
+                "      <cktokenStr>(cktokenStr)</cktokenStr>\n" +
+                "      <ckBillCount>(ckBillCount)</ckBillCount>\n" +
+                "    </Mobile_uploadckComplete>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+
+
+        xml = xml.replace("(userOID)", userId);
+        xml = xml.replace("(cktokenStr)", cktokenStr);
+        xml = xml.replace("(ckBillCount)", ckBillCount+"");
+
+        String url = ip + URL_MOBILE_UPLOADCKCOMPLETE;
+
+        RequestParams params = new RequestParams(url);
+
+        params.addBodyParameter(
+                "data",
+                xml,
+                "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
+        String result = x.http().postSync(params, String.class);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadckCompleteResult", result);
+        if (xmlrs.contains("true")) {
+
+            return true;
+            //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
+        } else {
+            throw new RuntimeException(xmlrs);
+        }
+
     }
 }

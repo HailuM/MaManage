@@ -74,7 +74,7 @@ public class SetActivity extends AutoLayoutActivity {
                 break;
             case R.id.textViewClear://清除离线数据
                 try {
-                    new MaDAO().clearData();
+                    new MaDAO().clearData(this);
                 } catch (DbException e) {
                     e.printStackTrace();
                 }

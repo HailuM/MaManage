@@ -10,8 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.order.Pu_order;
 
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -91,6 +93,11 @@ public class DiroutOrderAdapter extends BaseAdapter {
 
                     intent.putExtras(bundle);
 
+                    try {
+                        new MaDAO().deleteTempDirout();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
                     context.startActivityForResult(intent,0);
                 }
             });

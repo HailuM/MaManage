@@ -30,6 +30,28 @@ public class Ic_diroutbill implements Serializable {
     @Column(name = "addr")
     private String Addr;
 
+
+    @Column(name = "ProjectName")
+    private String ProjectName;
+
+    @Column(name = "Company")
+    private String Company;
+
+    public String getProjectName() {
+        return ProjectName;
+    }
+
+    public void setProjectName(String projectName) {
+        ProjectName = projectName;
+    }
+
+    public String getCompany() {
+        return Company;
+    }
+
+    public void setCompany(String company) {
+        Company = company;
+    }
     @Column(name = "consumerid")
     private String consumerid;
 

@@ -87,7 +87,7 @@ public class MethodUtil {
         return newno;
     }
 
-    public static void saveOrderToken(Context content,String token){
+    public static void saveRkToken(Context content, String token){
         SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
         // 存入键值对
         editor.putString("ordertoken", token);
@@ -97,7 +97,7 @@ public class MethodUtil {
         editor.commit();
     }
 
-    public static void saveInbillToken(Context content,String token){
+    public static void saveCkToken(Context content, String token){
         SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
         // 存入键值对
         editor.putString("inbilltoken", token);
@@ -107,12 +107,12 @@ public class MethodUtil {
         editor.commit();
     }
 
-    public static String getOrderToken(Context content){
+    public static String getRkToken(Context content){
         return  content.getSharedPreferences(MaConstants.FILENAME, 0).getString("ordertoken" ,"");
 
     }
 
-    public static String getInbillToken(Context content){
+    public static String getCkToken(Context content){
         return  content.getSharedPreferences(MaConstants.FILENAME, 0).getString("inbilltoken" ,"");
 
     }

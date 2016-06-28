@@ -22,6 +22,7 @@ import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Author: wyouflf
@@ -193,6 +194,30 @@ public class Pu_order_b implements Serializable{
 
     public String getOrderid() {
         return orderid;
+    }
+
+    @Column(name = "time" )
+    private Date time;
+
+    public Date getTime() {
+        if(null == time)
+            return new Date();
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    @Column(name = "price")
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void setOrderid(String orderid) {

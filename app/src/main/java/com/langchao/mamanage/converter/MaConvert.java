@@ -53,7 +53,7 @@ public class MaConvert {
         ic_inbill_b.setModel(pu_order_b.getModel());
         ic_inbill_b.setUnit(pu_order_b.getUnit());
         ic_inbill_b.setName(pu_order_b.getName());
-
+        ic_inbill_b.setPrice(pu_order_b.getPrice());
 
         ic_inbill_b.setSourceQty(num);
 
@@ -62,20 +62,21 @@ public class MaConvert {
 
     }
 
-    public static Ic_outbill_b convert(Ic_inbill_b inbill_b, double num, String id) {
+    public static Ic_outbill_b convert(Ic_inbill_b inbill_b, double num, String id, String number) {
         Ic_outbill_b outbill_b = new Ic_outbill_b();
         outbill_b.setOrderid(id);
         outbill_b.setOrderentryid(UUID.randomUUID().toString());
         outbill_b.setSourceId(inbill_b.getOrderid());
         outbill_b.setSourcebId(inbill_b.getOrderentryid());
 
+        outbill_b.setNumber(number);
 
         outbill_b.setNote(inbill_b.getNote());
         outbill_b.setBrand(inbill_b.getBrand());
         outbill_b.setModel(inbill_b.getModel());
         outbill_b.setUnit(inbill_b.getUnit());
         outbill_b.setName(inbill_b.getName());
-
+        outbill_b.setPrice(inbill_b.getPrice());
 
         outbill_b.setSourceQty(num);
 
@@ -92,7 +93,8 @@ public class MaConvert {
         Pu_order orderHead = orderAgg.getPu_order();
         head.setAddr(orderHead.getAddr());
 
-
+        head.setProjectName(orderHead.getProjectName());
+        head.setCompany(orderHead.getCompany());
         head.setDate(getDate());
         head.setId(id);
         head.setMaterialDesc(orderHead.getMaterialDesc());
@@ -132,7 +134,8 @@ public class MaConvert {
         Ic_inbill orderHead = inbillAgg.getIc_inbill();
         head.setAddr(orderHead.getAddr());
 
-
+        head.setProjectName(orderHead.getProjectName());
+        head.setCompany(orderHead.getCompany());
         head.setDate(getDate());
         head.setId(id);
         head.setMaterialDesc(orderHead.getMaterialDesc());
@@ -143,8 +146,9 @@ public class MaConvert {
         for (Ic_inbill_b item : inbillAgg.getIc_inbill_bList()) {
 
             if(item.getCurQty() > 0) {
-                blist.add(convert(item, item.getCurQty(), id));
+                blist.add(convert(item, item.getCurQty(), id,head.getNumber()));
                 item.setCkQty(item.getCkQty() + item.getCurQty());
+
             }
 
         }
@@ -162,7 +166,8 @@ public class MaConvert {
         Pu_order orderHead = orderAgg.getPu_order();
         head.setAddr(orderHead.getAddr());
 
-
+        head.setProjectName(orderHead.getProjectName());
+        head.setCompany(orderHead.getCompany());
         head.setDate(getDate());
         head.setId(id);
         head.setMaterialDesc(orderHead.getMaterialDesc());
@@ -196,7 +201,7 @@ public class MaConvert {
         ic_inbill_b.setModel(pu_order_b.getModel());
         ic_inbill_b.setUnit(pu_order_b.getUnit());
         ic_inbill_b.setName(pu_order_b.getName());
-
+        ic_inbill_b.setPrice(pu_order_b.getPrice());
 
         ic_inbill_b.setSourceQty(num);
 

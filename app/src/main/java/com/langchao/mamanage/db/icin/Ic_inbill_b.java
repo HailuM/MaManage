@@ -22,6 +22,7 @@ import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Author: wyouflf
@@ -50,6 +51,21 @@ public class Ic_inbill_b implements Serializable {
      */
     @Column(name = "orderentryid", isId = true)
     private String orderentryid;
+
+    @Column(name = "OrderMXID")
+    private String OrderMXID;
+
+    public String getOrderMXID() {
+        return OrderMXID;
+    }
+
+    public void setOrderMXID(String orderMXID) {
+        OrderMXID = orderMXID;
+        if(null != orderMXID && orderMXID.trim().length() > 0)
+        {
+            setOrderentryid(orderMXID);
+        }
+    }
 
     @Column(name = "name")
     private String Name;
@@ -89,6 +105,32 @@ public class Ic_inbill_b implements Serializable {
     private String createType;
 
     private double curQty;
+
+
+    @Column(name = "time" )
+    private Date time;
+
+    public Date getTime() {
+        if(null == time)
+            return new Date();
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+
+    @Column(name = "price")
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public double getCurQty() {
         return curQty;

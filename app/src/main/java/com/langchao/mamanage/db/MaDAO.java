@@ -1,9 +1,10 @@
 package com.langchao.mamanage.db;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -24,15 +25,11 @@ import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
-import com.langchao.mamanage.dialog.LoadingDialog;
-import com.langchao.mamanage.manet.MaCallback;
 import com.langchao.mamanage.manet.NetUtils;
 import com.langchao.mamanage.utils.MethodUtil;
 
 import org.xutils.DbManager;
-import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
-import org.xutils.db.table.DbModel;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
@@ -178,7 +175,493 @@ public class MaDAO {
         return newlist;
     }
 
-    public void syncData(String userId, final MainActivity mainActivity) throws DbException {
+
+    /**
+     * 同步入库
+     * @param userId
+     * @param mainActivity
+     */
+    public void syncRk(final String userId, final MainActivity mainActivity) throws DbException {
+
+        DbManager db = x.getDb(daoConfig);
+
+
+
+        //查看是否有入库TOKEN  没有的话清除直入直出  清除入库
+        final String rkToken = MethodUtil.getRkToken(mainActivity);
+        if(null == rkToken || rkToken.trim().length() == 0){
+            db.dropTable(Ic_diroutbill.class);
+            db.dropTable(Ic_diroutbill_b.class);
+            db.dropTable(Ic_inbill.class);
+            db.dropTable(Ic_inbill_b.class);
+        }
+
+
+          int size = 0;
+
+
+        //存在入库TOKEN  上传直入直出数据
+        final List<Ic_diroutbill_b> ic_diroutbill_bs = db.selector(Ic_diroutbill_b.class).where("status","=",MaConstants.STATUS_NORMAL).findAll() == null ? new ArrayList<Ic_diroutbill_b>() :  db.selector(Ic_diroutbill_b.class).where("status","=",MaConstants.STATUS_NORMAL).findAll();
+
+
+
+        final List<Ic_inbill_b> ic_inbill_bs =  db.selector(Ic_inbill_b.class).where("createType"," !=",MaConstants.TYPE_SYNC).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).where("createType"," !=",MaConstants.TYPE_SYNC).findAll();
+
+        size = size + ic_diroutbill_bs.size() + ic_inbill_bs.size();
+
+        String ckToken = MethodUtil.getCkToken(mainActivity);
+        ckToken = null;
+        List<Ic_outbill_b> ic_outbill_bs = null;
+        int outSize = 0;
+        if(null == ckToken || ckToken.trim().length() == 0){
+            //没有出库TOKEN的时候  一起上传出库单
+
+            ic_outbill_bs =  db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
+            outSize =  ic_outbill_bs.size();
+        }
+
+        final boolean delOut = (null == ckToken || ckToken.trim().length() == 0);
+        final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
+        progressDialog.setTitle("同步入库");
+        progressDialog.setMessage("上传数据中");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.setMax(size+outSize);
+        progressDialog.show();
+
+        final Runnable afterThread = new Runnable() {
+            public void run() {
+                try {
+                    downLoadOrder(userId,mainActivity,delOut);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        };
+
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if(msg.what  == -1){
+                    Toast.makeText(mainActivity, "上传失败" , Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                    return;
+                }
+                if (msg.what >= 100) {
+                    afterThread.run();
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                }
+                progressDialog.setProgress(msg.what);
+                super.handleMessage(msg);
+            }
+        };
+
+        final List<Ic_outbill_b> finalIc_outbill_bs = ic_outbill_bs;
+        Runnable doThread = new Runnable() {
+              Integer count = 0;
+            public void run() {
+                try {
+                   if(null == rkToken || rkToken.trim().length() == 0){
+                       handler.sendEmptyMessage(100);
+                       return;
+                   }
+                    //先上传直出
+                    for(Ic_diroutbill_b ic_diroutbill_b : ic_diroutbill_bs){
+                        try {
+                            count = count + 1;
+                            NetUtils.uploadZrzc(ic_diroutbill_b,rkToken,userId);
+
+                            handler.sendEmptyMessage(count);
+                        } catch (Throwable throwable) {
+                            Toast.makeText(mainActivity,"上传失败:"+throwable.getMessage(),Toast.LENGTH_LONG);
+                            handler.sendEmptyMessage(-1);
+                        }
+                    }
+
+                    //上传入库
+                    for(Ic_inbill_b ic_inbill_b : ic_inbill_bs){
+                        try {
+                            count = count + 1;
+                            NetUtils.uploadInbill(ic_inbill_b,rkToken,userId);
+
+                            handler.sendEmptyMessage(count);
+                        } catch (Throwable throwable) {
+                            Toast.makeText(mainActivity,"上传失败:"+throwable.getMessage(),Toast.LENGTH_LONG).show();
+                            handler.sendEmptyMessage(-1);
+                        }
+                    }
+
+                    if(null != finalIc_outbill_bs && finalIc_outbill_bs.size() > 0) {
+                        for (Ic_outbill_b ic_outbill_b : finalIc_outbill_bs) {
+                            try {
+                                count = count + 1;
+                                NetUtils.uploadOutbill(ic_outbill_b, rkToken, userId,"rkck");
+
+                                handler.sendEmptyMessage(count);
+                            } catch (Throwable throwable) {
+                                Toast.makeText(mainActivity, "上传失败:" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                handler.sendEmptyMessage(-1);
+                            }
+                        }
+                    }
+
+
+                    try {
+                        NetUtils.Mobile_uploadrkComplete(userId,rkToken,ic_diroutbill_bs.size(),ic_inbill_bs.size(),finalIc_outbill_bs.size());
+                    } catch (Throwable throwable) {
+                        Toast.makeText(mainActivity, "上传失败:" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                        handler.sendEmptyMessage(-1);
+                    }
+
+                    handler.sendEmptyMessage(100);
+
+                    // ///
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                }
+            }
+        };
+        new Thread(doThread).start();
+    }
+
+
+    public void downLoadOrder(final String userId, final MainActivity mainActivity,boolean delout) throws Throwable {
+        DbManager db = x.getDb(daoConfig);
+        db.dropTable(Pu_order.class);
+        db.dropTable(Pu_order_b.class);
+        db.dropTable(Ic_inbill.class);
+        db.dropTable(Ic_inbill_b.class);
+        if(delout) {
+            db.dropTable(Ic_outbill.class);
+            db.dropTable(Ic_outbill_b.class);
+        }
+
+        db.dropTable(Ic_diroutbill.class);
+        db.dropTable(Ic_diroutbill_b.class);
+        db.dropTable(Consumer.class);
+
+        JSONObject jsonObject =  NetUtils.Mobile_DownloadOrderInfo(userId);
+
+        final String rkToken = jsonObject.getString("tokenStr");
+        MethodUtil.saveRkToken(mainActivity,rkToken);
+
+        JSONArray orderArray = jsonObject.getJSONArray("details");
+
+
+        if (orderArray.size() > 0) {
+            for (int i = 0; i < orderArray.size(); i++) {
+                JSONObject order = (JSONObject) orderArray.get(i);
+
+
+                final Pu_order pu_order = JSON.parseObject(order.toJSONString(), Pu_order.class);
+
+                final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
+                progressDialog.setTitle("同步入库");
+                progressDialog.setMessage("下载订单中");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setProgress(0);
+                progressDialog.setMax(orderArray.size());
+                progressDialog.show();
+
+                final Runnable afterThread = new Runnable() {
+                    public void run() {
+                        try {
+                            Toast.makeText(mainActivity,"同步入库成功",Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                final Handler handler = new Handler() {
+                    public void handleMessage(Message msg) {
+                        if(msg.what  == -1){
+                            progressDialog.cancel();
+                            progressDialog.dismiss();
+                            return;
+                        }
+                        if (msg.what >= 100) {
+                            afterThread.run();
+                            progressDialog.cancel();
+                            progressDialog.dismiss();
+                        }
+                        progressDialog.setProgress(msg.what);
+                        super.handleMessage(msg);
+                    }
+                };
+
+
+                Runnable doThread = new Runnable() {
+                    Integer count = 0;
+                    public void run() {
+                        try {
+                            // Looper.loop();
+
+                            try {
+                                JSONArray orderArray = NetUtils.Mobile_DownloadOrderMaterial(userId, pu_order.getId(), rkToken);
+
+
+
+                                if (null == orderArray) {
+                                   // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                                    handler.sendEmptyMessage(-1);
+                                }
+                                List<Pu_order_b> list = JSON.parseArray(orderArray.toJSONString(), Pu_order_b.class);
+                                //保存
+                                new MaDAO().save(pu_order, list);
+
+                                JSONArray jsonArray = NetUtils.Mobile_DownloadOrderconsumer(userId, pu_order.getId(), rkToken);
+                                List<Consumer> consumerList = JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
+//                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
+
+                                new MaDAO().save(consumerList);
+                            } catch (Throwable throwable) {
+                                //Toast.makeText(mainActivity,"下载订单明细失败："+throwable.getMessage(),Toast.LENGTH_LONG).show();
+                                handler.sendEmptyMessage(-1);
+                            }
+
+                            handler.sendEmptyMessage(100);
+
+                            // ///
+                        } catch (Exception e) {
+                            handler.sendEmptyMessage(-1);
+                        } finally {
+                            progressDialog.cancel();
+                            progressDialog.dismiss();
+                        }
+                    }
+                };
+                new Thread(doThread).start();
+
+            }
+        }
+
+    }
+
+
+    /**
+     * 同步出库
+     * @param userId
+     * @param mainActivity
+     */
+    public void syncCk(final String userId, final MainActivity mainActivity) throws DbException {
+
+        DbManager db = x.getDb(daoConfig);
+
+
+
+        final String ckToken = MethodUtil.getCkToken(mainActivity);
+
+        List<Ic_outbill_b> ic_outbill_bs   =  db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
+
+
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
+        progressDialog.setTitle("同步出库");
+        progressDialog.setMessage("上传数据中");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.setMax(ic_outbill_bs.size());
+        progressDialog.show();
+
+        final Runnable afterThread = new Runnable() {
+            public void run() {
+                try {
+                    downLoadReceive(userId,mainActivity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        };
+
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if(msg.what  == -1){
+                    Toast.makeText(mainActivity, "上传失败" , Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                    return;
+                }
+                if (msg.what >= 100) {
+                    afterThread.run();
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                }
+                progressDialog.setProgress(msg.what);
+                super.handleMessage(msg);
+            }
+        };
+
+        final List<Ic_outbill_b> finalIc_outbill_bs = ic_outbill_bs;
+        Runnable doThread = new Runnable() {
+            Integer count = 0;
+            public void run() {
+                try {
+
+                    if(null == ckToken || finalIc_outbill_bs.size() == 0){
+                        handler.sendEmptyMessage(100);
+                        return;
+                    }
+
+                    if(null != finalIc_outbill_bs && finalIc_outbill_bs.size() > 0) {
+                        for (Ic_outbill_b ic_outbill_b : finalIc_outbill_bs) {
+                            try {
+                                count = count + 1;
+                                NetUtils.uploadOutbill(ic_outbill_b, ckToken, userId,"ck");
+
+                                handler.sendEmptyMessage(count);
+                            } catch (Throwable throwable) {
+
+                                handler.sendEmptyMessage(-1);
+                            }
+                        }
+                    }
+
+
+                    try {
+                        NetUtils.Mobile_uploadckComplete(userId,ckToken,finalIc_outbill_bs.size());
+                    } catch (Throwable throwable) {
+
+                        handler.sendEmptyMessage(-1);
+                    }
+
+                    handler.sendEmptyMessage(100);
+
+                    // ///
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                }
+            }
+        };
+        new Thread(doThread).start();
+    }
+
+
+
+    public void downLoadReceive(final String userId, final MainActivity mainActivity) throws Throwable {
+        DbManager db = x.getDb(daoConfig);
+
+            db.dropTable(Ic_outbill.class);
+            db.dropTable(Ic_outbill_b.class);
+
+        db.dropTable(Ic_inbill.class);
+        db.dropTable(Ic_inbill_b.class);
+
+        JSONObject jsonObject =  NetUtils.Mobile_downloadReceiveInfo(userId);
+
+        final String ckToken = jsonObject.getString("tokenStr");
+        MethodUtil.saveCkToken(mainActivity,ckToken);
+
+        JSONArray orderArray = jsonObject.getJSONArray("details");
+
+
+        if (orderArray.size() > 0) {
+            for (int i = 0; i < orderArray.size(); i++) {
+                JSONObject receive = (JSONObject) orderArray.get(i);
+
+
+                final Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
+
+                final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
+                progressDialog.setTitle("同步出库");
+                progressDialog.setMessage("下载入库单中");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setProgress(0);
+                progressDialog.setMax(orderArray.size());
+                progressDialog.show();
+
+                final Runnable afterThread = new Runnable() {
+                    public void run() {
+                        try {
+                            Toast.makeText(mainActivity,"同步入库成功",Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                final Handler handler = new Handler() {
+                    public void handleMessage(Message msg) {
+                        if(msg.what  == -1){
+                            progressDialog.cancel();
+                            progressDialog.dismiss();
+                            return;
+                        }
+                        if (msg.what >= 100) {
+                            afterThread.run();
+                            progressDialog.cancel();
+                            progressDialog.dismiss();
+                        }
+                        progressDialog.setProgress(msg.what);
+                        super.handleMessage(msg);
+                    }
+                };
+
+
+                Runnable doThread = new Runnable() {
+                    Integer count = 0;
+                    public void run() {
+                        try {
+                            // Looper.loop();
+
+                            try {
+                                JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveMaterial(userId, ic_inbill.getId(), ckToken);
+
+
+
+                                if (null == jsonArray) {
+
+                                    handler.sendEmptyMessage(-1);
+                                }
+                                List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
+                                //保存
+                                new MaDAO().save(ic_inbill, list);
+
+                                JSONArray consumerArray = NetUtils.Mobile_DownloadReceiveconsumer(userId, ic_inbill.getId(), ckToken);
+                                List<Consumer> consumerList = JSON.parseArray(consumerArray.toJSONString(), Consumer.class);
+//                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
+
+                                new MaDAO().save(consumerList);
+                            } catch (Throwable throwable) {
+
+                                handler.sendEmptyMessage(-1);
+                            }
+
+                            NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
+                            handler.sendEmptyMessage(100);
+
+                            // ///
+                        } catch (Exception e) {
+                            handler.sendEmptyMessage(-1);
+                        } catch (Throwable throwable) {
+                            handler.sendEmptyMessage(-1);
+                        } finally {
+                            progressDialog.cancel();
+                            progressDialog.dismiss();
+                        }
+                    }
+                };
+                new Thread(doThread).start();
+
+            }
+        }
+
+    }
+
+
+    public void syncData(String userId, final MainActivity mainActivity) throws Throwable {
 
 //        final LoadingDialog loadingDialog = new LoadingDialog(mainActivity);
 //        final Dialog dialog = loadingDialog.createLoadingDialog(mainActivity,"同步数据");
@@ -202,157 +685,150 @@ public class MaDAO {
         db.dropTable(Consumer.class);
         final String userOID = userId;
 
-        NetUtils.Mobile_DownloadOrderInfo(userOID, new MaCallback.MainInfoCallBack() {
-            @Override
-            public void onSuccess(JSONObject jsonObject) throws InterruptedException {
+        JSONObject jsonObject =  NetUtils.Mobile_DownloadOrderInfo(userOID);
+        {
 
-                if (null == jsonObject) {
-                    Toast.makeText(x.app(), "下载订单失败", Toast.LENGTH_LONG).show();
+            if (null == jsonObject) {
+                Toast.makeText(x.app(), "下载订单失败", Toast.LENGTH_LONG).show();
 //                    dialog.dismiss();
-                    return;
-                }
-                //token 需要存到数据库 上传使用
-                String tokenStr = jsonObject.getString("tokenStr");
+                return;
+            }
+            //token 需要存到数据库 上传使用
+            String rkToken = jsonObject.getString("tokenStr");
 
 
-                JSONArray orderArray = jsonObject.getJSONArray("details");
+            JSONArray orderArray = jsonObject.getJSONArray("details");
 
 
-                JSONObject receiveObject = NetUtils.Mobile_downloadReceiveInfo(userOID);
+            JSONObject receiveObject = NetUtils.Mobile_downloadReceiveInfo(userOID);
 
-                String reToken = receiveObject.getString("tokenStr");
+            String reToken = receiveObject.getString("tokenStr");
 
-                MethodUtil.saveOrderToken(mainActivity,tokenStr);
-                MethodUtil.saveInbillToken(mainActivity,reToken);
+            MethodUtil.saveRkToken(mainActivity,rkToken);
+            MethodUtil.saveCkToken(mainActivity,reToken);
 
 
-                if (null == receiveObject) {
-                    Toast.makeText(x.app(), "下载入库单失败", Toast.LENGTH_LONG).show();
+            if (null == receiveObject) {
+                Toast.makeText(x.app(), "下载入库单失败", Toast.LENGTH_LONG).show();
 //                    dialog.dismiss();
-                    return;
-                }
-                JSONArray receiveArray = receiveObject.getJSONArray("details");
+                return;
+            }
+            JSONArray receiveArray = receiveObject.getJSONArray("details");
 
 
-                progressDialog.setMax(orderArray.size() + receiveArray.size());
-                progressDialog.setTitle("开始下载明细数据");
+            progressDialog.setMax(orderArray.size() + receiveArray.size());
+            progressDialog.setTitle("开始下载明细数据");
 
-                if (orderArray.size() > 0) {
+            if (orderArray.size() > 0) {
 
-                    //Toast.makeText(x.app(),"开始同步:"+orderArray.size()+"条",Toast.LENGTH_LONG).show();
-                    for (int i = 0; i < orderArray.size(); i++) {
-                        JSONObject order = (JSONObject) orderArray.get(i);
-
-
-                        final Pu_order pu_order = JSON.parseObject(order.toJSONString(), Pu_order.class);
+                //Toast.makeText(x.app(),"开始同步:"+orderArray.size()+"条",Toast.LENGTH_LONG).show();
+                for (int i = 0; i < orderArray.size(); i++) {
+                    JSONObject order = (JSONObject) orderArray.get(i);
 
 
-                        //查询表体物料
+                    final Pu_order pu_order = JSON.parseObject(order.toJSONString(), Pu_order.class);
 
-                        try {
-                            JSONArray jsonArray = NetUtils.Mobile_DownloadOrderMaterial(userOID, pu_order.getId(), tokenStr);
-                            List<Pu_order_b> list = JSON.parseArray(jsonArray.toJSONString(), Pu_order_b.class);
-                            // Toast.makeText(x.app(),"开始同步明细:"+list.size()+"条",Toast.LENGTH_LONG).show();
-                            if (null == jsonArray) {
-                                Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
-                                progressDialog.dismiss();
-                            }
-                            //保存
-                            new MaDAO().save(pu_order, list);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
+
+                    //查询表体物料
+
+                    try {
+                        JSONArray jsonArray = NetUtils.Mobile_DownloadOrderMaterial(userOID, pu_order.getId(), rkToken);
+                        List<Pu_order_b> list = JSON.parseArray(jsonArray.toJSONString(), Pu_order_b.class);
+                        // Toast.makeText(x.app(),"开始同步明细:"+list.size()+"条",Toast.LENGTH_LONG).show();
+                        if (null == jsonArray) {
+                            Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                         }
-
-                        //查询领料商
-                        try {
-                            JSONArray jsonArray = NetUtils.Mobile_DownloadOrderconsumer(userOID, pu_order.getId(), tokenStr);
-                            if (null == jsonArray) {
-                                Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
-                                progressDialog.dismiss();
-                            }
-                            List<Consumer> consumerList = JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
-//                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
-
-                            new MaDAO().save(consumerList);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-
-                        progressDialog.setProgress(i + 1);
+                        //保存
+                        new MaDAO().save(pu_order, list);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
 
-                    //
-                }
-
-                if (receiveArray.size() > 0) {
-
-                    //Toast.makeText(x.app(),"开始同步:"+orderArray.size()+"条",Toast.LENGTH_LONG).show();
-                    for (int i = 0; i < receiveArray.size(); i++) {
-                        JSONObject receive = (JSONObject) receiveArray.get(i);
-
-
-                        final Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
-
-
-                        //查询表体物料
-
-                        try {
-                            JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveMaterial(userOID, ic_inbill.getId(), reToken);
-                            if (null == jsonArray) {
-                                Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
-                                progressDialog.dismiss();
-                            }
-                            List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
-                            // Toast.makeText(x.app(),"开始同步明细:"+list.size()+"条",Toast.LENGTH_LONG).show();
-                            for (Ic_inbill_b icb : list
-                                    ) {
-                                icb.setCreateType(MaConstants.TYPE_SYNC);
-                                if (null == icb.getOrderentryid() || icb.getOrderentryid().trim().length() == 0) {
-                                    icb.setOrderentryid(UUID.randomUUID().toString());
-                                }
-                            }
-                            //保存
-                            new MaDAO().save(ic_inbill, list);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
+                    //查询领料商
+                    try {
+                        JSONArray jsonArray = NetUtils.Mobile_DownloadOrderconsumer(userOID, pu_order.getId(), rkToken);
+                        if (null == jsonArray) {
+                            Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                         }
-
-                        //查询领料商
-                        try {
-                            JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveconsumer(userOID, ic_inbill.getId(), reToken);
-                            List<Consumer> consumerList = JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
+                        List<Consumer> consumerList = JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
 //                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
-                            if (null == jsonArray) {
-                                Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
-                                progressDialog.dismiss();
-                            }
-                            new MaDAO().save(consumerList);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
 
-                        progressDialog.setProgress(i + orderArray.size() + 1);
-
+                        new MaDAO().save(consumerList);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
 
-                    // Toast.makeText(x.app(),"同步订单成功",Toast.LENGTH_LONG).show();
+                    progressDialog.setProgress(i + 1);
                 }
 
+                //
+            }
 
-                progressDialog.dismiss();
-                Toast.makeText(x.app(), "同步成功", Toast.LENGTH_LONG).show();
+            if (receiveArray.size() > 0) {
+
+                //Toast.makeText(x.app(),"开始同步:"+orderArray.size()+"条",Toast.LENGTH_LONG).show();
+                for (int i = 0; i < receiveArray.size(); i++) {
+                    JSONObject receive = (JSONObject) receiveArray.get(i);
+
+
+                    final Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
+
+
+                    //查询表体物料
+
+                    try {
+                        JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveMaterial(userOID, ic_inbill.getId(), reToken);
+                        if (null == jsonArray) {
+                            Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                        List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
+                        // Toast.makeText(x.app(),"开始同步明细:"+list.size()+"条",Toast.LENGTH_LONG).show();
+                        for (Ic_inbill_b icb : list
+                                ) {
+                            icb.setCreateType(MaConstants.TYPE_SYNC);
+                            if (null == icb.getOrderentryid() || icb.getOrderentryid().trim().length() == 0) {
+                                icb.setOrderentryid(UUID.randomUUID().toString());
+                            }
+                        }
+                        //保存
+                        new MaDAO().save(ic_inbill, list);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    //查询领料商
+                    try {
+                        JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveconsumer(userOID, ic_inbill.getId(), reToken);
+                        List<Consumer> consumerList = JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
+//                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
+                        if (null == jsonArray) {
+                            Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                        new MaDAO().save(consumerList);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    progressDialog.setProgress(i + orderArray.size() + 1);
+
+                }
+
+                // Toast.makeText(x.app(),"同步订单成功",Toast.LENGTH_LONG).show();
+            }
+
+
+            progressDialog.dismiss();
+            Toast.makeText(x.app(), "同步成功", Toast.LENGTH_LONG).show();
 //                dialog.dismiss();
-            }
-
-            @Override
-            public void onError(Throwable ex) {
-                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        }
 
     }
 
-    public void clearData() throws DbException {
+    public void clearData(Context context) throws DbException {
         DbManager db = x.getDb(daoConfig);
 
         db.dropTable(Pu_order.class);
@@ -365,6 +841,9 @@ public class MaDAO {
         db.dropTable(Ic_outbill_b.class);
         db.dropTable(Ic_diroutbill.class);
         db.dropTable(Ic_diroutbill_b.class);
+
+        MethodUtil.saveRkToken(context,"");
+        MethodUtil.saveCkToken(context,"");
 
         Toast.makeText(x.app(), "清除离线数据成功", Toast.LENGTH_LONG).show();
     }
@@ -452,6 +931,21 @@ public class MaDAO {
 
     public void deleteTempDirout() throws DbException {
         DbManager db = x.getDb(daoConfig);
+
+        List<String> orderIdList = new ArrayList<>();
+        try{
+        Cursor cursor = db.execQuery("select distinct sourceId from ic_diroutbill_b where status = '"+MaConstants.STATUS_TEMP+"'");
+        while (cursor.moveToNext()) {
+            String orderId = cursor.getString(0);
+            orderIdList.add(orderId);
+        }
+        cursor.close();
+        for(String orderId : orderIdList) {
+            db.executeUpdateDelete("update pu_order_b set ckQty = 0 where orderid = '"+orderId+"'");
+        }}catch (Exception e){
+
+        }
+
         db.delete(Ic_diroutbill.class, WhereBuilder.b("status", "=", MaConstants.STATUS_TEMP));
         db.delete(Ic_diroutbill_b.class, WhereBuilder.b("status", "=", MaConstants.STATUS_TEMP));
     }
@@ -472,11 +966,13 @@ public class MaDAO {
 
 
 
+
+
     public void updateDataToServer(Context context) throws DbException {
 
-        String ordertoken = MethodUtil.getOrderToken(context);
+        String ordertoken = MethodUtil.getRkToken(context);
 
-        String inbilltoken = MethodUtil.getInbillToken(context);
+        String inbilltoken = MethodUtil.getCkToken(context);
 
         DbManager db = x.getDb(daoConfig);
         List<Ic_inbill_b> ic_inbill_bs =  db.findAll(Ic_inbill_b.class);

@@ -22,6 +22,7 @@ import org.xutils.db.annotation.Table;
 import org.xutils.ex.DbException;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Author: wyouflf
@@ -58,11 +59,32 @@ public class Ic_outbill_b implements Serializable {
     @Column(name = "sourceQty")
     private double sourceQty;
 
+    @Column(name = "time" )
+    private Date time;
 
+    public Date getTime() {
+        if(null == time)
+            return new Date();
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
     //已出数量
     @Column(name = "rkQty")
     private double rkQty;
 
+    @Column(name = "price")
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
     //来源子表
     @Column(name = "sourcebid")
     private String sourcebId;
@@ -78,6 +100,18 @@ public class Ic_outbill_b implements Serializable {
     //领料商名称
     @Column(name = "consumername")
     private String consumerName;
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    //领料商名称
+    @Column(name = "number")
+    private String number;
 
     public String getConsumerId() {
         return consumerId;
