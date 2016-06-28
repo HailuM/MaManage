@@ -3,6 +3,8 @@ package com.langchao.mamanage.activity.dirout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,6 +18,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +40,7 @@ public class DiroutListActivity extends AppCompatActivity {
     private ListView lvOrder;
 
     DiroutOrderAdapter adapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +52,42 @@ public class DiroutListActivity extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
-
+        lvOrder.requestFocus();
         try {
-            pu_orderList = new MaDAO().queryPuOrder(null,null);
+            pu_orderList = new MaDAO().queryPuOrder(null, null);
 
         } catch (DbException e) {
             e.printStackTrace();
         }
 
-          adapter = new DiroutOrderAdapter(this,pu_orderList);
+        adapter = new DiroutOrderAdapter(this, pu_orderList);
         lvOrder.setAdapter(adapter);
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String s = editable.toString();
+                try {
+                    pu_orderList = new MaDAO().queryPuOrderForRk(s, null);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                if (null == pu_orderList) {
+                    pu_orderList = new ArrayList<>();
+                }
+                adapter.pu_orderList = pu_orderList;
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
 
@@ -65,7 +95,7 @@ public class DiroutListActivity extends AppCompatActivity {
         switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case RESULT_OK:
                 try {
-                    pu_orderList = new MaDAO().queryPuOrder(null,null);
+                    pu_orderList = new MaDAO().queryPuOrder(null, null);
                     adapter.pu_orderList = pu_orderList;
                     adapter.notifyDataSetChanged();
                 } catch (DbException e) {

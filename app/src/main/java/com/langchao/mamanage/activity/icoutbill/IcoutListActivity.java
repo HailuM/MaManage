@@ -3,6 +3,8 @@ package com.langchao.mamanage.activity.icoutbill;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,17 +51,46 @@ public class IcoutListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         textViewTitle.setText("出库办理");
+        lvOrder.requestFocus();
 
         try {
             ic_inbills = new MaDAO().queryInbillForCk(null,null);
 
-        } catch (DbException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
+        }
+        if(null == ic_inbills){
+            ic_inbills = new ArrayList<>();
         }
         adapter = new IcoutInbillAdapter(this, ic_inbills);
         lvOrder.setAdapter(adapter);
 
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String s = editable.toString();
+                try {
+                    ic_inbills = new MaDAO().queryInbillForCk(s,null);
+                } catch (Exception e) {
+
+                }
+                if(null == ic_inbills){
+                    ic_inbills = new ArrayList<>();
+                }
+                adapter.inbills = ic_inbills;
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -260,14 +260,22 @@ public class MaDAO {
         };
 
         final List<Ic_outbill_b> finalIc_outbill_bs = ic_outbill_bs;
+        final int finalSize = size;
         Runnable doThread = new Runnable() {
               Integer count = 0;
             public void run() {
                 try {
+
+
                    if(null == rkToken || rkToken.trim().length() == 0){
                        handler.sendEmptyMessage(100);
                        return;
                    }
+
+                    if(finalSize == 0){
+                        handler.sendEmptyMessage(100);
+                        return;
+                    }
                     //先上传直出
                     for(Ic_diroutbill_b ic_diroutbill_b : ic_diroutbill_bs){
                         try {
@@ -276,7 +284,7 @@ public class MaDAO {
 
                             handler.sendEmptyMessage(count);
                         } catch (Throwable throwable) {
-                            Toast.makeText(mainActivity,"上传失败:"+throwable.getMessage(),Toast.LENGTH_LONG);
+                           // Toast.makeText(mainActivity,"上传失败:"+throwable.getMessage(),Toast.LENGTH_LONG);
                             handler.sendEmptyMessage(-1);
                         }
                     }
@@ -289,7 +297,7 @@ public class MaDAO {
 
                             handler.sendEmptyMessage(count);
                         } catch (Throwable throwable) {
-                            Toast.makeText(mainActivity,"上传失败:"+throwable.getMessage(),Toast.LENGTH_LONG).show();
+                           // Toast.makeText(mainActivity,"上传失败:"+throwable.getMessage(),Toast.LENGTH_LONG).show();
                             handler.sendEmptyMessage(-1);
                         }
                     }
@@ -302,7 +310,7 @@ public class MaDAO {
 
                                 handler.sendEmptyMessage(count);
                             } catch (Throwable throwable) {
-                                Toast.makeText(mainActivity, "上传失败:" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+
                                 handler.sendEmptyMessage(-1);
                             }
                         }
@@ -312,7 +320,7 @@ public class MaDAO {
                     try {
                         NetUtils.Mobile_uploadrkComplete(userId,rkToken,ic_diroutbill_bs.size(),ic_inbill_bs.size(),finalIc_outbill_bs.size());
                     } catch (Throwable throwable) {
-                        Toast.makeText(mainActivity, "上传失败:" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+
                         handler.sendEmptyMessage(-1);
                     }
 
@@ -998,5 +1006,24 @@ public class MaDAO {
 
         }
 
+    }
+
+
+    /**
+     * 查询补打
+     * @return
+     */
+    public List<Ic_outbill> queryForPrint() throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return db.selector(Ic_outbill.class).where("isPrint","=",false).findAll();
+    }
+
+    /**
+     * 查询补打
+     * @return
+     */
+    public List<Ic_diroutbill> queryDirForPrint() throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return db.selector(Ic_diroutbill.class).where("isPrint","=",false).findAll();
     }
 }

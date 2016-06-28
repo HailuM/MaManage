@@ -3,6 +3,8 @@ package com.langchao.mamanage.activity.icinbill;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +49,8 @@ public class IcinListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         textViewTitle.setText("入库办理");
-
+        lvOrder.setFocusable(true);
+        lvOrder.requestFocus();
         try {
             pu_orderList = new MaDAO().queryPuOrderForRk(null,null);
 
@@ -57,7 +61,32 @@ public class IcinListActivity extends AppCompatActivity {
         adapter = new IcinOrderAdapter(this,pu_orderList);
         lvOrder.setAdapter(adapter);
 
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String s = editable.toString();
+                try {
+                    pu_orderList = new MaDAO().queryPuOrderForRk(s,null);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                if(null == pu_orderList){
+                    pu_orderList = new ArrayList<>();
+                }
+                adapter.pu_orderList = pu_orderList;
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
 

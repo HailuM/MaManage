@@ -59,6 +59,18 @@ public class Ic_outbill implements Serializable {
     @Column(name = "Company")
     private String Company;
 
+
+    @Column(name = "isPrint")
+    private boolean isPrint;
+
+    public boolean isPrint() {
+        return isPrint;
+    }
+
+    public void setPrint(boolean print) {
+        isPrint = print;
+    }
+
     public String getProjectName() {
         return ProjectName;
     }

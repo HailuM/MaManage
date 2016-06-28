@@ -71,6 +71,18 @@ public class Ic_diroutbill implements Serializable {
         this.consumerid = consumerid;
     }
 
+
+    @Column(name = "isPrint")
+    private boolean isPrint;
+
+    public boolean isPrint() {
+        return isPrint;
+    }
+
+    public void setPrint(boolean print) {
+        isPrint = print;
+    }
+
     @Column(name = "consumername")
     private String consumername;
 

@@ -26,6 +26,7 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.activity.dirout.DiroutListActivity;
 import com.langchao.mamanage.activity.icinbill.IcinListActivity;
 import com.langchao.mamanage.activity.icoutbill.IcoutListActivity;
+import com.langchao.mamanage.activity.main.PrintActivity;
 import com.langchao.mamanage.activity.main.SetActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
@@ -84,7 +85,7 @@ public class MainActivity extends AutoLayoutActivity {
     ProgressDialog progressDialog = null;
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set, R.id.imageViewTbrk, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewsyncout}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set, R.id.imageViewTbrk, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewsyncout,R.id.imageViewsupplement}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -126,6 +127,10 @@ public class MainActivity extends AutoLayoutActivity {
                 } catch (Exception e) {
                     Toast.makeText(this,"同步入库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
                 }
+                break;
+            case R.id.imageViewsupplement:
+                intent.setClass(this, PrintActivity.class);
+                startActivity(intent);
                 break;
 
         }
