@@ -41,11 +41,15 @@
         <activity android:name=".activity.ServiceActivity" />
         <activity android:name=".activity.main.SetActivity" />
         <activity android:name=".activity.dirout.DiroutOrderActivity" />
-        <activity android:name=".activity.dirout.DiroutListActivity" />
+        <activity android:name=".activity.dirout.DiroutListActivity" android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.dirout.DiroutOrderConfirmActivity" />
-        <activity android:name=".activity.icinbill.IcinListActivity" />
+        <activity android:name=".activity.icinbill.IcinListActivity" android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".activity.icinbill.IcinOrderActivity" />
         <activity android:name=".activity.icinbill.IcinOrderConfirmActivity" />
+        <activity android:name=".activity.icoutbill.IcoutInbillActivity" />
+        <activity android:name=".activity.icoutbill.IcoutListActivity" android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".activity.icoutbill.IcoutInbillConfirmActivity" />
+        <activity android:name=".activity.main.PrintActivity" />
         <activity android:name=".activity.main.InStorageActivity"></activity>
     </application>
 
