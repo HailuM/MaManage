@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:text="@string/login"
             android:textColor="@color/white"
-            android:textSize="@dimen/textsize" />
+            android:textSize="@dimen/headsize" />
 
     </RelativeLayout>
 

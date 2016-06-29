@@ -20,6 +20,7 @@ import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
+import com.langchao.mamanage.dialog.MessageDialog;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -89,26 +90,32 @@ public class DiroutOrderActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case RESULT_OK:
-                List<Pu_order_b> list = null;
-                try {
-                    list = new MaDAO().queryOrderDetail(order.getId());
-
-                    adapter.blist = list;
-                    adapter.choosedList = new ArrayList<>();
-                    updateTotalNum(0);
-                    adapter.notifyDataSetChanged();
-                    if(null == list || list.size() == 0){
-                        //完成了  修改单据为正常
-                        new MaDAO().updateTempDirToNormal();
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
+                freshData();
                 break;
             default:
+                freshData();
                 break;
+        }
+    }
+
+    void freshData(){
+        List<Pu_order_b> list = null;
+        try {
+            list = new MaDAO().queryOrderDetail(order.getId());
+
+            adapter.blist = list;
+            adapter.choosedList = new ArrayList<>();
+            updateTotalNum(0);
+            cbOrderChoose.setChecked(false);
+            adapter.notifyDataSetChanged();
+            if(null == list || list.size() == 0){
+                //完成了  修改单据为正常
+                new MaDAO().updateTempDirToNormal();
+                setResult(RESULT_OK);
+                finish();
+            }
+        } catch (DbException e) {
+            MessageDialog.show(this,e.getMessage());
         }
     }
 

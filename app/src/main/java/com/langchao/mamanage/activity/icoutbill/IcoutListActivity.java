@@ -96,16 +96,22 @@ public class IcoutListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case RESULT_OK:
-                try {
-                    ic_inbills = new MaDAO().queryInbillForCk(null,null);
-                    adapter.inbills = ic_inbills;
-                    adapter.notifyDataSetChanged();
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
+               fresh();
                 break;
             default:
+                fresh();
                 break;
+        }
+    }
+
+    private void fresh() {
+        try {
+            String s = etSearch.getText().toString();
+            ic_inbills = new MaDAO().queryInbillForCk(null,null);
+            adapter.inbills = ic_inbills;
+            adapter.notifyDataSetChanged();
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 }

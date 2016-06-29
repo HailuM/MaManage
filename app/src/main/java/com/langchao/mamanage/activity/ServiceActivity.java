@@ -52,10 +52,10 @@ public class ServiceActivity extends AutoLayoutActivity {
                     return;
                 }
                 String ip = textViewIp.getText().toString();
-                if(!ip.startsWith("http")){
-                    ip = "http://"+ip;
+                if(ip.startsWith("http")){
+                    ip = ip.replace("http://","");
                 }
-                NetUtils.ip = ip;
+
                 saveIp(ip);
                 this.finish();
                 break;

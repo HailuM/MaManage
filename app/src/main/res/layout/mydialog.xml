@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/imageView_background_mydialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+
+    <!-- Line 1 -->
+
+    <ImageView
+        android:id="@+id/imageView_warning_mydialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/imageView_background_mydialog"
+        android:layout_alignTop="@id/imageView_background_mydialog"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="30dip"
+        />
+
+    <TextView
+        android:id="@+id/textView_title_mydialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView_warning_mydialog"
+        android:layout_alignTop="@id/imageView_background_mydialog"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="30dp"
+        android:text="success AlertDialog"
+        android:textColor="@color/white"
+        android:textSize="22dp" >
+    </TextView>
+
+    <!-- Line 2 -->
+
+    <TextView
+        android:id="@+id/textView_mydialog"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/imageView_background_mydialog"
+        android:layout_alignTop="@id/imageView_background_mydialog"
+        android:layout_marginLeft="30dip"
+        android:layout_marginTop="87dip"
+        android:text="HELLO WORLD"
+        android:textColor="@color/white"
+        android:textSize="15dp" />
+
+    <!-- Line 3 -->
+
+    <Button
+        android:id="@+id/button_back_mydialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_background_mydialog"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+
+        android:text="CANCEL" />
+
+</RelativeLayout>

@@ -94,16 +94,22 @@ public class IcinListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case RESULT_OK:
-                try {
-                    pu_orderList = new MaDAO().queryPuOrderForRk(null,null);
-                    adapter.pu_orderList = pu_orderList;
-                    adapter.notifyDataSetChanged();
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
+               fresh();
                 break;
             default:
+                fresh();
                 break;
+        }
+    }
+
+    private void fresh() {
+        try {
+            String s = etSearch.getText().toString();
+            pu_orderList = new MaDAO().queryPuOrderForRk(s,null);
+            adapter.pu_orderList = pu_orderList;
+            adapter.notifyDataSetChanged();
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 }

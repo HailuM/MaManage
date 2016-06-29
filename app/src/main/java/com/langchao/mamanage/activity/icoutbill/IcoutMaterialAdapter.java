@@ -12,6 +12,7 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.dialog.AlertForResult;
 import com.langchao.mamanage.dialog.PopCallBack;
+import com.langchao.mamanage.utils.MathUtils;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -72,17 +73,17 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         public BaseAdapter baseAdapter;
 
 
-        @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
-        private void numClick(View v){
-            AlertForResult.popUp( ic_bill_b.getCurQty(),context,new PopCallBack() {
+        @Event(value = {R.id.et_dir_out_order_m_num}, type = View.OnClickListener.class)
+        private void numClick(View v) {
+            AlertForResult.popUp(ic_bill_b.getCurQty(), context, new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > ic_bill_b.getSourceQty()){
+                    if (num > ic_bill_b.getSourceQty()) {
                         num = ic_bill_b.getSourceQty();
                     }
-                    if(num > 0) {
-                        if(num > (ic_bill_b.getSourceQty()-ic_bill_b.getCkQty())){
-                            num = ic_bill_b.getSourceQty()-ic_bill_b.getCkQty();
+                    if (num > 0) {
+                        if (num > (ic_bill_b.getSourceQty() - ic_bill_b.getCkQty())) {
+                            num = ic_bill_b.getSourceQty() - ic_bill_b.getCkQty();
                         }
                         ic_bill_b.setCurQty(num);
 
@@ -92,63 +93,49 @@ public class IcoutMaterialAdapter extends BaseAdapter {
             });
         }
 
-        @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
-        private void add(View v){
-            if(ic_bill_b.getCurQty() < (ic_bill_b.getSourceQty()-ic_bill_b.getCkQty())) {
+        @Event(value = {R.id.tv_dir_out_order_m_add}, type = View.OnClickListener.class)
+        private void add(View v) {
+            if (ic_bill_b.getCurQty() < (ic_bill_b.getSourceQty() - ic_bill_b.getCkQty())) {
                 ic_bill_b.setCurQty(ic_bill_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
             }
         }
-        @Event(value = {R.id.img_m_add }, type = View.OnClickListener.class)
-        private void choose(View v){
 
+        @Event(value = {R.id.img_m_add}, type = View.OnClickListener.class)
+        private void choose(View v) {
 
-
-            if(!choosedList.contains(ic_bill_b)) {
-
-                AlertForResult.popUp( ic_bill_b.getCurQty(),context,new PopCallBack() {
-                    @Override
-                    public void setNum(double num) {
-                        if(num > ic_bill_b.getSourceQty()){
-                            num = ic_bill_b.getSourceQty();
-                        }
-                        if(num > 0) {
-                            if(num > (ic_bill_b.getSourceQty()-ic_bill_b.getCkQty())){
-                                num = ic_bill_b.getSourceQty()-ic_bill_b.getCkQty();
-                            }
-                            ic_bill_b.setCurQty(num);
-                            choosedList.add(ic_bill_b);
-                            context.updateTotalNum(choosedList.size());
-                            notifyDataSetChanged();
-                        }
-                    }
-                });
-
+            if (ic_bill_b.getCurQty() > 0) {
+                choosedList.add(ic_bill_b);
+                blist.remove(ic_bill_b);
+                context.updateTotalNum(choosedList.size());
+                notifyDataSetChanged();
             }
+
         }
 
-        @Event(value = {R.id.tv_dir_out_order_m_del }, type = View.OnClickListener.class)
-        private void sub(View v){
-            if(ic_bill_b.getCurQty() > 1) {
+        @Event(value = {R.id.tv_dir_out_order_m_del}, type = View.OnClickListener.class)
+        private void sub(View v) {
+            if (ic_bill_b.getCurQty() > 1) {
                 ic_bill_b.setCurQty(ic_bill_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
             }
         }
     }
 
-    public void chooseAll(){
+    public void chooseAll() {
         choosedList.clear();
-        for(Ic_inbill_b b : blist){
-            b.setCurQty(b.getSourceQty()-b.getCkQty());
+        for (Ic_inbill_b b : blist) {
+            b.setCurQty(b.getSourceQty() - b.getCkQty());
             choosedList.add(b);
         }
         context.updateTotalNum(choosedList.size());
+        blist.clear();
         notifyDataSetChanged();
     }
 
-    public void unChooseAll(){
-        for(Ic_inbill_b b : choosedList){
-            b.setCurQty(0);
+    public void unChooseAll() {
+        for (Ic_inbill_b b : choosedList) {
+            blist.add(b);
 
         }
         choosedList.clear();
@@ -158,7 +145,7 @@ public class IcoutMaterialAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(null == blist)
+        if (null == blist)
             return 0;
         return blist.size();
     }
@@ -195,10 +182,10 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         Ic_inbill_b order_b = blist.get(position);
         order_b.setPosition(position);
         _Holder.tvBrand.setText(order_b.getBrand());
-        _Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
+        _Holder.leftQty.setText(MathUtils.scaleDouble(order_b.getSourceQty() - order_b.getCkQty() - order_b.getCurQty()));
         _Holder.tvModel.setText(order_b.getModel());
         _Holder.tvName.setText(order_b.getName());
-        _Holder.tvNum.setText(order_b.getCurQty()+"");
+        _Holder.tvNum.setText(MathUtils.scaleDouble(order_b.getCurQty()));
         _Holder.tvNote.setText(order_b.getNote());
         _Holder.tvUnit.setText(order_b.getUnit());
 
@@ -206,7 +193,6 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         _Holder.baseAdapter = this;
         return convertView;
     }
-
 
 
 }

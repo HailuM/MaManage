@@ -24,7 +24,7 @@
             android:layout_centerVertical="true"
             android:text="直入直出确认"
             android:textColor="@color/white"
-            android:textSize="@dimen/textsize"/>
+            android:textSize="@dimen/headsize"/>
 
     </RelativeLayout>
 
@@ -195,12 +195,16 @@
             android:id="@+id/rl_bottom">
 
 
-            <ImageView
+            <TextView
                 android:id="@+id/img_dir_out_choose"
                 android:layout_width="160px"
                 android:layout_height="100px"
                 android:layout_alignParentRight="true"
                 android:src="@mipmap/outaffirm"
+                android:text="确认"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:textColor="@color/white"
                 android:background="@color/orangered"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -216,6 +220,10 @@
             android:id="@+id/lv_dir_out_m"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="#00000000"
+            android:dividerHeight="5dp"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
             android:layout_above="@+id/rl_bottom"/>
     </RelativeLayout>
 </LinearLayout>

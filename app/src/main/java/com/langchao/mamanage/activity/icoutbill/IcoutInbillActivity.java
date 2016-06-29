@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,6 +56,9 @@ public class IcoutInbillActivity extends AppCompatActivity {
     @ViewInject(R.id.cb_dir_out_order_choose)
     CheckBox cbOrderChoose;
 
+    @ViewInject(R.id.et_dir_out_list_search)
+    private EditText etSearch;
+
     @ViewInject(R.id.textViewTitle)
     private TextView textViewTitle;
     IcoutMaterialAdapter adapter = null;
@@ -93,23 +99,29 @@ public class IcoutInbillActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case RESULT_OK:
-                List<Ic_inbill_b> list = null;
-                try {
-                    list = new MaDAO().queryInbillDetail(ic_inbill.getId());
-                    adapter.blist = list;
-                    adapter.choosedList = new ArrayList<>();
-                    updateTotalNum(0);
-                    adapter.notifyDataSetChanged();
-                    if(null == list || list.size() == 0){
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
+               fresh();
                 break;
             default:
+                fresh();
                 break;
+        }
+    }
+
+    private void fresh() {
+        List<Ic_inbill_b> list = null;
+        try {
+            list = new MaDAO().queryInbillDetail(ic_inbill.getId());
+            adapter.blist = list;
+            adapter.choosedList = new ArrayList<>();
+            updateTotalNum(0);
+            cbOrderChoose.setChecked(false);
+            adapter.notifyDataSetChanged();
+            if(null == list || list.size() == 0){
+                setResult(RESULT_OK);
+                finish();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 
@@ -142,6 +154,8 @@ public class IcoutInbillActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(MaConstants.FRESH);
         registerReceiver(this.broadcastReceiver, filter); // 注册
+
+
     }
 
     // 写一个广播的内部类，当收到动作时，结束activity
@@ -150,9 +164,9 @@ public class IcoutInbillActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             // unregisterReceiver(this); // 这句话必须要写要不会报错，不写虽然能关闭，会报一堆错
 
-            Ic_inbill_b in_b = (Ic_inbill_b) intent.getExtras().getSerializable("ic_inbill");
-            adapter.update(in_b);
-            adapter.notifyDataSetChanged();
+//            Ic_inbill_b in_b = (Ic_inbill_b) intent.getExtras().getSerializable("ic_inbill");
+//            adapter.update(in_b);
+//            adapter.notifyDataSetChanged();
         }
     };
 

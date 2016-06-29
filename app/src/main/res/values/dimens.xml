@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!--普通通用文字大小-->
     <dimen name="textsize">30px</dimen>
+    <dimen name="headsize">40px</dimen>
 </resources>

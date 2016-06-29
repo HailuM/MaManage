@@ -68,6 +68,9 @@ public class MaConvert {
         outbill_b.setOrderentryid(UUID.randomUUID().toString());
         outbill_b.setSourceId(inbill_b.getOrderid());
         outbill_b.setSourcebId(inbill_b.getOrderentryid());
+        if(null != inbill_b.getSourcebId() && inbill_b.getSourcebId() .trim().length() == 0){
+            outbill_b.setSourcebId(inbill_b.getSourcebId());
+        }
 
         outbill_b.setNumber(number);
 

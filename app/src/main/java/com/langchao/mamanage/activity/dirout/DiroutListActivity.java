@@ -52,15 +52,15 @@ public class DiroutListActivity extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
-        lvOrder.requestFocus();
-        try {
-            pu_orderList = new MaDAO().queryPuOrder(null, null);
 
+
+        try {
+            pu_orderList = new MaDAO().queryPuOrderForRk(null, null);
         } catch (DbException e) {
             e.printStackTrace();
         }
-
         adapter = new DiroutOrderAdapter(this, pu_orderList);
+
         lvOrder.setAdapter(adapter);
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,19 +90,24 @@ public class DiroutListActivity extends AppCompatActivity {
         });
     }
 
+    void fresh(){
+        try {
+            String s = etSearch.getText().toString();
+            pu_orderList = new MaDAO().queryPuOrderForRk(s, null);
+            adapter.pu_orderList = pu_orderList;
+            adapter.notifyDataSetChanged();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case RESULT_OK:
-                try {
-                    pu_orderList = new MaDAO().queryPuOrder(null, null);
-                    adapter.pu_orderList = pu_orderList;
-                    adapter.notifyDataSetChanged();
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
+                fresh();
                 break;
             default:
+                fresh();
                 break;
         }
     }

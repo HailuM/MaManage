@@ -25,7 +25,7 @@
             android:layout_centerVertical="true"
             android:text="直入直出选择"
             android:textColor="@color/white"
-            android:textSize="@dimen/textsize"/>
+            android:textSize="@dimen/headsize"/>
 
     </RelativeLayout>
 
@@ -176,12 +176,16 @@
                 android:layout_centerVertical="true"
                 android:textColor="@color/white"
                 android:text="全选"/>
-            <ImageView
+            <TextView
                 android:id="@+id/img_dir_out_order_choose"
                 android:src="@mipmap/choose"
                 android:layout_width="160px"
                 android:layout_height="100px"
                 android:layout_alignParentRight="true"
+                android:text="选"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:textColor="@color/white"
                 android:background="@color/orangered"/>
             <TextView
                 android:id="@+id/tv_dir_out_order_choose"
@@ -197,6 +201,10 @@
         <ListView
             android:id="@+id/lv_dir_out_order_m"
             android:layout_width="match_parent"
+            android:divider="#00000000"
+            android:dividerHeight="5dp"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
             android:layout_height="match_parent"
             android:layout_above="@+id/rl_bottom"/>
     </RelativeLayout>

@@ -15,6 +15,7 @@ import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.AlertForResult;
 import com.langchao.mamanage.dialog.PopCallBack;
+import com.langchao.mamanage.utils.MathUtils;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -85,6 +86,7 @@ public class IcinConfirmAdapter extends BaseAdapter {
             });
         }
 
+
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
             if(pu_order_b.getCurQty() < pu_order_b.getSourceQty()) {
@@ -104,14 +106,23 @@ public class IcinConfirmAdapter extends BaseAdapter {
             }
         }
 
-        private void notice(Pu_order_b pu_order_b){
-            Intent intent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("order", pu_order_b);
+        @Event(value = {R.id.img_m_add }, type = View.OnClickListener.class)
+        private void del(View v){
 
-            intent.putExtras(bundle);
-            intent.setAction(MaConstants.FRESH); // 说明动作
-            context.sendBroadcast(intent);// 该函数用于发送广播
+               blist.remove(pu_order_b);
+                baseAdapter.notifyDataSetChanged();
+                notice(pu_order_b);
+
+        }
+
+        private void notice(Pu_order_b pu_order_b){
+//            Intent intent = new Intent();
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("order", pu_order_b);
+//
+//            intent.putExtras(bundle);
+//            intent.setAction(MaConstants.FRESH); // 说明动作
+//            context.sendBroadcast(intent);// 该函数用于发送广播
         }
     }
 
@@ -158,7 +169,7 @@ public class IcinConfirmAdapter extends BaseAdapter {
         //_Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
         _Holder.tvModel.setText(order_b.getModel());
         _Holder.tvName.setText(order_b.getName());
-        _Holder.tvNum.setText(order_b.getCurQty()+"");
+        _Holder.tvNum.setText(MathUtils.scaleDouble(order_b.getCurQty()));
         _Holder.tvNote.setText(order_b.getNote());
         _Holder.tvUnit.setText(order_b.getUnit());
         _Holder.tvleft.setVisibility(View.INVISIBLE);

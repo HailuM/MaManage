@@ -1,11 +1,13 @@
 package com.langchao.mamanage.manet;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.activity.MainActivity;
+import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
@@ -22,7 +24,10 @@ import java.util.List;
  */
 public class NetUtils {
 
-    public static String ip = "http://58.221.4.34:9310";
+    public static String getIp (){
+          return "http://"+x.app().getSharedPreferences(MaConstants.FILENAME, 0).getString(MaConstants.PARA_IP,"58.221.4.34:9310");
+         
+    }
 
 
     public static String URL_TOLOGIN = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=ToLogin";
@@ -77,7 +82,7 @@ public class NetUtils {
         xml = xml.replace("(pwd)", pwd);
 
 
-        String url = ip + URL_TOLOGIN;
+        String url = getIp() + URL_TOLOGIN;
 
         RequestParams params = new RequestParams(url);
 
@@ -137,7 +142,7 @@ public class NetUtils {
         xml = xml.replace("(userOID)", userOID);
 
 
-        String url = ip + URL_MOBILE_DOWNLOADORDERINFO;
+        String url = getIp() + URL_MOBILE_DOWNLOADORDERINFO;
 
         RequestParams params = new RequestParams(url);
 
@@ -149,7 +154,7 @@ public class NetUtils {
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderInfoResult", result);
         if (xmlrs.startsWith("false")) {
 
-            return null;
+            throw new RuntimeException(xmlrs.replace("false:",""));
 
         } else {
 
@@ -182,7 +187,7 @@ public class NetUtils {
         xml = xml.replace("(rktokenStr)", rktokenStr);
 
 
-        String url = ip + URL_MOBILE_DOWNLOADORDERMATERIAL;
+        String url = getIp() + URL_MOBILE_DOWNLOADORDERMATERIAL;
 
         RequestParams params = new RequestParams(url);
 
@@ -195,7 +200,7 @@ public class NetUtils {
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderMaterialResult", result);
         if (xmlrs.startsWith("false")) {
 
-            return null;
+              throw new RuntimeException(xmlrs.replace("false:",""));
 
         } else {
 
@@ -271,7 +276,7 @@ public class NetUtils {
         xml = xml.replace("(rktokenStr)", rktokenStr);
 
 
-        String url = ip + URL_MOBILE_DOWNLOADORDERCONSUMER;
+        String url = getIp() + URL_MOBILE_DOWNLOADORDERCONSUMER;
 
         RequestParams params = new RequestParams(url);
 
@@ -283,7 +288,7 @@ public class NetUtils {
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderconsumerResult", result);
         if (xmlrs.startsWith("false")) {
 
-            return null;
+            throw new RuntimeException(xmlrs.replace("false:",""));
 
         } else {
 
@@ -316,7 +321,7 @@ public class NetUtils {
         xml = xml.replace("(userOID)", userOID);
 
 
-        String url = ip + URL_MOBILE_DOWNLOADRECEIVEINFO;
+        String url = getIp() + URL_MOBILE_DOWNLOADRECEIVEINFO;
 
         RequestParams params = new RequestParams(url);
 
@@ -336,7 +341,7 @@ public class NetUtils {
         String xmlrs = NetUtils.getValueFromXML("Mobile_downloadReceiveInfoResult", result);
         if (xmlrs.startsWith("false")) {
 
-            return null;
+            throw new RuntimeException(xmlrs.replace("false:",""));
 
         } else {
 
@@ -368,7 +373,7 @@ public class NetUtils {
         xml = xml.replace("(cktokenStr)", cktokenStr);
 
 
-        String url = ip + URL_MOBILE_DOWNLOADRECEIVEMATERIAL;
+        String url = getIp() + URL_MOBILE_DOWNLOADRECEIVEMATERIAL;
 
         RequestParams params = new RequestParams(url);
 
@@ -386,9 +391,17 @@ public class NetUtils {
             return null;
         }
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadReceiveMaterialResult", result);
-        JSONArray array = JSON.parseArray(xmlrs);
+        if (xmlrs.startsWith("false")) {
 
-        return array;
+            throw new RuntimeException(xmlrs.replace("false:",""));
+
+        } else {
+
+            JSONArray array = JSON.parseArray(xmlrs);
+
+            return array;
+        }
+
 
     }
 
@@ -398,7 +411,7 @@ public class NetUtils {
      *
      * @param userOID
      */
-    public static JSONArray Mobile_DownloadReceiveconsumer(final String userOID, final String receiveId, final String cktokenStr) {
+    public static JSONArray Mobile_DownloadReceiveconsumer(final String userOID, final String receiveId, final String cktokenStr) throws Throwable {
 
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -414,7 +427,7 @@ public class NetUtils {
         xml = xml.replace("(cktokenStr)", cktokenStr);
 
 
-        String url = ip + URL_MOBILE_DOWNLOADRECEIVECONSUMER;
+        String url = getIp() + URL_MOBILE_DOWNLOADRECEIVECONSUMER;
 
         RequestParams params = new RequestParams(url);
 
@@ -425,10 +438,17 @@ public class NetUtils {
         try {
             String result = x.http().postSync(params, String.class);
             String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadReceiveconsumerResult", result);
-            JSONArray array = JSON.parseArray(xmlrs);
-            return array;
+            if (xmlrs.startsWith("false")) {
+
+                throw new RuntimeException(xmlrs.replace("false:",""));
+
+            }
+            else {
+                JSONArray array = JSON.parseArray(xmlrs);
+                return array;
+            }
         } catch (Throwable throwable) {
-            return null;
+          throw throwable;
         }
 
     }
@@ -458,7 +478,7 @@ public class NetUtils {
         xml = xml.replace("(rktokenStr)", rkToken);
         xml = xml.replace("(jsonData)", jo.toJSONString());
 
-        String url = ip + URL_MOBILE_UPLOADZRZCINFO;
+        String url = getIp() + URL_MOBILE_UPLOADZRZCINFO;
 
         RequestParams params = new RequestParams(url);
 
@@ -473,7 +493,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
     }
 
@@ -509,7 +529,7 @@ public class NetUtils {
         xml = xml.replace("(rktokenStr)", rkToken);
         xml = xml.replace("(jsonData)", jo.toJSONString());
 
-        String url = ip + URL_MOBILE_UPLOADRKINFO;
+        String url = getIp() + URL_MOBILE_UPLOADRKINFO;
 
         RequestParams params = new RequestParams(url);
 
@@ -524,7 +544,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
     }
 
@@ -556,7 +576,7 @@ public class NetUtils {
         xml = xml.replace("(jsonData)", jo.toJSONString());
         xml = xml.replace("(type)", type);
 
-        String url = ip + URL_MOBILE_UPLOADCKINFO;
+        String url = getIp() + URL_MOBILE_UPLOADCKINFO;
 
         RequestParams params = new RequestParams(url);
 
@@ -571,7 +591,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
     }
 
@@ -590,7 +610,7 @@ public class NetUtils {
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(rktokenStr)", rktokenStr);
 
-        String url = ip + URL_MOBILE_DOWNLOADORDERCOMPLETE;
+        String url = getIp() + URL_MOBILE_DOWNLOADORDERCOMPLETE;
 
         RequestParams params = new RequestParams(url);
 
@@ -605,7 +625,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
 
     }
@@ -626,7 +646,7 @@ public class NetUtils {
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(cktokenStr)", cktokenStr);
 
-        String url = ip + URL_MOBILE_DOWNLOADRECEIVECOMPLETE;
+        String url = getIp() + URL_MOBILE_DOWNLOADRECEIVECOMPLETE;
 
         RequestParams params = new RequestParams(url);
 
@@ -641,7 +661,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
 
     }
@@ -669,7 +689,7 @@ public class NetUtils {
         xml = xml.replace("(rkBillCount)", rkBillCount+"");
         xml = xml.replace("(ckBillCount)", ckBillCount+"");
 
-        String url = ip + URL_MOBILE_UPLOADRKCOMPLETE;
+        String url = getIp() + URL_MOBILE_UPLOADRKCOMPLETE;
 
         RequestParams params = new RequestParams(url);
 
@@ -684,7 +704,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
 
     }
@@ -709,7 +729,7 @@ public class NetUtils {
         xml = xml.replace("(cktokenStr)", cktokenStr);
         xml = xml.replace("(ckBillCount)", ckBillCount+"");
 
-        String url = ip + URL_MOBILE_UPLOADCKCOMPLETE;
+        String url = getIp() + URL_MOBILE_UPLOADCKCOMPLETE;
 
         RequestParams params = new RequestParams(url);
 
@@ -724,7 +744,7 @@ public class NetUtils {
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs);
+            throw new RuntimeException(xmlrs.replace("false:",""));
         }
 
     }

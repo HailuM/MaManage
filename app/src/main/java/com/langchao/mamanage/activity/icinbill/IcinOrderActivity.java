@@ -101,6 +101,7 @@ public class IcinOrderActivity extends AppCompatActivity {
                     adapter.blist = list;
                     adapter.choosedList = new ArrayList<>();
                     updateTotalNum(0);
+                    cbOrderChoose.setChecked(false);
                     adapter.notifyDataSetChanged();
                     if(null == list || list.size() == 0){
                         setResult(RESULT_OK);

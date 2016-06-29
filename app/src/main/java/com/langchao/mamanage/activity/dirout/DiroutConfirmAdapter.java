@@ -14,6 +14,7 @@ import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.AlertForResult;
 import com.langchao.mamanage.dialog.PopCallBack;
+import com.langchao.mamanage.utils.MathUtils;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -65,7 +66,14 @@ public class DiroutConfirmAdapter extends BaseAdapter {
 
         public BaseAdapter baseAdapter;
 
+        @Event(value = {R.id.img_m_add }, type = View.OnClickListener.class)
+        private void del(View v){
 
+            blist.remove(pu_order_b);
+            baseAdapter.notifyDataSetChanged();
+
+
+        }
         @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
         private void numClick(View v){
             AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
@@ -104,9 +112,9 @@ public class DiroutConfirmAdapter extends BaseAdapter {
         }
 
         private void notice(){
-            Intent intent = new Intent();
-            intent.setAction(MaConstants.FRESH); // 说明动作
-            context.sendBroadcast(intent);// 该函数用于发送广播
+//            Intent intent = new Intent();
+//            intent.setAction(MaConstants.FRESH); // 说明动作
+//            context.sendBroadcast(intent);// 该函数用于发送广播
         }
     }
 
@@ -153,7 +161,7 @@ public class DiroutConfirmAdapter extends BaseAdapter {
         //_Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
         _Holder.tvModel.setText(order_b.getModel());
         _Holder.tvName.setText(order_b.getName());
-        _Holder.tvNum.setText(order_b.getCurQty()+"");
+        _Holder.tvNum.setText(MathUtils.scaleDouble(order_b.getCurQty()));
         _Holder.tvNote.setText(order_b.getNote());
         _Holder.tvUnit.setText(order_b.getUnit());
         _Holder.tvleft.setVisibility(View.INVISIBLE);
