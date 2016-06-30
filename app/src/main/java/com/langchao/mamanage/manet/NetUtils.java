@@ -333,7 +333,7 @@ public class NetUtils {
         try {
             result = x.http().postSync(params, String.class);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            throw new RuntimeException(throwable);
         }
         if (null == result) {
             return null;

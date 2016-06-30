@@ -70,7 +70,7 @@
         android:gravity="center_vertical|bottom">
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/logIn"
+            android:id="@+id/print"
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_below="@+id/checkBoxAutoLogin"

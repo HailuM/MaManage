@@ -1,8 +1,10 @@
 package com.langchao.mamanage.activity.main;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -10,14 +12,18 @@ import android.widget.TextView;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.activity.icoutbill.IcoutInbillAdapter;
+import com.langchao.mamanage.activity.icoutbill.IcoutInbillConfirmActivity;
+import com.langchao.mamanage.blueprint.PrintDataActivity;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.icin.Ic_inbill;
+import com.langchao.mamanage.dialog.MessageDialog;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -63,6 +69,22 @@ public class PrintActivity extends AppCompatActivity {
         lvOrder.setAdapter(adapter);
 
 
+    }
+
+
+    @Event(value = {R.id.print}, type = View.OnClickListener.class)
+    private void print(View v) {
+        if(null ==  BluetoothAdapter
+                .getDefaultAdapter()){
+            MessageDialog.show(this,"没有找到蓝牙适配器");
+            return;
+        }
+        Intent intent = new Intent(this, PrintDataActivity.class);
+
+
+
+
+        this.startActivityForResult(intent,0);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
