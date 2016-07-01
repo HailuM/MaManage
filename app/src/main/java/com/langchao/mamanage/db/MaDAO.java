@@ -723,6 +723,9 @@ public class MaDAO {
                                         handler.sendEmptyMessage(-1);
                                     }
                                     List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
+                                    for(Ic_inbill_b b : list){
+                                        b.setSourceId(ic_inbill.getOrderId());
+                                    }
                                     //保存
                                     new MaDAO().save(ic_inbill, list);
 

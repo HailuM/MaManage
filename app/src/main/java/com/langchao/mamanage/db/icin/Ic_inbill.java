@@ -36,6 +36,17 @@ public class Ic_inbill implements Serializable{
     @Column(name = "id", isId = true)
     private String id;
 
+    public String getOrderId() {
+        return OrderId;
+    }
+
+    public void setOrderId(String orderId) {
+        OrderId = orderId;
+    }
+
+    @Column(name = "OrderId")
+    private String OrderId;
+
     @Column(name = "number")
     private String number;
     @Column(name = "supplier")
