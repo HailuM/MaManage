@@ -78,6 +78,11 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
         }
     }
 
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
+
+    }
     private void buildOutBill() throws DbException {
 
 

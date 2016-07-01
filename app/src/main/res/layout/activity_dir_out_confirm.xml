@@ -11,7 +11,7 @@
         android:background="@color/title">
 
         <ImageView
-            android:id="@+id/img_dir_out_list_back"
+            android:id="@+id/back_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/arrow_left"/>
@@ -200,7 +200,7 @@
                 android:layout_width="160px"
                 android:layout_height="100px"
                 android:layout_alignParentRight="true"
-                android:src="@mipmap/outaffirm"
+
                 android:text="确认"
                 android:textSize="30dp"
                 android:gravity="center"

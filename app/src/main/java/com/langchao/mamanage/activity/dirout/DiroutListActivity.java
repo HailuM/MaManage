@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,6 +16,7 @@ import com.langchao.mamanage.db.order.Pu_order;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -99,6 +101,12 @@ public class DiroutListActivity extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

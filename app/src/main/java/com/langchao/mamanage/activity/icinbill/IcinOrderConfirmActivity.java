@@ -72,6 +72,12 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
           buildInBill();
     }
 
+
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
+
+    }
     private void buildInBill() {
         Ic_inbill_agg inbillAgg =  MaConvert.convertOrderToInbill(this,orderAgg);
 
@@ -93,7 +99,7 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
         tvOrderGet.setVisibility(View.GONE);
         textViewTitle.setText("入库确认");
 
-        imgOrderChoose.setImageResource(R.mipmap.affirm);
+        //imgOrderChoose.setImageResource(R.mipmap.affirm);
         orderAgg = (Pu_order_agg) this.getIntent().getExtras().getSerializable("order");
 
 

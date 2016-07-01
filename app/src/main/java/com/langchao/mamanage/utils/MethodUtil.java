@@ -116,4 +116,18 @@ public class MethodUtil {
         return  content.getSharedPreferences(MaConstants.FILENAME, 0).getString("inbilltoken" ,"");
 
     }
+
+    public static void savePrintMac(Context content, String mac){
+        SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
+        // 存入键值对
+        editor.putString("printmac", mac);
+
+
+        // 将内存中的数据写到XML文件中去
+        editor.commit();
+    }
+
+    public static String getPrintMac(Context content ){
+        return  content.getSharedPreferences(MaConstants.FILENAME, 0).getString("printmac" ,"");
+    }
 }

@@ -125,6 +125,12 @@ public class IcoutInbillActivity extends AppCompatActivity {
         }
     }
 
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
+
+    }
+
     Ic_inbill ic_inbill = null;
 
     @Override

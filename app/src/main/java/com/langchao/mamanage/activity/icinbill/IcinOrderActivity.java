@@ -67,7 +67,11 @@ public class IcinOrderActivity extends AppCompatActivity {
         }
     }
 
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
 
+    }
 
 
     @Event(value = {R.id.img_dir_out_order_choose}, type = View.OnClickListener.class)

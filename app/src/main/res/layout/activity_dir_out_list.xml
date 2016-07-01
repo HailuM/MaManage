@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/arrow_left"
-            android:id="@+id/img_dir_out_list_back"/>
+            android:id="@+id/back_image"/>
 
         <TextView
             android:id="@+id/textViewTitle"

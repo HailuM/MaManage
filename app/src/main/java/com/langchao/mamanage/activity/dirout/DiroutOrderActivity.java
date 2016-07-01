@@ -98,6 +98,12 @@ public class DiroutOrderActivity extends AppCompatActivity {
         }
     }
 
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
+
+    }
+
     void freshData(){
         List<Pu_order_b> list = null;
         try {

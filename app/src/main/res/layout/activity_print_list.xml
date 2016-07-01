@@ -38,7 +38,7 @@
             android:textSize="@dimen/headsize" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/back_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

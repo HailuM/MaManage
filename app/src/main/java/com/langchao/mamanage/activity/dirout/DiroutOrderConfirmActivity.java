@@ -55,7 +55,11 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
     TextView tvOrderChoose;
 
 
+    @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
 
+    }
     DiroutConfirmAdapter adapter = null;
 
     Pu_order_agg orderAgg = null;

@@ -3,6 +3,7 @@
     package="com.langchao.mamanage">
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -53,8 +54,8 @@
         <activity android:name=".activity.icoutbill.IcoutListActivity" android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.icoutbill.IcoutInbillConfirmActivity" />
         <activity android:name=".activity.main.PrintActivity" />
-        <activity android:name=".blueprint.PrintDataActivity" />
-        <activity android:name=".blueprint.BluetoothActivity" />
+        <activity android:name=".lcprint.BluetoothActivity" />
+        <activity android:name=".lcprint.PrintDataActivity" />
         <activity android:name=".activity.main.InStorageActivity"></activity>
     </application>
 
