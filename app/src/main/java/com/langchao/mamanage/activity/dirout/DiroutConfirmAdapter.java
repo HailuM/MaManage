@@ -1,6 +1,7 @@
 package com.langchao.mamanage.activity.dirout;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,8 @@ public class DiroutConfirmAdapter extends BaseAdapter {
 
             blist.remove(pu_order_b);
             baseAdapter.notifyDataSetChanged();
-
+            notice();
+            context.updateTotal(blist.size());
 
         }
         @Event(value = {R.id.et_dir_out_order_m_num }, type = View.OnClickListener.class)
@@ -79,8 +81,8 @@ public class DiroutConfirmAdapter extends BaseAdapter {
             AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > pu_order_b.getLimitQty()){
-                        num = pu_order_b.getLimitQty();
+                    if(num > (pu_order_b.getLimitQty() - pu_order_b.getCkQty())){
+                        num = pu_order_b.getLimitQty() - pu_order_b.getCkQty();
                     }
                     if(num > 0) {
                         pu_order_b.setCurQty(num);
@@ -94,10 +96,10 @@ public class DiroutConfirmAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < pu_order_b.getLimitQty()) {
+            if(pu_order_b.getCurQty() < (pu_order_b.getLimitQty()-pu_order_b.getCkQty())) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
-                notice();
+
             }
         }
 
@@ -107,14 +109,18 @@ public class DiroutConfirmAdapter extends BaseAdapter {
             if(pu_order_b.getCurQty() > 1) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
-                notice();
+
             }
         }
 
         private void notice(){
-//            Intent intent = new Intent();
-//            intent.setAction(MaConstants.FRESH); // 说明动作
-//            context.sendBroadcast(intent);// 该函数用于发送广播
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("order", pu_order_b);
+
+            intent.putExtras(bundle);
+            intent.setAction(MaConstants.FRESH); // 说明动作
+            context.sendBroadcast(intent);// 该函数用于发送广播
         }
     }
 

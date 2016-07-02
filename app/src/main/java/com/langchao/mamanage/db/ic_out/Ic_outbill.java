@@ -59,6 +59,18 @@ public class Ic_outbill implements Serializable {
     @Column(name = "Company")
     private String Company;
 
+    public Integer getPrintcount() {
+        return printcount;
+    }
+
+    public void setPrintcount(Integer printcount) {
+        this.printcount = printcount;
+    }
+
+    @Column(name = "printcount")
+    private Integer printcount;
+
+
 
     @Column(name = "isPrint")
     private boolean isPrint;
@@ -66,6 +78,9 @@ public class Ic_outbill implements Serializable {
     public boolean isPrint() {
         return isPrint;
     }
+
+
+
 
     public void setPrint(boolean print) {
         isPrint = print;

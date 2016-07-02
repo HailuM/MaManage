@@ -138,6 +138,7 @@ public class DiroutOrderActivity extends AppCompatActivity {
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
         tvOrderContact.setText(order.getName());
+        tvOrderSupply.setText(order.getSupplier());
 
 
         List<Pu_order_b> list = null;
@@ -160,9 +161,9 @@ public class DiroutOrderActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             //unregisterReceiver(this); // 这句话必须要写要不会报错，不写虽然能关闭，会报一堆错
             Pu_order_b order_b = (Pu_order_b) intent.getExtras().getSerializable("order");
-            adapter.update(order_b);
+            adapter.addBack(order_b);
             adapter.notifyDataSetChanged();
-
+            updateTotalNum(adapter.choosedList.size());
 
         }
     };

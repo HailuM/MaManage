@@ -24,7 +24,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:digits="0,1,2,3,4,5,6,7,8,9,."
-
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="numberDecimal"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/textView12"
                 android:textColor="@color/orangered" />

@@ -74,7 +74,7 @@ public class MethodUtil {
 
 
         no = no + 1;
-        String newno = MaConvert.getDate() + "-"+no.toString();
+        String newno = MaConvert.getDate() + "-"+no.toString()+getNano4();
 
         SharedPreferences.Editor editor = content.getSharedPreferences(MaConstants.FILENAME, 0).edit();
         // 存入键值对
@@ -85,6 +85,11 @@ public class MethodUtil {
         editor.commit();
 
         return newno;
+    }
+
+    public static String getNano4(){
+        String nano = System.nanoTime()+"";
+        return  nano.substring(nano.length()-5,nano.length());
     }
 
     public static void saveRkToken(Context content, String token){

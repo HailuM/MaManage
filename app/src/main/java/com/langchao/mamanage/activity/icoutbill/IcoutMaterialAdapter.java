@@ -41,6 +41,17 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         blist.get(posion).setCurQty(in_b.getCurQty());
     }
 
+    public void addBack(Ic_inbill_b in_b) {
+        blist.add(in_b);
+        for(Ic_inbill_b b : choosedList){
+            if(b.getOrderentryid().equals(in_b.getOrderentryid())){
+                choosedList.remove(b);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+    }
+
     class ViewHolder {
         @ViewInject(R.id.img_m_add)
         ImageView imgAdd;
@@ -123,10 +134,13 @@ public class IcoutMaterialAdapter extends BaseAdapter {
     }
 
     public void chooseAll() {
-        choosedList.clear();
+        //choosedList.clear();
         for (Ic_inbill_b b : blist) {
-            b.setCurQty(b.getSourceQty() - b.getCkQty());
-            choosedList.add(b);
+            //b.setCurQty(b.getSourceQty() - b.getCkQty());
+            if(!choosedList.contains(b))
+            {
+                choosedList.add(b);
+            }
         }
         context.updateTotalNum(choosedList.size());
         blist.clear();

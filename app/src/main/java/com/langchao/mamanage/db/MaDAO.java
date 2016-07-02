@@ -217,9 +217,27 @@ public class MaDAO {
         //存在入库TOKEN  上传直入直出数据
         final List<Ic_diroutbill_b> ic_diroutbill_bs = db.selector(Ic_diroutbill_b.class).where("status", "=", MaConstants.STATUS_NORMAL).findAll() == null ? new ArrayList<Ic_diroutbill_b>() : db.selector(Ic_diroutbill_b.class).where("status", "=", MaConstants.STATUS_NORMAL).findAll();
 
+        if(null != ic_diroutbill_bs && ic_diroutbill_bs.size() > 0){
+            for(Ic_diroutbill_b ib : ic_diroutbill_bs)
+            {
+                String billid = ib.getOrderid();
+                Ic_diroutbill head = queryNewHeadDir(billid);
+                ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
+            }
+        }
 
-        final List<Ic_inbill_b> ic_inbill_bs = db.selector(Ic_inbill_b.class).where("createType", " !=", MaConstants.TYPE_SYNC).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).where("createType", " !=", MaConstants.TYPE_SYNC).findAll();
+          List<Ic_inbill_b> ic_inbill_bs_t = db.selector(Ic_inbill_b.class).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).findAll();
 
+        List<Ic_inbill_b> ic_inbill_bs_new = new ArrayList<>();
+        if(ic_inbill_bs_t.size() > 0){
+            for(Ic_inbill_b ib : ic_inbill_bs_t){
+                if(null == ib.getCreateType()){
+                    ic_inbill_bs_new.add(ib);
+                }
+            }
+        }
+
+        final   List<Ic_inbill_b> ic_inbill_bs = ic_inbill_bs_new;
         size = size + ic_diroutbill_bs.size() + ic_inbill_bs.size();
 
         String ckToken = MethodUtil.getCkToken(mainActivity);
@@ -231,6 +249,14 @@ public class MaDAO {
 
             ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
             outSize = ic_outbill_bs.size();
+            if(null != ic_outbill_bs && ic_outbill_bs.size() > 0){
+                for(Ic_outbill_b ib : ic_outbill_bs)
+                {
+                    String billid = ib.getOrderid();
+                    Ic_outbill head = queryNewHead(billid);
+                    ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
+                }
+            }
         }
 
         final boolean delOut = (null == ckToken || ckToken.trim().length() == 0);
@@ -423,9 +449,12 @@ public class MaDAO {
             final Runnable afterThread = new Runnable() {
                 public void run() {
                     try {
+                        NetUtils.Mobile_DownLoadOrderComplete(userId,rkToken);
                         MessageDialog.show(mainActivity, "同步入库成功");
                     } catch (Exception e) {
                         MessageDialog.show(mainActivity, e.getMessage());
+                    } catch (Throwable throwable) {
+                        MessageDialog.show(mainActivity, throwable.getMessage());
                     }
                 }
             };
@@ -466,13 +495,30 @@ public class MaDAO {
 
                                 if (null == orderArray) {
                                     // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
-                                    handler.sendEmptyMessage(-1);
+                                    Message errmsg = new Message();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("err", pu_order.getNumber()+"未能获取订单物料");
+                                    errmsg.setData(bundle);
+                                    errmsg.what = -1;
+                                    handler.sendMessage(errmsg);
+                                    return;
                                 }
                                 List<Pu_order_b> list = JSON.parseArray(orderArray.toJSONString(), Pu_order_b.class);
                                 //保存
-                                new MaDAO().save(pu_order, list);
+
 
                                 JSONArray jsonArray = NetUtils.Mobile_DownloadOrderconsumer(userId, pu_order.getId(), rkToken);
+                                if (null == jsonArray || jsonArray.size() == 0) {
+                                    // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                                    Message errmsg = new Message();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("err", pu_order.getNumber()+"未能获取订单领料商");
+                                    errmsg.setData(bundle);
+                                    errmsg.what = -1;
+                                    handler.sendMessage(errmsg);
+                                    return;
+                                }
+                                new MaDAO().save(pu_order, list);
                                 if (null != jsonArray) {
                                     List<Consumer> consumerList = JSON.parseArray(jsonArray.toJSONString(), Consumer.class);
                                     new MaDAO().save(consumerList);
@@ -532,7 +578,14 @@ public class MaDAO {
         final String ckToken = MethodUtil.getCkToken(mainActivity);
 
         List<Ic_outbill_b> ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
-
+        if(null != ic_outbill_bs && ic_outbill_bs.size() > 0){
+            for(Ic_outbill_b ib : ic_outbill_bs)
+            {
+                String billid = ib.getOrderid();
+                Ic_outbill head = queryNewHead(billid);
+                ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
+            }
+        }
 
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setTitle("同步出库");
@@ -675,9 +728,12 @@ public class MaDAO {
             final Runnable afterThread = new Runnable() {
                 public void run() {
                     try {
+                        NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
                         MessageDialog.show(mainActivity, "同步出库成功");
                     } catch (Exception e) {
                         MessageDialog.show(mainActivity, e.getMessage());
+                    } catch (Throwable throwable) {
+                        MessageDialog.show(mainActivity, throwable.getMessage());
                     }
                 }
             };
@@ -720,16 +776,33 @@ public class MaDAO {
 
                                     if (null == jsonArray) {
 
-                                        handler.sendEmptyMessage(-1);
+                                        Message errmsg = new Message();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("err", ic_inbill.getNumber()+"未能获取入库单物料");
+                                        errmsg.setData(bundle);
+                                        errmsg.what = -1;
+                                        handler.sendMessage(errmsg);
+                                        return;
                                     }
                                     List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
                                     for(Ic_inbill_b b : list){
                                         b.setSourceId(ic_inbill.getOrderId());
                                     }
-                                    //保存
-                                    new MaDAO().save(ic_inbill, list);
+
 
                                     JSONArray consumerArray = NetUtils.Mobile_DownloadReceiveconsumer(userId, ic_inbill.getId(), ckToken);
+                                    if (null == jsonArray || jsonArray.size() == 0) {
+                                        // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                                        Message errmsg = new Message();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("err", ic_inbill.getNumber()+"未能获取入库单领料商");
+                                        errmsg.setData(bundle);
+                                        errmsg.what = -1;
+                                        handler.sendMessage(errmsg);
+                                        return;
+                                    }
+                                    //保存
+                                    new MaDAO().save(ic_inbill, list);
                                     if (null != jsonArray) {
                                         List<Consumer> consumerList = JSON.parseArray(consumerArray.toJSONString(), Consumer.class);
                                         new MaDAO().save(consumerList);
@@ -1134,5 +1207,48 @@ public class MaDAO {
     public List<Ic_diroutbill> queryDirForPrint() throws DbException {
         DbManager db = x.getDb(daoConfig);
         return db.selector(Ic_diroutbill.class).where("isPrint", "=", false).findAll();
+    }
+
+
+
+    public  void  addPrintCount(String billid) throws DbException {
+        String sql = "update ic_outbill set printcount = (printcount+1) where id = '"+billid+"'";
+        DbManager db = x.getDb(daoConfig);
+        Ic_outbill outbill =  db.findById(Ic_outbill.class,billid);
+
+        if(null != outbill){
+            Integer count = outbill.getPrintcount() == null ? 0 : outbill.getPrintcount();
+            outbill.setPrintcount(count+1);
+            db.saveOrUpdate(outbill);
+        }
+
+        Ic_diroutbill diroutbill =  db.findById(Ic_diroutbill.class,billid);
+
+        if(null != diroutbill){
+            Integer count = diroutbill.getPrintcount() == null ? 0 : diroutbill.getPrintcount();
+            diroutbill.setPrintcount(count+1);
+            db.saveOrUpdate(diroutbill);
+        }
+    }
+
+    public List<Ic_outbill_b> queryDetailForPrint(String id) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        //db.findAll(Ic_outbill_b.class);
+        return db.selector(Ic_outbill_b.class).where("orderid","=",id).findAll();
+    }
+
+    public List<Ic_diroutbill_b> queryDetailForPrintDir(String id) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return db.selector(Ic_diroutbill_b.class).where("orderid","=",id).findAll();
+    }
+
+    public Ic_outbill queryNewHead(String id) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return db.findById(Ic_outbill.class,id);
+    }
+
+    public Ic_diroutbill queryNewHeadDir(String id) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        return db.findById(Ic_diroutbill.class,id);
     }
 }

@@ -25,4 +25,9 @@ public class MaConstants {
     public static String STATUS_TEMP = "temp";
 
     public static String STATUS_NORMAL = "normal";
+
+
+    public final static String PRINT_LINESTART = "/*****************************/";
+
+    public final static String PRINT_LINEBLANK="/- - - - - - - - - - - - - /";
 }

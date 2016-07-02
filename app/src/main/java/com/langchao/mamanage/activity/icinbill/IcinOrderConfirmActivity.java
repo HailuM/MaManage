@@ -108,7 +108,7 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
         tvOrderContact.setText(order.getName());
-
+        tvOrderSupply.setText(order.getSupplier());
 
         List<Consumer> consumers = null;
         try {
@@ -125,6 +125,10 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
 
         adapter = new IcinConfirmAdapter(this, list);
         lvOrderMaterial.setAdapter(adapter);
+    }
+
+    public void updateChoosdSize(int size){
+        tvOrderChoose.setText("已选品种：" + size);
     }
 
     public class ConsumerAdapter extends BaseAdapter {

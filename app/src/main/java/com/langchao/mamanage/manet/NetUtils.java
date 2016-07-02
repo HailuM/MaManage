@@ -8,6 +8,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.activity.MainActivity;
 import com.langchao.mamanage.common.MaConstants;
+import com.langchao.mamanage.converter.MaConvert;
+import com.langchao.mamanage.db.MaDAO;
+import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
@@ -465,13 +468,15 @@ public class NetUtils {
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
 
+        Ic_diroutbill head = new MaDAO().queryNewHeadDir(bill.getOrderid());
         JSONObject jo = new JSONObject();
         jo.put("orderid", bill.getSourceId());
-        jo.put("preparertime", bill.getTime());
-        jo.put("consumerid", bill.getConsumerId());
+        jo.put("preparertime", MaConvert.formatData(bill.getTime()));
+        jo.put("consumerid", head.getConsumerid());
         jo.put("orderEntryid", bill.getSourcebId());
         jo.put("zrzcid", bill.getOrderentryid());
         jo.put("qty", bill.getSourceQty());
+        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount());
 
 
         xml = xml.replace("(userOID)", userId);
@@ -518,10 +523,10 @@ public class NetUtils {
 
         JSONObject jo = new JSONObject();
         jo.put("orderid", bill.getSourceId());
-        jo.put("preparertime", bill.getTime());
+        jo.put("preparertime", MaConvert.formatData(bill.getTime()));
 
         jo.put("orderEntryid", bill.getSourcebId());
-        jo.put("receiveid", bill.getOrderentryid());
+        jo.put("receiveid", bill.getOrderid());
         jo.put("qty", bill.getSourceQty());
 
 
@@ -560,15 +565,18 @@ public class NetUtils {
                 "    </Mobile_uploadckInfo>\n" +
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
+        Ic_outbill head = new MaDAO().queryNewHead(bill.getOrderid());
 
         JSONObject jo = new JSONObject();
         jo.put("orderid", bill.getSourceId());
-        jo.put("preparertime", bill.getTime());
+        jo.put("preparertime", MaConvert.formatData(bill.getTime()));
         jo.put("deliverNo", bill.getNumber());
-        jo.put("consumerid", bill.getConsumerId());
+        jo.put("consumerid", head.getConsumerid());
         jo.put("orderEntryid", bill.getSourcebId());
         jo.put("deliverid", bill.getOrderentryid());
         jo.put("qty", bill.getSourceQty());
+        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount());
+        jo.put("receiveid",bill.getReceiveid());
 
 
         xml = xml.replace("(userOID)", userId);
@@ -619,7 +627,7 @@ public class NetUtils {
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
         String result = x.http().postSync(params, String.class);
-        String xmlrs = NetUtils.getValueFromXML("Mobile_uploadckCompleteResult", result);
+        String xmlrs = NetUtils.getValueFromXML("Mobile_DownLoadOrderCompleteResult", result);
         if (xmlrs.contains("true")) {
 
             return true;

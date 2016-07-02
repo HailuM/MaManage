@@ -29,7 +29,16 @@ public class Ic_diroutbill implements Serializable {
     private String materialDesc;
     @Column(name = "addr")
     private String Addr;
+    public Integer getPrintcount() {
+        return printcount;
+    }
 
+    public void setPrintcount(Integer printcount) {
+        this.printcount = printcount;
+    }
+
+    @Column(name = "printcount")
+    private Integer printcount;
 
     @Column(name = "ProjectName")
     private String ProjectName;

@@ -36,6 +36,18 @@ public class DiroutMaterialAdapter extends BaseAdapter {
         blist = list;
     }
 
+
+    public void addBack(Pu_order_b order_b) {
+        blist.add(order_b);
+        for(Pu_order_b b : choosedList){
+            if(b.getOrderentryid().equals(order_b.getOrderentryid())){
+                choosedList.remove(b);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+    }
+
     class ViewHolder {
         @ViewInject(R.id.img_m_add)
         ImageView imgAdd;
@@ -119,10 +131,14 @@ public class DiroutMaterialAdapter extends BaseAdapter {
         blist.get(posion).setCurQty(order_b.getCurQty());
     }
     public void chooseAll(){
-        choosedList.clear();
+       // choosedList.clear();
         for(Pu_order_b b : blist){
-            b.setCurQty(b.getSourceQty()-b.getCkQty());
-            choosedList.add(b);
+            //b.setCurQty(b.getSourceQty()-b.getCkQty());
+                if(        !    choosedList
+                        .contains(b))
+                {
+                    choosedList.add(b);
+                }
         }
         context.updateTotalNum(choosedList.size());
         blist.clear();

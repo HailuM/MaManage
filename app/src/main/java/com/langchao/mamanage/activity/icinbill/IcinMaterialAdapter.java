@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.AlertForResult;
 import com.langchao.mamanage.dialog.PopCallBack;
@@ -39,6 +40,17 @@ public class IcinMaterialAdapter extends BaseAdapter {
     public void update(Pu_order_b order_b) {
         int posion = order_b.getPosition();
         blist.get(posion).setCurQty(order_b.getCurQty());
+    }
+
+    public void addBack(Pu_order_b order_b) {
+        blist.add(order_b);
+        for(Pu_order_b b : choosedList){
+            if(b.getOrderentryid().equals(order_b.getOrderentryid())){
+                choosedList.remove(b);
+                notifyDataSetChanged();
+                return;
+            }
+        }
     }
 
     class ViewHolder {
@@ -121,11 +133,14 @@ public class IcinMaterialAdapter extends BaseAdapter {
     }
 
     public void chooseAll() {
-        choosedList.clear();
+
         for (Pu_order_b b : blist) {
             if (b.getSourceQty() - b.getRkQty() > 0) {
-                b.setCurQty(b.getSourceQty() - b.getRkQty());
-                choosedList.add(b);
+                //b.setCurQty(b.getSourceQty() - b.getRkQty());
+                if(!choosedList.contains(b))
+                {
+                    choosedList.add(b);
+                }
             }
         }
         context.updateTotalNum(choosedList.size());

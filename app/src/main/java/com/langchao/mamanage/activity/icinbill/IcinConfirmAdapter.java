@@ -74,8 +74,8 @@ public class IcinConfirmAdapter extends BaseAdapter {
             AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > pu_order_b.getSourceQty()){
-                        num = pu_order_b.getSourceQty();
+                    if(num > (pu_order_b.getSourceQty()- pu_order_b.getRkQty())){
+                        num = pu_order_b.getSourceQty()- pu_order_b.getRkQty();
                     }
                     if(num > 0) {
                         pu_order_b.setCurQty(num);
@@ -89,10 +89,10 @@ public class IcinConfirmAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < pu_order_b.getSourceQty()) {
+            if(pu_order_b.getCurQty() < (pu_order_b.getSourceQty()- pu_order_b.getRkQty())) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
-                notice(pu_order_b);
+
             }
         }
 
@@ -102,7 +102,7 @@ public class IcinConfirmAdapter extends BaseAdapter {
             if(pu_order_b.getCurQty() > 1) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
-                notice(pu_order_b);
+
             }
         }
 
@@ -113,16 +113,17 @@ public class IcinConfirmAdapter extends BaseAdapter {
                 baseAdapter.notifyDataSetChanged();
                 notice(pu_order_b);
 
+            context.updateChoosdSize(blist.size());
         }
 
         private void notice(Pu_order_b pu_order_b){
-//            Intent intent = new Intent();
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("order", pu_order_b);
-//
-//            intent.putExtras(bundle);
-//            intent.setAction(MaConstants.FRESH); // 说明动作
-//            context.sendBroadcast(intent);// 该函数用于发送广播
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("order", pu_order_b);
+
+            intent.putExtras(bundle);
+            intent.setAction(MaConstants.FRESH); // 说明动作
+            context.sendBroadcast(intent);// 该函数用于发送广播
         }
     }
 

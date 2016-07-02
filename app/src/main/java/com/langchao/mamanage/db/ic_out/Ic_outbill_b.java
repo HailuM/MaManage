@@ -33,7 +33,15 @@ import java.util.Date;
 public class Ic_outbill_b implements Serializable {
 
 
+    public Integer getPrintcount() {
+        return printcount;
+    }
 
+    public void setPrintcount(Integer printcount) {
+        this.printcount = printcount;
+    }
+
+    private  Integer printcount;
 
     @Column(name = "orderentryid", isId = true)
     private String orderentryid;
@@ -96,6 +104,28 @@ public class Ic_outbill_b implements Serializable {
     //领料商ID
     @Column(name = "consumerid")
     private String consumerId;
+
+    @Column(name = "receivebid")
+    private String receivebid;
+
+    public String getReceiveid() {
+        return receiveid;
+    }
+
+    public void setReceiveid(String receiveid) {
+        this.receiveid = receiveid;
+    }
+
+    public String getReceivebid() {
+        return receivebid;
+    }
+
+    public void setReceivebid(String receivebid) {
+        this.receivebid = receivebid;
+    }
+
+    @Column(name = "receiveid")
+    private String receiveid;
 
     //领料商名称
     @Column(name = "consumername")

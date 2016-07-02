@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.converter.MaConvert;
@@ -22,6 +23,8 @@ import com.langchao.mamanage.db.ic_out.Ic_outbill_agg;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
+import com.langchao.mamanage.dialog.MessageDialog;
+import com.langchao.mamanage.lcprint.PrintUtil;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -77,7 +80,7 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
         tvOrderContact.setText(order.getName());
-
+        tvOrderSupply.setText(order.getSupplier());
 
         List<Consumer> consumers = null;
         try {
@@ -98,6 +101,9 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
         lvOrderMaterial.setAdapter(adapter);
     }
 
+    public void updateTotal(int size){
+        tvOrderChoose.setText("已选品种：" + size);
+    }
 
     /**
      * 确认后保存数据
@@ -121,13 +127,14 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
             String consumerid = ((Consumer)spOrderGet.getSelectedItem()).getConsumerid();
             outbillAgg.getIc_diroutbill().setConsumerid(consumerid);
             String consumername = ((Consumer)spOrderGet.getSelectedItem()).getName();
-            outbillAgg.getIc_diroutbill().setConsumerid(consumername);
+            outbillAgg.getIc_diroutbill().setConsumername(consumername);
         }
 
         new MaDAO().saveDirOutBillTemp(outbillAgg, this.orderAgg);
         setResult(RESULT_OK);
         this.finish();
-
+        //MessageDialog.show(this,"准备打印");
+        PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_diroutbill(),outbillAgg.getIc_diroutbill_bs()),outbillAgg.getIc_diroutbill().getId());
     }
 
     public class ConsumerAdapter extends BaseAdapter {

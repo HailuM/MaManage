@@ -1,20 +1,15 @@
 package com.langchao.mamanage.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.langchao.mamanage.R;
-import com.langchao.mamanage.activity.MainActivity;
 
 /**
  * Created by miaohl on 2016/6/26.
@@ -25,14 +20,18 @@ public class AlertForResult {
 
     public static  void popUp(double oldnum,Context context,final PopCallBack callBack) {
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+       // alertDialog.setView(((Activity)context).getLayoutInflater().inflate(dialoglayout, null));
         alertDialog.show();
         Window window = alertDialog.getWindow();
         window.setContentView(R.layout.alert_num);
+
         TextView text_add = (TextView) window.findViewById(R.id.textView12);
         TextView text_reduce = (TextView) window.findViewById(R.id.textView18);
 //        tv_title.setText("详细信息");
         final EditText editText = (EditText) window.findViewById(R.id.editText);
         editText.setText(oldnum+"");
+        editText.setEnabled(true);
+        editText.setFocusable(true);
         BootstrapButton no= (BootstrapButton) window.findViewById(R.id.no);
         BootstrapButton yes= (BootstrapButton) window.findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {

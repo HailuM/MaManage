@@ -11,4 +11,9 @@ public class MathUtils {
         BigDecimal n2 = new BigDecimal(num);
         return n2.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
     }
+
+    public static String scaleDouble4(double num){
+        BigDecimal n2 = new BigDecimal(num);
+        return n2.setScale(4,BigDecimal.ROUND_HALF_UP).toString();
+    }
 }

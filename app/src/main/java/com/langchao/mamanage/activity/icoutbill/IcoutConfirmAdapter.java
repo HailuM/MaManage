@@ -74,8 +74,8 @@ public class IcoutConfirmAdapter extends BaseAdapter {
             AlertForResult.popUp( inbill_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > inbill_b.getSourceQty()){
-                        num = inbill_b.getSourceQty();
+                    if(num > (inbill_b.getSourceQty()-inbill_b.getCkQty())){
+                        num =inbill_b.getSourceQty()-inbill_b.getCkQty();
                     }
                     if(num > 0) {
                         inbill_b.setCurQty(num);
@@ -88,10 +88,10 @@ public class IcoutConfirmAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(inbill_b.getCurQty() < inbill_b.getSourceQty()) {
+            if(inbill_b.getCurQty() < (inbill_b.getSourceQty()-inbill_b.getCkQty())) {
                 inbill_b.setCurQty(inbill_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
-                notice(inbill_b);
+
             }
         }
 
@@ -101,7 +101,7 @@ public class IcoutConfirmAdapter extends BaseAdapter {
             if(inbill_b.getCurQty() > 1) {
                 inbill_b.setCurQty(inbill_b.getCurQty() - 1);
                 baseAdapter.notifyDataSetChanged();
-                notice(inbill_b);
+
             }
         }
 
@@ -111,17 +111,18 @@ public class IcoutConfirmAdapter extends BaseAdapter {
             blist.remove(inbill_b);
             baseAdapter.notifyDataSetChanged();
 
-
+            notice(inbill_b);
+            context.updateTotal(blist.size());
         }
 
         private void notice(Ic_inbill_b inbill_b){
-//            Intent intent = new Intent();
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("ic_inbill", inbill_b);
-//
-//            intent.putExtras(bundle);
-//            intent.setAction(MaConstants.FRESH); // 说明动作
-//            context.sendBroadcast(intent);// 该函数用于发送广播
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("ic_inbill", inbill_b);
+
+            intent.putExtras(bundle);
+            intent.setAction(MaConstants.FRESH); // 说明动作
+            context.sendBroadcast(intent);// 该函数用于发送广播
         }
     }
 

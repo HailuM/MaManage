@@ -131,6 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/contact"
+                android:visibility="gone"
                 android:textSize="16sp"/>
 
             <TextView
@@ -139,6 +140,7 @@
                 android:layout_weight="3"
                 android:id="@+id/tv_dir_out_order_contact"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 android:textSize="16sp"/>
         </LinearLayout>
 

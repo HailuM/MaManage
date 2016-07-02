@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.converter.MaConvert;
@@ -22,6 +23,8 @@ import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
+import com.langchao.mamanage.dialog.MessageDialog;
+import com.langchao.mamanage.lcprint.PrintUtil;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -98,6 +101,9 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
         setResult(RESULT_OK);
         this.finish();
 
+        MessageDialog.show(this,"准备打印");
+
+        PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_outbill(),outbillAgg.getIc_outbill_bs()),outbillAgg.getIc_outbill().getId());
     }
 
     @Override
@@ -114,6 +120,7 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
 
         tvOrderNo.setText(order.getNumber());
         tvOrderBuild.setText(order.getAddr());
+        tvOrderSupply.setText(order.getSupplier());
 
         List<Ic_inbill_b> list = inbillAgg.getIc_inbill_bList();
         List<Consumer> consumers = null;
@@ -134,6 +141,10 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
 
         adapter = new IcoutConfirmAdapter(this, list);
         lvOrderMaterial.setAdapter(adapter);
+    }
+
+    public void updateTotal(int size){
+        tvOrderChoose.setText("已选品种：" + size);
     }
 
     public class ConsumerAdapter extends BaseAdapter {

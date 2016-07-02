@@ -35,6 +35,17 @@ public class Ic_diroutbill_b implements Serializable {
 
 
 
+    public Integer getPrintcount() {
+        return printcount;
+    }
+
+    public void setPrintcount(Integer printcount) {
+        this.printcount = printcount;
+    }
+
+    private  Integer printcount;
+
+
     @Column(name = "orderentryid", isId = true)
     private String orderentryid;
 

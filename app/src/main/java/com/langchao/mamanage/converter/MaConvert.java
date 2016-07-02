@@ -62,16 +62,21 @@ public class MaConvert {
 
     }
 
-    public static Ic_outbill_b convert(Ic_inbill_b inbill_b, double num, String id, String number) {
+    public static Ic_outbill_b convert(Ic_inbill_b inbill_b, double num, String id, String number, String orderHeadId) {
         Ic_outbill_b outbill_b = new Ic_outbill_b();
         outbill_b.setOrderid(id);
         outbill_b.setOrderentryid(UUID.randomUUID().toString());
         outbill_b.setSourceId(inbill_b.getOrderid());
         outbill_b.setSourcebId(inbill_b.getOrderentryid());
-        if(null != inbill_b.getSourcebId() && inbill_b.getSourcebId() .trim().length() == 0){
+        if(null != inbill_b.getSourcebId() && inbill_b.getSourcebId() .trim().length() >= 0){
             outbill_b.setSourcebId(inbill_b.getSourcebId());
+
         }
 
+        if(null != inbill_b.getSourceId() && inbill_b.getSourceId() .trim().length() >= 0){
+
+            outbill_b.setSourceId(inbill_b.getSourceId());
+        }
         outbill_b.setNumber(number);
 
         outbill_b.setNote(inbill_b.getNote());
@@ -80,6 +85,7 @@ public class MaConvert {
         outbill_b.setUnit(inbill_b.getUnit());
         outbill_b.setName(inbill_b.getName());
         outbill_b.setPrice(inbill_b.getPrice());
+        outbill_b.setReceiveid(orderHeadId);
 
         outbill_b.setSourceQty(num);
 
@@ -127,6 +133,14 @@ public class MaConvert {
         return format.format(c1.getTime());
     }
 
+    public static String formatData(Date time){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(time);
+        return format.format(c1.getTime());
+    }
+
     public static Ic_outbill_agg convertInbilToOut(IcoutInbillConfirmActivity content, Ic_inbill_agg inbillAgg) {
 
         Ic_outbill_agg agg = new Ic_outbill_agg();
@@ -149,7 +163,7 @@ public class MaConvert {
         for (Ic_inbill_b item : inbillAgg.getIc_inbill_bList()) {
 
             if(item.getCurQty() > 0) {
-                blist.add(convert(item, item.getCurQty(), id,head.getNumber()));
+                blist.add(convert(item, item.getCurQty(), id,head.getNumber(),orderHead.getId()));
                 item.setCkQty(item.getCkQty() + item.getCurQty());
 
             }

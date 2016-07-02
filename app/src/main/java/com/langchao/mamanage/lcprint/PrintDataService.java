@@ -9,7 +9,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.langchao.mamanage.db.MaDAO;
+import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.utils.MethodUtil;
+
+import org.xutils.ex.DbException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -96,9 +100,14 @@ public class PrintDataService {
      */  
     public static void disconnect() {  
         System.out.println("断开蓝牙设备连接");  
-        try {  
-            bluetoothSocket.close();  
-            outputStream.close();  
+        try {
+            if(null != bluetoothSocket) {
+                bluetoothSocket.close();
+            }
+            if(null != outputStream)
+            {
+                outputStream.close();
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block  
             e.printStackTrace();  
@@ -123,14 +132,28 @@ public class PrintDataService {
                     }  
                 }).create().show();  
     }  
-  
+
+    private boolean printed = false;
+
     /** 
      * 发送数据 
      */  
-    public void send(String sendData) {  
+    public void send(String sendData) {
+        if(printed){
+            MessageDialog.show(context,"此单已打印，请返回！");
+            return;
+        }
         if (this.isConnection) {
             //保存  下次直接连接
             MethodUtil.savePrintMac(this.context,this.device.getAddress());
+
+            String billid = intent.getStringExtra("billid");
+            try {
+                new MaDAO().addPrintCount(billid);
+            } catch (DbException e) {
+
+            }
+            printed = true;
             System.out.println("开始打印！！");  
             try {  
                 byte[] data = sendData.getBytes("gbk");  

@@ -145,6 +145,7 @@ public class IcoutInbillActivity extends AppCompatActivity {
         tvOrderNo.setText(ic_inbill.getNumber());
         tvOrderBuild.setText(ic_inbill.getAddr());
         //tvOrderContact.setText(ic_inbill.getName());
+        tvOrderSupply.setText(ic_inbill.getSupplier());
 
 
         List<Ic_inbill_b> list = null;
@@ -170,9 +171,10 @@ public class IcoutInbillActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             // unregisterReceiver(this); // 这句话必须要写要不会报错，不写虽然能关闭，会报一堆错
 
-//            Ic_inbill_b in_b = (Ic_inbill_b) intent.getExtras().getSerializable("ic_inbill");
-//            adapter.update(in_b);
-//            adapter.notifyDataSetChanged();
+            Ic_inbill_b in_b = (Ic_inbill_b) intent.getExtras().getSerializable("ic_inbill");
+            adapter.addBack(in_b);
+            adapter.notifyDataSetChanged();
+            updateTotalNum(adapter.choosedList.size());
         }
     };
 

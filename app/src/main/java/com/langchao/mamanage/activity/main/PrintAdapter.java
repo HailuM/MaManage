@@ -15,6 +15,7 @@ import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.icin.Ic_inbill;
+import com.langchao.mamanage.lcprint.PrintUtil;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -57,7 +58,7 @@ public class PrintAdapter extends BaseAdapter {
         @ViewInject(R.id.tv_dir_out_order_building)
         public TextView tvBuilding;
 
-        public Ic_inbill inbill;
+        public Object outbill;
 
 
     }
@@ -94,6 +95,18 @@ public class PrintAdapter extends BaseAdapter {
             x.view().inject(_Holder, convertView);
             convertView.setTag(_Holder);
 
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   Object bill =  ((ViewHolder)view.getTag()).outbill;
+                    if(bill.getClass().equals(Ic_outbill.class)){
+                        PrintUtil.print(context,(Ic_outbill)bill);
+                    }else{
+                        PrintUtil.print(context,(Ic_diroutbill) bill);
+                    }
+                }
+            });
+
         } else {
             _Holder = (ViewHolder) convertView.getTag();
         }
@@ -105,6 +118,7 @@ public class PrintAdapter extends BaseAdapter {
             _Holder.tvMaterial.setText(outbill.getMaterialDesc());
             _Holder.tvSupplier.setText(outbill.getSupplier());
             _Holder.tvOrderTime.setText(outbill.getDate().toString());
+            _Holder.outbill = outbill;
         }else {
 
             Ic_diroutbill diroutbill = dirout.get(position - out.size());
@@ -114,6 +128,7 @@ public class PrintAdapter extends BaseAdapter {
                 _Holder.tvMaterial.setText(diroutbill.getMaterialDesc());
                 _Holder.tvSupplier.setText(diroutbill.getSupplier());
                 _Holder.tvOrderTime.setText(diroutbill.getDate().toString());
+                _Holder.outbill = diroutbill;
             }
         }
 
