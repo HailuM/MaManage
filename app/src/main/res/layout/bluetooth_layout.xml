@@ -2,14 +2,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:layout_alignParentLeft="true"
+        android:background="@color/title">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/arrow_left"
+            android:id="@+id/back_image"/>
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="搜索打印机"
+            android:textColor="@color/white"
+            android:textSize="@dimen/headsize"/>
+
+    </RelativeLayout>
     <Button
         android:id="@+id/openBluetooth_tb"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="18dp"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_marginTop="0dp"
+        android:visibility="gone"
         android:text="打开蓝牙" />
 
     <Button
@@ -80,6 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/searchDevices"
         android:layout_alignParentLeft="true"
+        android:visibility="gone"
         android:text="返回" />
 
 </RelativeLayout>
