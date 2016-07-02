@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.langchao.mamanage.R;
@@ -49,7 +50,15 @@ public class BluetoothActivity extends Activity {
   
         switchBT.setOnClickListener(bluetoothAction);  
         searchDevices.setOnClickListener(bluetoothAction);  
-        returnButton.setOnClickListener(bluetoothAction);  
+        returnButton.setOnClickListener(bluetoothAction);
+
+        ImageView backView = (ImageView) this.findViewById(R.id.back_image);
+        backView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }  
     //屏蔽返回键的代码:  
     public boolean onKeyDown(int keyCode,KeyEvent event)
