@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ public class AlertForResult {
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
        // alertDialog.setView(((Activity)context).getLayoutInflater().inflate(dialoglayout, null));
         alertDialog.show();
+        alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         Window window = alertDialog.getWindow();
         window.setContentView(R.layout.alert_num);
 
