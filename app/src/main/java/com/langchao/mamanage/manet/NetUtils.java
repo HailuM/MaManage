@@ -457,6 +457,14 @@ public class NetUtils {
     }
 
 
+    /**
+     * 直入直出上传
+     * @param bill
+     * @param rkToken
+     * @param userId
+     * @return
+     * @throws Throwable
+     */
     public  static boolean uploadZrzc(Ic_diroutbill_b bill, String rkToken, String userId) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -470,13 +478,14 @@ public class NetUtils {
 
         Ic_diroutbill head = new MaDAO().queryNewHeadDir(bill.getOrderid());
         JSONObject jo = new JSONObject();
-        jo.put("orderid", bill.getSourceId());
-        jo.put("preparertime", MaConvert.formatData(bill.getTime()));
-        jo.put("consumerid", head.getConsumerid());
-        jo.put("orderEntryid", bill.getSourcebId());
-        jo.put("zrzcid", bill.getOrderentryid());
-        jo.put("qty", bill.getSourceQty());
-        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount());
+        jo.put("orderid", bill.getSourceId()); //来源订单主表ID
+        jo.put("preparertime", MaConvert.formatData(bill.getTime())); //制单时间  yyyy-mm-dd hh:mm:ss
+
+        jo.put("consumerid", head.getConsumerid());//领料商ID
+        jo.put("orderEntryid", bill.getSourcebId()); //来源订单子表ID
+        jo.put("zrzcid", bill.getOrderentryid());//生成的直入直出ID  UUID
+        jo.put("qty", bill.getSourceQty());//数量
+        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
 
 
         xml = xml.replace("(userOID)", userId);
@@ -510,6 +519,14 @@ public class NetUtils {
         return xml.substring(start, end);
     }
 
+    /**
+     * 上传入库单
+     * @param bill
+     * @param rkToken
+     * @param userId
+     * @return
+     * @throws Throwable
+     */
     public static boolean uploadInbill(Ic_inbill_b bill, String rkToken, String userId) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -521,17 +538,17 @@ public class NetUtils {
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
 
-        JSONObject jo = new JSONObject();
-        jo.put("orderid", bill.getSourceId());
-        jo.put("preparertime", MaConvert.formatData(bill.getTime()));
+        JSONObject jo = new JSONObject(); //上传的时候按行明细上传
+        jo.put("orderid", bill.getSourceId());  //来源订单表头ID
+        jo.put("preparertime", MaConvert.formatData(bill.getTime()));  //制单时间  格式 yyyy-mm-dd hh:mm:ss
 
-        jo.put("orderEntryid", bill.getSourcebId());
-        jo.put("receiveid", bill.getOrderid());
-        jo.put("qty", bill.getSourceQty());
+        jo.put("orderEntryid", bill.getSourcebId()); //来源订单表体ID
+        jo.put("receiveid", bill.getOrderid());  //生成的入库单主表ID  我使用的是UUID
+        jo.put("qty", bill.getSourceQty()); //入库单行的数量
 
 
-        xml = xml.replace("(userOID)", userId);
-        xml = xml.replace("(rktokenStr)", rkToken);
+        xml = xml.replace("(userOID)", userId);  //用户ID
+        xml = xml.replace("(rktokenStr)", rkToken); //上次下载订单后的  入库TOKEN
         xml = xml.replace("(jsonData)", jo.toJSONString());
 
         String url = getIp() + URL_MOBILE_UPLOADRKINFO;
@@ -554,6 +571,15 @@ public class NetUtils {
     }
 
 
+    /**
+     * 上传出库单
+     * @param bill
+     * @param ckToken
+     * @param userId
+     * @param type
+     * @return
+     * @throws Throwable
+     */
     public static boolean uploadOutbill(Ic_outbill_b bill, String ckToken, String userId, String type) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
@@ -568,21 +594,21 @@ public class NetUtils {
         Ic_outbill head = new MaDAO().queryNewHead(bill.getOrderid());
 
         JSONObject jo = new JSONObject();
-        jo.put("orderid", bill.getSourceId());
-        jo.put("preparertime", MaConvert.formatData(bill.getTime()));
-        jo.put("deliverNo", bill.getNumber());
-        jo.put("consumerid", head.getConsumerid());
-        jo.put("orderEntryid", bill.getSourcebId());
-        jo.put("deliverid", bill.getOrderentryid());
-        jo.put("qty", bill.getSourceQty());
-        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount());
-        jo.put("receiveid",bill.getReceiveid());
+        jo.put("orderid", bill.getSourceId());  //来源订单主表ID   从订单带到入库单 带到出库单
+        jo.put("preparertime", MaConvert.formatData(bill.getTime())); //制单时间  yyyy-mm-dd hh:mm:ss
+        jo.put("deliverNo", bill.getNumber()); //生成的出库单号  打印的时候有个单号 用来和系统对应  我使用的年月日+自增长+纳秒后5位   2016-02-03-1*****
+        jo.put("consumerid", head.getConsumerid());//领料商ID  界面选择的
+        jo.put("orderEntryid", bill.getSourcebId()); //来源订单子表ID 从订单带到入库单带到出库单
+        jo.put("deliverid", bill.getOrderentryid()); //生成的出库单子表ID
+        jo.put("qty", bill.getSourceQty()); //出库数量
+        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
+        jo.put("receiveid",bill.getReceiveid()); //来源的入库单的 主表ID
 
 
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(cktokenStr)", ckToken);
         xml = xml.replace("(jsonData)", jo.toJSONString());
-        xml = xml.replace("(type)", type);
+        xml = xml.replace("(type)", type);  //区分是 同步入库的时候  还是 同步出库的时候上传的
 
         String url = getIp() + URL_MOBILE_UPLOADCKINFO;
 
