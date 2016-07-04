@@ -190,6 +190,24 @@ public class MaDAO {
     }
 
 
+    public static int outnum = 0;
+
+    public static int innum = 0;
+
+    public static int ditnum = 0;
+
+    public static int ordernum = 0;
+
+    public static int receivenum = 0;
+
+    public static void cleanNums(){
+        innum = 0;
+        outnum = 0;
+        ditnum = 0;
+        ordernum = 0;
+        receivenum = 0;
+    }
+
     /**
      * 同步入库
      *
@@ -197,6 +215,8 @@ public class MaDAO {
      * @param mainActivity
      */
     public void syncRk(final String userId, final MainActivity mainActivity) throws DbException {
+
+        cleanNums();
 
         DbManager db = x.getDb(daoConfig);
 
@@ -225,6 +245,7 @@ public class MaDAO {
                 ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
             }
         }
+        MaDAO.ditnum = ic_diroutbill_bs.size();
 
           List<Ic_inbill_b> ic_inbill_bs_t = db.selector(Ic_inbill_b.class).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).findAll();
 
@@ -236,6 +257,7 @@ public class MaDAO {
                 }
             }
         }
+        MaDAO.innum = ic_inbill_bs_t.size();
 
         final   List<Ic_inbill_b> ic_inbill_bs = ic_inbill_bs_new;
         size = size + ic_diroutbill_bs.size() + ic_inbill_bs.size();
@@ -249,6 +271,9 @@ public class MaDAO {
 
             ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
             outSize = ic_outbill_bs.size();
+
+            MaDAO.outnum = outSize;
+
             if(null != ic_outbill_bs && ic_outbill_bs.size() > 0){
                 for(Ic_outbill_b ib : ic_outbill_bs)
                 {
@@ -272,6 +297,7 @@ public class MaDAO {
             public void run() {
                 try {
                     downLoadOrder(userId, mainActivity, delOut);
+                    Toast.makeText(mainActivity,"本次上传入库单"+innum+"张 出库单"+outnum+"张 直入直出"+ditnum+"张",Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
                 } catch (Throwable throwable) {
@@ -451,6 +477,9 @@ public class MaDAO {
                     try {
                         NetUtils.Mobile_DownLoadOrderComplete(userId,rkToken);
                         MessageDialog.show(mainActivity, "同步入库成功");
+                        if(ordernum > 0) {
+                            Toast.makeText(mainActivity, "本次下载订单" + ordernum + "张", Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
                         MessageDialog.show(mainActivity, e.getMessage());
                     } catch (Throwable throwable) {
@@ -538,6 +567,7 @@ public class MaDAO {
                             }
 
 
+                            MaDAO.ordernum = orderArray.size();
                             handler.sendEmptyMessage(i);
 
                         }
@@ -572,6 +602,8 @@ public class MaDAO {
      */
     public void syncCk(final String userId, final MainActivity mainActivity) throws DbException {
 
+        cleanNums();
+
         DbManager db = x.getDb(daoConfig);
 
 
@@ -586,6 +618,7 @@ public class MaDAO {
                 ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
             }
         }
+        outnum = ic_outbill_bs.size();
 
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setTitle("同步出库");
@@ -599,6 +632,7 @@ public class MaDAO {
             public void run() {
                 try {
                     downLoadReceive(userId, mainActivity);
+                    Toast.makeText(mainActivity, "本次上传出库单" + outnum + "张", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
                 } catch (Throwable throwable) {
@@ -730,6 +764,7 @@ public class MaDAO {
                     try {
                         NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
                         MessageDialog.show(mainActivity, "同步出库成功");
+                        Toast.makeText(mainActivity, "本次下载入库单" + receivenum + "张", Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         MessageDialog.show(mainActivity, e.getMessage());
                     } catch (Throwable throwable) {
@@ -822,7 +857,8 @@ public class MaDAO {
                                 }
                             }
                             NetUtils.Mobile_DownLoadReceiveComplete(userId, ckToken);
-                            handler.sendEmptyMessage(100);
+                            receivenum = orderArray.size();
+                            handler.sendEmptyMessage(101);
                             return;
 
                             // ///
