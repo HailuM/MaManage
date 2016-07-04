@@ -488,6 +488,8 @@ public class NetUtils {
         jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("deliverNo", head.getNumber()); //生成的出库单号
 
+        jo.put("receiverOID",head.getReceiverOID()); //来源的入库单的 主表ID
+
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(rktokenStr)", rkToken);
         xml = xml.replace("(jsonData)", jo.toJSONString());
@@ -603,7 +605,7 @@ public class NetUtils {
         jo.put("qty", bill.getSourceQty()); //出库数量
         jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("receiveid",bill.getReceiveid()); //来源的入库单的 主表ID
-
+        jo.put("receiverOID",head.getReceiverOID()); //来源的入库单的 主表ID
 
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(cktokenStr)", ckToken);

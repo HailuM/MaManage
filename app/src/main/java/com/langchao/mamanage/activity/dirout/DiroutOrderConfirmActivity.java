@@ -128,6 +128,8 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
             outbillAgg.getIc_diroutbill().setConsumerid(consumerid);
             String consumername = ((Consumer)spOrderGet.getSelectedItem()).getName();
             outbillAgg.getIc_diroutbill().setConsumername(consumername);
+            String receiverOID = ((Consumer)spOrderGet.getSelectedItem()).getReceiverOID();
+            outbillAgg.getIc_diroutbill().setReceiverOID(receiverOID);
         }
 
         new MaDAO().saveDirOutBillTemp(outbillAgg, this.orderAgg);

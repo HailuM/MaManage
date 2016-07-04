@@ -46,6 +46,17 @@ public class Ic_diroutbill implements Serializable {
     @Column(name = "Company")
     private String Company;
 
+    public String getReceiverOID() {
+        return receiverOID;
+    }
+
+    public void setReceiverOID(String receiverOID) {
+        this.receiverOID = receiverOID;
+    }
+
+    @Column(name = "receiverOID")
+    private String receiverOID;
+
     public String getProjectName() {
         return ProjectName;
     }

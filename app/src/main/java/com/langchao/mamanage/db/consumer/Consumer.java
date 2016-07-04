@@ -57,6 +57,16 @@ public class Consumer {
     @Column(name = "consumerid")
     private String consumerid;
 
+    public String getReceiverOID() {
+        return receiverOID;
+    }
+
+    public void setReceiverOID(String receiverOID) {
+        this.receiverOID = receiverOID;
+    }
+
+    @Column(name = "receiverOID")
+    private String receiverOID;
 
     public String getName() {
         return Name;

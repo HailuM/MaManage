@@ -33,6 +33,19 @@ public class Ic_outbill implements Serializable {
     @Column(name = "consumername")
     private String consumername;
 
+
+    public String getReceiverOID() {
+        return receiverOID;
+    }
+
+    public void setReceiverOID(String receiverOID) {
+        this.receiverOID = receiverOID;
+    }
+
+    @Column(name = "receiverOID")
+    private String receiverOID;
+
+
     public String getConsumername() {
         return consumername;
     }

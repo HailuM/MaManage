@@ -93,8 +93,10 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
         if(null != ((Consumer)spOrderGet.getSelectedItem())){
             String consumerid = ((Consumer)spOrderGet.getSelectedItem()).getConsumerid();
             String consumername = ((Consumer)spOrderGet.getSelectedItem()).getName();
+            String receiverOID = ((Consumer)spOrderGet.getSelectedItem()).getReceiverOID();
             outbillAgg.getIc_outbill().setConsumerid(consumerid);
             outbillAgg.getIc_outbill().setConsumername(consumername);
+            outbillAgg.getIc_outbill().setReceiverOID(receiverOID);
         }
 
         new MaDAO().saveOutBill(outbillAgg, this.inbillAgg);
