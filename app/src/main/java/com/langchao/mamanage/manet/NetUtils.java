@@ -486,7 +486,7 @@ public class NetUtils {
         jo.put("zrzcid", bill.getOrderentryid());//生成的直入直出ID  UUID
         jo.put("qty", bill.getSourceQty());//数量
         jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
-
+        jo.put("deliverNo", head.getNumber()); //生成的出库单号
 
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(rktokenStr)", rkToken);
