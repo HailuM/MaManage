@@ -1,7 +1,9 @@
 package com.langchao.mamanage.db;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -297,8 +299,39 @@ public class MaDAO {
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
-                    downLoadOrder(userId, mainActivity, delOut);
+
                     Toast.makeText(mainActivity,"本次上传入库单"+innum+"张 出库单"+outnum+"张 直入直出"+ditnum+"张",Toast.LENGTH_LONG).show();
+
+                    // 无数据上传  增加弹框 判断是否下载
+                    if(MaDAO.innum == 0 && MaDAO.outnum == 0 && MaDAO.ditnum == 0){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                        builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
+                        builder.setTitle("确认下载");
+
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                try {
+                                    downLoadOrder(userId, mainActivity, delOut);
+                                } catch (Throwable throwable) {
+                                    MessageDialog.show(mainActivity, throwable.getMessage());
+                                }
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alertDialog = builder.create();
+
+                        alertDialog.setCancelable(false);
+                        alertDialog.show();
+                    }else{
+                        downLoadOrder(userId, mainActivity, delOut);
+                    }
+
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
                 } catch (Throwable throwable) {
@@ -633,8 +666,38 @@ public class MaDAO {
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
-                    downLoadReceive(userId, mainActivity);
                     Toast.makeText(mainActivity, "本次上传出库单" + outnum + "张", Toast.LENGTH_LONG).show();
+
+                    // 无数据上传  增加弹框 判断是否下载
+                    if(MaDAO.outnum == 0 ){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                        builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
+                        builder.setTitle("确认下载");
+
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                try {
+                                    downLoadReceive(userId, mainActivity);
+                                } catch (Throwable throwable) {
+                                    MessageDialog.show(mainActivity, throwable.getMessage());
+                                }
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alertDialog = builder.create();
+
+                        alertDialog.setCancelable(false);
+                        alertDialog.show();
+                    }else{
+                        downLoadReceive(userId, mainActivity);
+                    }
+
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
                 } catch (Throwable throwable) {

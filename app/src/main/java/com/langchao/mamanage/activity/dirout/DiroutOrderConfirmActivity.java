@@ -132,6 +132,7 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
             outbillAgg.getIc_diroutbill().setReceiverOID(receiverOID);
         }
 
+        orderAgg.getPu_order().setType("zc");
         new MaDAO().saveDirOutBillTemp(outbillAgg, this.orderAgg);
         setResult(RESULT_OK);
         this.finish();

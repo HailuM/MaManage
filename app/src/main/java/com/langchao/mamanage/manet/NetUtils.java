@@ -211,6 +211,7 @@ public class NetUtils {
             if (array.size() > 0) {
                 return array;
             } else {
+                System.out.println(array.size()  + "///" +  xmlrs);
                 return null;
             }
         }
