@@ -56,6 +56,11 @@ public class IcinListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        try {
+            new MaDAO().deleteTempDirout();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
         textViewTitle.setText("入库办理");
         lvOrder.setFocusable(true);
         lvOrder.requestFocus();

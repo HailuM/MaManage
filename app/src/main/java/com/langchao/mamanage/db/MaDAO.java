@@ -99,7 +99,7 @@ public class MaDAO {
 
             List<String> orderIdList = new ArrayList<>();
         try {
-            Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > ckQty");
+            Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > ckQty and rkQty = 0");
             while (cursor.moveToNext()) {
                 String orderId = cursor.getString(0);
                 orderIdList.add(orderId);
@@ -112,14 +112,15 @@ public class MaDAO {
         if (orderIdList.size() == 0)
             return new ArrayList<>();
 
-        List<Pu_order> list2 = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", null).findAll();
+        List<Pu_order> list2 = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", null).and("id", "in", orderIdList.toArray(new String[]{})).orderBy("number").findAll();
 
-        List<Pu_order> list = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", "zc").findAll();
+        List<Pu_order> list = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", "zc").and("id", "in", orderIdList.toArray(new String[]{})).orderBy("number").findAll();
         list.addAll(list2);
         return list;
     }
 
     public List<Pu_order> queryPuOrderForRk(String orderno, String supplier) throws DbException {
+        deleteTempDirout();
         DbManager db = x.getDb(daoConfig);
 
         if (null == orderno) {
@@ -130,7 +131,7 @@ public class MaDAO {
         }
         List<String> orderIdList = new ArrayList<>();
         try {
-            Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > rkQty");
+            Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > rkQty  ");
             while (cursor.moveToNext()) {
                 String orderId = cursor.getString(0);
                 orderIdList.add(orderId);
@@ -142,16 +143,16 @@ public class MaDAO {
 
         if (orderIdList.size() == 0)
             return new ArrayList<>();
-        List<Pu_order> list = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", null).and("id", "in", orderIdList.toArray(new String[]{})).findAll();
+        List<Pu_order> list = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("id", "in", orderIdList.toArray(new String[]{})).orderBy("number").findAll();
 
-        List<Pu_order> list2 = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", "rk").and("id", "in", orderIdList.toArray(new String[]{})).findAll();
-        list.addAll(list2);
+        //List<Pu_order> list2 = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", "rk").and("id", "in", orderIdList.toArray(new String[]{})).findAll();
+       // list.addAll(list2);
         return list;
     }
 
     public List<Pu_order_b> queryOrderDetail(String orderId) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).findAll();
+        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).orderBy("name").findAll();
         List<Pu_order_b> newlist = new ArrayList<>();
         for (Pu_order_b orderb : list) {
             if (orderb.getSourceQty() - orderb.getCkQty() > 0) {
@@ -164,7 +165,7 @@ public class MaDAO {
 
     public List<Pu_order_b> queryOrderDetailForIn(String orderId) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).findAll();
+        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).orderBy("name").findAll();
         List<Pu_order_b> newlist = new ArrayList<>();
         for (Pu_order_b orderb : list) {
             if (orderb.getSourceQty() - orderb.getRkQty() > 0) {
@@ -178,7 +179,7 @@ public class MaDAO {
 
     public List<Ic_inbill_b> queryInbillDetail(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        List<Ic_inbill_b> list = db.selector(Ic_inbill_b.class).where("orderid", "=", id).findAll();
+        List<Ic_inbill_b> list = db.selector(Ic_inbill_b.class).where("orderid", "=", id).orderBy("name").findAll();
         List<Ic_inbill_b> newlist = new ArrayList<>();
         for (Ic_inbill_b orderb : list) {
             if (orderb.getSourceQty() - orderb.getCkQty() > 0) {
@@ -337,13 +338,14 @@ public class MaDAO {
 
                     if (null == rkToken || rkToken.trim().length() == 0) {
                         handler.sendEmptyMessage(100);
-                        ;
+
                         return;
                     }
 
                     if (finalSize == 0) {
-                        handler.sendEmptyMessage(100);
-                        return;
+                        //不返回
+//                        handler.sendEmptyMessage(100);
+//                        return;
                     }
                     //先上传直出
                     for (Ic_diroutbill_b ic_diroutbill_b : ic_diroutbill_bs) {
@@ -668,7 +670,7 @@ public class MaDAO {
             public void run() {
                 try {
 
-                    if (null == ckToken || finalIc_outbill_bs.size() == 0) {
+                    if (null == ckToken || ckToken.trim().length() == 0 ) {
                         handler.sendEmptyMessage(100);
                         return;
                     }
@@ -1121,7 +1123,7 @@ public class MaDAO {
         if (orderIdList.size() == 0)
             return new ArrayList<>();
 
-        List<Ic_inbill> list = db.selector(Ic_inbill.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("id", "in", orderIdList.toArray(new String[]{})).findAll();
+        List<Ic_inbill> list = db.selector(Ic_inbill.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("id", "in", orderIdList.toArray(new String[]{})).orderBy("number").findAll();
 
 
         return list;
@@ -1173,6 +1175,7 @@ public class MaDAO {
             cursor.close();
             for (String orderId : orderIdList) {
                 db.executeUpdateDelete("update pu_order_b set ckQty = 0 where orderid = '" + orderId + "'");
+               // db.executeUpdateDelete("update pu_order set type = null where orderid = '" + orderId + "'");
             }
         } catch (Exception e) {
 

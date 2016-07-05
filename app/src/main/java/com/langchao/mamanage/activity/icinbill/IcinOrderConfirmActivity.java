@@ -80,7 +80,7 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
     }
     private void buildInBill() {
         Ic_inbill_agg inbillAgg =  MaConvert.convertOrderToInbill(this,orderAgg);
-
+        orderAgg.getPu_order().setType("rk");
         try {
             new MaDAO().saveInBill(inbillAgg,orderAgg);
         } catch (DbException e) {

@@ -57,7 +57,7 @@ public class DiroutListActivity extends AppCompatActivity {
 
 
         try {
-            pu_orderList = new MaDAO().queryPuOrderForRk(null, null);
+            pu_orderList = new MaDAO().queryPuOrder(null, null);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -79,7 +79,7 @@ public class DiroutListActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 String s = editable.toString();
                 try {
-                    pu_orderList = new MaDAO().queryPuOrderForRk(s, null);
+                    pu_orderList = new MaDAO().queryPuOrder(s, null);
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -95,7 +95,7 @@ public class DiroutListActivity extends AppCompatActivity {
     void fresh(){
         try {
             String s = etSearch.getText().toString();
-            pu_orderList = new MaDAO().queryPuOrderForRk(s, null);
+            pu_orderList = new MaDAO().queryPuOrder(s, null);
             adapter.pu_orderList = pu_orderList;
             adapter.notifyDataSetChanged();
         } catch (DbException e) {
