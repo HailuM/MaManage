@@ -131,7 +131,7 @@ public class MaDAO {
         }
         List<String> orderIdList = new ArrayList<>();
         try {
-            Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > rkQty  ");
+            Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > rkQty  and ckQty = 0");
             while (cursor.moveToNext()) {
                 String orderId = cursor.getString(0);
                 orderIdList.add(orderId);
