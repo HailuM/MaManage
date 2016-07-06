@@ -74,8 +74,8 @@ public class IcinConfirmAdapter extends BaseAdapter {
             AlertForResult.popUp( pu_order_b.getCurQty(),context,new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if(num > (pu_order_b.getSourceQty()- pu_order_b.getRkQty())){
-                        num = pu_order_b.getSourceQty()- pu_order_b.getRkQty();
+                    if(num > (pu_order_b.getLimitQty()- pu_order_b.getRkQty())){
+                        num = pu_order_b.getLimitQty()- pu_order_b.getRkQty();
                     }
                     if(num > 0) {
                         pu_order_b.setCurQty(num);
@@ -89,7 +89,7 @@ public class IcinConfirmAdapter extends BaseAdapter {
 
         @Event(value = {R.id.tv_dir_out_order_m_add }, type = View.OnClickListener.class)
         private void add(View v){
-            if(pu_order_b.getCurQty() < (pu_order_b.getSourceQty()- pu_order_b.getRkQty())) {
+            if(pu_order_b.getCurQty() < (pu_order_b.getLimitQty()- pu_order_b.getRkQty())) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
 

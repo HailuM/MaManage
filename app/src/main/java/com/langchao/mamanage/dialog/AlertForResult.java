@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.utils.MathUtils;
 
 /**
  * Created by miaohl on 2016/6/26.
@@ -32,7 +33,7 @@ public class AlertForResult {
         TextView text_reduce = (TextView) window.findViewById(R.id.textView18);
 //        tv_title.setText("详细信息");
         final EditText editText = (EditText) window.findViewById(R.id.editText);
-        editText.setText(oldnum+"");
+        editText.setText(MathUtils.scaleDouble(oldnum)+"");
         editText.setEnabled(true);
         editText.setFocusable(true);
         BootstrapButton no= (BootstrapButton) window.findViewById(R.id.no);

@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="200dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal">
@@ -27,6 +27,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:inputType="numberDecimal"
+                android:textSize="40dp"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/textView12"
                 android:textColor="@color/orangered" />
@@ -40,6 +41,7 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:text="+"
                 android:textSize="30dp"
+
                 android:textColor="@color/orangered" />
 
             <TextView
@@ -67,7 +69,7 @@
                 android:id="@+id/yes"
                 android:gravity="center"
                 app:bootstrapBrand="success"
-                android:textSize="@dimen/textsize"
+                android:textSize="40px"
                 app:buttonMode="regular"
                 app:showOutline="false"
                 app:roundedCorners="true"
@@ -80,7 +82,7 @@
                 android:id="@+id/no"
                 android:gravity="center"
                 app:bootstrapBrand="warning"
-                android:textSize="@dimen/textsize"
+                android:textSize="40px"
                 app:buttonMode="regular"
                 app:showOutline="false"
                 app:roundedCorners="true"

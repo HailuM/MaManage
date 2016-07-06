@@ -223,6 +223,11 @@ public class MaDAO {
 
         DbManager db = x.getDb(daoConfig);
 
+        List<Pu_order> a_orders = db.findAll(Pu_order.class);
+        int a_orderssize = 0;
+        if(null != a_orders && a_orders.size() > 0){
+            a_orderssize = a_orders.size();
+        }
 
         //查看是否有入库TOKEN  没有的话清除直入直出  清除入库
         final String rkToken = MethodUtil.getRkToken(mainActivity);
@@ -296,14 +301,16 @@ public class MaDAO {
         progressDialog.setMax(size + outSize);
         progressDialog.show();
 
+        final int finalA_orderssize = a_orderssize;
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
 
                     Toast.makeText(mainActivity,"本次上传入库单"+innum+"张 出库单"+outnum+"张 直入直出"+ditnum+"张",Toast.LENGTH_LONG).show();
 
+
                     // 无数据上传  增加弹框 判断是否下载
-                    if(MaDAO.innum == 0 && MaDAO.outnum == 0 && MaDAO.ditnum == 0){
+                    if(MaDAO.innum == 0 && MaDAO.outnum == 0 && MaDAO.ditnum == 0 && finalA_orderssize > 0){
                         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                         builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
                         builder.setTitle("确认下载");
@@ -642,6 +649,12 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
 
 
+        List<Ic_inbill> a_iclist =  db.findAll(Ic_inbill.class);
+        int a_iclistsize = 0;
+        if(null != a_iclist && a_iclist.size() > 0){
+            a_iclistsize = a_iclist.size();
+        }
+
         final String ckToken = MethodUtil.getCkToken(mainActivity);
 
         List<Ic_outbill_b> ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
@@ -663,13 +676,14 @@ public class MaDAO {
         progressDialog.setMax(ic_outbill_bs.size());
         progressDialog.show();
 
+        final int finalA_iclistsize = a_iclistsize;
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
                     Toast.makeText(mainActivity, "本次上传出库单" + outnum + "张", Toast.LENGTH_LONG).show();
 
                     // 无数据上传  增加弹框 判断是否下载
-                    if(MaDAO.outnum == 0 ){
+                    if(MaDAO.outnum == 0 && finalA_iclistsize > 0){
                         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                         builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
                         builder.setTitle("确认下载");
