@@ -135,6 +135,7 @@ public class DiroutOrderConfirmActivity extends AppCompatActivity {
         orderAgg.getPu_order().setType("zc");
         new MaDAO().saveDirOutBillTemp(outbillAgg, this.orderAgg);
         setResult(RESULT_OK);
+        Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
         this.finish();
         //MessageDialog.show(this,"准备打印");
         PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_diroutbill(),outbillAgg.getIc_diroutbill_bs()),outbillAgg.getIc_diroutbill().getId());

@@ -101,6 +101,7 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
 
         new MaDAO().saveOutBill(outbillAgg, this.inbillAgg);
         setResult(RESULT_OK);
+        Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
         this.finish();
 
         MessageDialog.show(this,"准备打印");

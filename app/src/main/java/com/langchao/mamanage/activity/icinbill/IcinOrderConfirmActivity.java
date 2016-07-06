@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.converter.MaConvert;
@@ -87,6 +88,7 @@ public class IcinOrderConfirmActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         setResult(RESULT_OK);
+        Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
         this.finish();
 
     }

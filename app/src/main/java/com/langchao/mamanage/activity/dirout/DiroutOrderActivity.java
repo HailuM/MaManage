@@ -1,8 +1,10 @@
 package com.langchao.mamanage.activity.dirout;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -100,8 +102,62 @@ public class DiroutOrderActivity extends AppCompatActivity {
 
     @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
     private void back(View v) {
-        this.finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("已经保存并打印的出库单将失效!是否确认返回？");
+        builder.setTitle("确认返回");
 
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                try {
+                    DiroutOrderActivity.this.finish();
+                } catch (Throwable throwable) {
+                    MessageDialog.show(DiroutOrderActivity.this, throwable.getMessage());
+                }
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("已经保存并打印的出库单将失效!是否确认返回？");
+        builder.setTitle("确认返回");
+
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                try {
+                    DiroutOrderActivity.super.onBackPressed();
+                } catch (Throwable throwable) {
+                    MessageDialog.show(DiroutOrderActivity.this, throwable.getMessage());
+                }
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+    }
+
+    void onBackPressed2(){
+        super.onBackPressed();
     }
 
     void freshData(){
