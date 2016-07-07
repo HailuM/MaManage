@@ -8,11 +8,17 @@ import java.math.BigDecimal;
 public class MathUtils {
 
     public static String scaleDouble(double num){
+        if(num == 0){
+            return "0";
+        }
         BigDecimal n2 = new BigDecimal(num);
         return n2.setScale(2,BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString();
     }
 
     public static String scaleDouble4(double num){
+        if(num == 0){
+            return "0";
+        }
         BigDecimal n2 = new BigDecimal(num);
         return n2.setScale(4,BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString();
     }

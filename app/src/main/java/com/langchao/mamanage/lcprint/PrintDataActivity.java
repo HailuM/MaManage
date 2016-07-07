@@ -4,13 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.dialog.MessageDialog;
+import com.zhy.autolayout.AutoLayoutActivity;
 
-public class PrintDataActivity extends Activity {
+public class PrintDataActivity extends AutoLayoutActivity {
     private Context context = null;
   
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class PrintDataActivity extends Activity {
         TextView printdata = (TextView) this
                 .findViewById(R.id.print_data);
         printdata.setText(data);
+        printdata.setMovementMethod(ScrollingMovementMethod.getInstance());
+
         this.initListener();  
     }  
   

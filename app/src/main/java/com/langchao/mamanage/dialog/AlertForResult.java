@@ -70,7 +70,7 @@ public class AlertForResult {
                 }catch (Exception e){
 
                 }
-                    editText.setText(num+"");
+                    editText.setText(MathUtils.scaleDouble4(num)+"");
             }
         });
         text_reduce.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +85,7 @@ public class AlertForResult {
                 }
                 if (num!=0){
                     num--;
-                    editText.setText(num+"");
+                    editText.setText(MathUtils.scaleDouble4(num)+"");
                 }
             }
         });

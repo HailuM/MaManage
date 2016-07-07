@@ -61,10 +61,7 @@ public class Ic_inbill_b implements Serializable {
 
     public void setOrderMXID(String orderMXID) {
         OrderMXID = orderMXID;
-        if(null != orderMXID && orderMXID.trim().length() > 0)
-        {
-            setOrderentryid(orderMXID);
-        }
+
     }
 
     @Column(name = "name")
@@ -115,6 +112,18 @@ public class Ic_inbill_b implements Serializable {
             return new Date();
         return time;
     }
+
+    @Column(name = "wareentryid")
+    private String wareentryid;
+
+    public String getWareentryid() {
+        return wareentryid;
+    }
+
+    public void setWareentryid(String wareentryid) {
+        this.wareentryid = wareentryid;
+    }
+
 
     public void setTime(Date time) {
         this.time = time;

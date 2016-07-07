@@ -86,6 +86,12 @@ public class MaConvert {
         outbill_b.setName(inbill_b.getName());
         outbill_b.setPrice(inbill_b.getPrice());
         outbill_b.setReceiveid(orderHeadId);
+        if(null != inbill_b.getWareentryid())
+        {
+            outbill_b.setWareentryid(inbill_b.getWareentryid());
+        }else{
+            outbill_b.setWareentryid(inbill_b.getOrderentryid());
+        }
 
         outbill_b.setSourceQty(num);
 

@@ -24,6 +24,7 @@ import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -38,7 +39,7 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_order)
-public class IcoutInbillActivity extends AppCompatActivity {
+public class IcoutInbillActivity extends AutoLayoutActivity {
     @ViewInject(R.id.tv_dir_out_order_no)
     TextView tvOrderNo;//订单号
     @ViewInject(R.id.tv_dir_out_order_supply)

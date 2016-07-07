@@ -219,6 +219,9 @@ public class MaDAO {
      */
     public void syncRk(final String userId, final MainActivity mainActivity) throws DbException {
 
+
+
+
         cleanNums();
 
         DbManager db = x.getDb(daoConfig);
@@ -644,6 +647,11 @@ public class MaDAO {
      */
     public void syncCk(final String userId, final MainActivity mainActivity) throws DbException {
 
+        if(isExistInBill()){
+            MessageDialog.show(mainActivity,"存在未上传的入库单，请先同步入库！");
+            return;
+        }
+
         cleanNums();
 
         DbManager db = x.getDb(daoConfig);
@@ -841,7 +849,7 @@ public class MaDAO {
             final Runnable afterThread = new Runnable() {
                 public void run() {
                     try {
-                        NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
+                       // NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
                         MessageDialog.show(mainActivity, "同步出库成功");
                         Toast.makeText(mainActivity, "本次下载入库单" + receivenum + "张", Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
@@ -860,6 +868,8 @@ public class MaDAO {
                         if (msg.what == -1) {
                             progressDialog.cancel();
                             progressDialog.dismiss();
+                            String err = msg.getData().getString("err");
+                            MessageDialog.show(mainActivity, err);
                             return;
                         }
                         if (msg.what >= 100) {
@@ -883,7 +893,7 @@ public class MaDAO {
                                 JSONObject receive = (JSONObject) orderArray.get(i);
 
 
-                                final Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
+                                  Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
                                 try {
                                     JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveMaterial(userId, ic_inbill.getId(), ckToken);
 
@@ -901,11 +911,17 @@ public class MaDAO {
                                     List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
                                     for(Ic_inbill_b b : list){
                                         b.setSourceId(ic_inbill.getOrderId());
+                                        if(null == b.getOrderentryid())
+                                        {
+                                            b.setOrderentryid(b.getWareentryid());
+
+                                        }
+                                        b.setCreateType(MaConstants.TYPE_SYNC);
                                     }
 
 
                                     JSONArray consumerArray = NetUtils.Mobile_DownloadReceiveconsumer(userId, ic_inbill.getId(), ckToken);
-                                    if (null == jsonArray || jsonArray.size() == 0) {
+                                    if (null == consumerArray || consumerArray.size() == 0) {
                                         // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
                                         Message errmsg = new Message();
                                         Bundle bundle = new Bundle();
@@ -917,7 +933,7 @@ public class MaDAO {
                                     }
                                     //保存
                                     new MaDAO().save(ic_inbill, list);
-                                    if (null != jsonArray) {
+                                    if (null != consumerArray) {
                                         List<Consumer> consumerList = JSON.parseArray(consumerArray.toJSONString(), Consumer.class);
                                         new MaDAO().save(consumerList);
                                     }
@@ -1160,7 +1176,7 @@ public class MaDAO {
 
     public List<Consumer> findConsumers(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        return db.selector(Consumer.class).where("Orderid", "=", id).findAll();
+        return db.selector(Consumer.class).where("Orderid", "=", id.toUpperCase()).or("Orderid", "=", id.toLowerCase()).findAll();
     }
 
     /**
@@ -1366,5 +1382,31 @@ public class MaDAO {
     public Ic_diroutbill queryNewHeadDir(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
         return db.findById(Ic_diroutbill.class,id);
+    }
+
+    public boolean isExistInBill() {
+        DbManager db = x.getDb(daoConfig);
+
+        List<Ic_inbill_b> ic_inbill_bs_t = new ArrayList<Ic_inbill_b>();
+        try {
+            ic_inbill_bs_t = db.selector(Ic_inbill_b.class).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).findAll();
+        } catch (DbException e) {
+           // e.printStackTrace();
+        }
+
+        List<Ic_inbill_b> ic_inbill_bs_new = new ArrayList<>();
+        if(ic_inbill_bs_t.size() > 0){
+            for(Ic_inbill_b ib : ic_inbill_bs_t){
+                if(null == ib.getCreateType()){
+                    ic_inbill_bs_new.add(ib);
+                }
+            }
+        }
+        if(ic_inbill_bs_new.size() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

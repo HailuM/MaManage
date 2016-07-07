@@ -73,8 +73,7 @@ public class IcoutMaterialAdapter extends BaseAdapter {
         TextView tvNote;
         @ViewInject(R.id.tv_dir_out_order_m_qty)
         TextView leftQty;
-        @ViewInject(R.id.tv_dir_out_order_1)
-        TextView tv1;
+
         @ViewInject(R.id.tv_dir_out_order_left)
         TextView tv_dir_out_order_left;
 

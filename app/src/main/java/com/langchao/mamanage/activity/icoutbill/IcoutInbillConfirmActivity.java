@@ -25,6 +25,7 @@ import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.lcprint.PrintUtil;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -38,7 +39,7 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_confirm)
-public class IcoutInbillConfirmActivity extends AppCompatActivity {
+public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
 
     @ViewInject(R.id.tv_dir_out_no)
     TextView tvOrderNo;//订单号
@@ -131,6 +132,9 @@ public class IcoutInbillConfirmActivity extends AppCompatActivity {
             consumers = new MaDAO().findConsumers(order.getId());
             if(null == consumers || consumers.size() == 0){
                 consumers = new MaDAO().findConsumers(list.get(0).getSourceId());
+            }
+            if(null == consumers || consumers.size() == 0){
+                consumers = new MaDAO().findConsumers(order.getOrderId());
             }
             spOrderGet.setAdapter(new ConsumerAdapter(this, consumers));
         } catch (DbException e) {

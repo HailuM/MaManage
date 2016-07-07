@@ -73,9 +73,6 @@
             android:id="@+id/print"
             android:layout_width="match_parent"
             android:layout_height="100px"
-            android:layout_below="@+id/checkBoxAutoLogin"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10px"
             android:gravity="center"
             android:text="打印"
             android:textSize="@dimen/textsize"
@@ -83,6 +80,9 @@
             app:bootstrapBrand="primary"
             app:buttonMode="regular"
             app:roundedCorners="true"
-            app:showOutline="false" />
+            app:showOutline="false"
+            android:layout_marginRight="10px"
+            android:layout_marginBottom="10px"
+            android:layout_alignParentTop="true" />
     </RelativeLayout>
 </RelativeLayout>

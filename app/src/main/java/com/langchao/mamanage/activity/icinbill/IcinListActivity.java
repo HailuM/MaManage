@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.order.Pu_order;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -28,7 +29,7 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_list)
-public class IcinListActivity extends AppCompatActivity {
+public class IcinListActivity extends AutoLayoutActivity {
 
     private List<Pu_order> pu_orderList = null;
 
@@ -38,6 +39,8 @@ public class IcinListActivity extends AppCompatActivity {
     @ViewInject(R.id.et_dir_out_list_search)
     private EditText etSearch;
 
+    @ViewInject(R.id.et_dir_out_list_search_supply)
+    private EditText etSearchSupply;
 
     @ViewInject(R.id.textViewTitle)
     private TextView textViewTitle;
@@ -87,17 +90,48 @@ public class IcinListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String s = editable.toString();
-                try {
-                    pu_orderList = new MaDAO().queryPuOrderForRk(s,null);
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-                if(null == pu_orderList){
-                    pu_orderList = new ArrayList<>();
-                }
-                adapter.pu_orderList = pu_orderList;
-                adapter.notifyDataSetChanged();
+                fresh();
+//                String s = editable.toString();
+//                try {
+//                    pu_orderList = new MaDAO().queryPuOrderForRk(s,null);
+//                } catch (DbException e) {
+//                    e.printStackTrace();
+//                }
+//                if(null == pu_orderList){
+//                    pu_orderList = new ArrayList<>();
+//                }
+//                adapter.pu_orderList = pu_orderList;
+//                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+
+        etSearchSupply.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                fresh();
+//                String s = editable.toString();
+//                try {
+//                    pu_orderList = new MaDAO().queryPuOrder(s, null);
+//                } catch (DbException e) {
+//                    e.printStackTrace();
+//                }
+//                if (null == pu_orderList) {
+//                    pu_orderList = new ArrayList<>();
+//                }
+//                adapter.pu_orderList = pu_orderList;
+//                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -118,7 +152,8 @@ public class IcinListActivity extends AppCompatActivity {
     private void fresh() {
         try {
             String s = etSearch.getText().toString();
-            pu_orderList = new MaDAO().queryPuOrderForRk(s,null);
+            String s2 = etSearchSupply.getText().toString();
+            pu_orderList = new MaDAO().queryPuOrderForRk(s,s2);
             adapter.pu_orderList = pu_orderList;
             adapter.notifyDataSetChanged();
         } catch (DbException e) {

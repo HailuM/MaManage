@@ -15,6 +15,7 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -29,7 +30,7 @@ import java.util.List;
  * Created by wongsuechang on 2016/6/26.
  */
 @ContentView(R.layout.activity_dir_out_list)
-public class IcoutListActivity extends AppCompatActivity {
+public class IcoutListActivity extends AutoLayoutActivity {
 
     private List<Ic_inbill> ic_inbills = null;
 
@@ -45,6 +46,9 @@ public class IcoutListActivity extends AppCompatActivity {
 
     @ViewInject(R.id.lv_dir_out_order)
     private ListView lvOrder;
+
+    @ViewInject(R.id.et_dir_out_list_search_supply)
+    private EditText etSearchSupply;
 
     @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
     private void back(View v) {
@@ -86,17 +90,47 @@ public class IcoutListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String s = editable.toString();
-                try {
-                    ic_inbills = new MaDAO().queryInbillForCk(s,null);
-                } catch (Exception e) {
+                fresh();
+//                String s = editable.toString();
+//                try {
+//                    ic_inbills = new MaDAO().queryInbillForCk(s,null);
+//                } catch (Exception e) {
+//
+//                }
+//                if(null == ic_inbills){
+//                    ic_inbills = new ArrayList<>();
+//                }
+//                adapter.inbills = ic_inbills;
+//                adapter.notifyDataSetChanged();
+            }
+        });
 
-                }
-                if(null == ic_inbills){
-                    ic_inbills = new ArrayList<>();
-                }
-                adapter.inbills = ic_inbills;
-                adapter.notifyDataSetChanged();
+
+        etSearchSupply.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                fresh();
+//                String s = editable.toString();
+//                try {
+//                    ic_inbills = new MaDAO().queryInbillForCk(s,null);
+//                } catch (Exception e) {
+//
+//                }
+//                if(null == ic_inbills){
+//                    ic_inbills = new ArrayList<>();
+//                }
+//                adapter.inbills = ic_inbills;
+//                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -115,7 +149,8 @@ public class IcoutListActivity extends AppCompatActivity {
     private void fresh() {
         try {
             String s = etSearch.getText().toString();
-            ic_inbills = new MaDAO().queryInbillForCk(null,null);
+            String s2 = etSearchSupply.getText().toString();
+            ic_inbills = new MaDAO().queryInbillForCk(s,s2);
             adapter.inbills = ic_inbills;
             adapter.notifyDataSetChanged();
         } catch (DbException e) {

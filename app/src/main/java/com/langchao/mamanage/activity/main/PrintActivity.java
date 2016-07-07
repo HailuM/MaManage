@@ -14,6 +14,7 @@ import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.lcprint.PrintUtil;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -25,7 +26,7 @@ import java.util.List;
 
 
 @ContentView(R.layout.activity_print_list)
-public class PrintActivity extends AppCompatActivity {
+public class PrintActivity extends AutoLayoutActivity {
 
     private List<Ic_outbill> ic_outbills = null;
 

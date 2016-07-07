@@ -44,7 +44,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/order_no"
                 android:textSize="16sp"/>
 
@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/supply"
                 android:textSize="16sp"/>
 
@@ -101,7 +101,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/build"
                 android:textSize="16sp"/>
 
@@ -205,8 +205,7 @@
             android:layout_width="match_parent"
             android:divider="#00000000"
             android:dividerHeight="5dp"
-            android:layout_marginLeft="10px"
-            android:layout_marginRight="10px"
+            android:background="@color/background"
             android:layout_height="match_parent"
             android:layout_above="@+id/rl_bottom"/>
     </RelativeLayout>

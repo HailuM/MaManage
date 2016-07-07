@@ -70,8 +70,7 @@ public class DiroutMaterialAdapter extends BaseAdapter {
         TextView tvNote;
         @ViewInject(R.id.tv_dir_out_order_m_qty)
         TextView leftQty;
-        @ViewInject(R.id.tv_dir_out_order_1)
-        TextView tv1;
+
 
         public Pu_order_b pu_order_b;
 

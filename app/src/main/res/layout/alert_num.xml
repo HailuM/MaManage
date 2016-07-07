@@ -27,7 +27,8 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:inputType="numberDecimal"
-                android:textSize="40dp"
+                android:textSize="30dp"
+                android:minWidth="150px"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/textView12"
                 android:textColor="@color/orangered" />
@@ -65,19 +66,6 @@
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="确定"
-                android:id="@+id/yes"
-                android:gravity="center"
-                app:bootstrapBrand="success"
-                android:textSize="40px"
-                app:buttonMode="regular"
-                app:showOutline="false"
-                app:roundedCorners="true"
-                android:layout_below="@+id/checkBoxAutoLogin"
-                android:layout_centerHorizontal="true" />
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="取消"
                 android:id="@+id/no"
                 android:gravity="center"
@@ -88,7 +76,21 @@
                 app:roundedCorners="true"
                 android:layout_below="@+id/checkBoxAutoLogin"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10px" />
+                android:layout_marginRight="20px" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确定"
+                android:id="@+id/yes"
+                android:gravity="center"
+                app:bootstrapBrand="success"
+                android:textSize="40px"
+                app:buttonMode="regular"
+                app:showOutline="false"
+                app:roundedCorners="true"
+                android:layout_below="@+id/checkBoxAutoLogin"
+                android:layout_centerHorizontal="true" />
         </LinearLayout>
 
     </LinearLayout>

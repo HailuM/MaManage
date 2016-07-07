@@ -607,6 +607,9 @@ public class NetUtils {
         jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("receiveid",bill.getReceiveid()); //来源的入库单的 主表ID
         jo.put("receiverOID",head.getReceiverOID()); //来源的入库单的 主表ID
+        jo.put("wareentryid",bill.getWareentryid()); //来源的入库单的 子表ID
+
+
 
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(cktokenStr)", ckToken);

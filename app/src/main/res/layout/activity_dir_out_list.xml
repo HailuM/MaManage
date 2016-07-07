@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+    android:background="@color/background"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -38,17 +39,44 @@
 
         <ImageView
             android:id="@+id/img_dir_out_list_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@mipmap/search"/>
+            android:layout_width="70px"
+            android:layout_height="70px"
+            android:src="@mipmap/search"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/et_dir_out_list_search"
+            android:layout_toEndOf="@+id/et_dir_out_list_search" />
         <EditText
-            android:layout_toLeftOf="@+id/img_dir_out_list_search"
             android:background="@drawable/bg_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="250px"
+            android:layout_height="70px"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:id="@+id/et_dir_out_list_search"
-            android:hint="@string/typeorder"/>
+            android:hint="@string/typeorder"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="70px"
+            android:layout_height="70px"
+            android:src="@mipmap/search"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/et_dir_out_list_search_supply" />
+
+        <EditText
+            android:background="@drawable/bg_edittext"
+            android:layout_width="250px"
+            android:layout_height="70px"
+            android:id="@+id/et_dir_out_list_search_supply"
+            android:hint="请输入供应商"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_alignTop="@+id/et_dir_out_list_search"
+            android:layout_toLeftOf="@+id/imageView5"
+            android:layout_toStartOf="@+id/imageView5" />
+
     </RelativeLayout>
 
     <ListView

@@ -32,4 +32,5 @@ public class MaConstants {
     public final static String PRINT_LINEBLANK="/- - - - - - - - - - - - - /";
 
     public static String VERSION = "V1.0";
+    public static String DEAULT_IP = "fdcwzm.zhongnangroup.cn:82";
 }

@@ -126,7 +126,7 @@ public class MainActivity extends AutoLayoutActivity {
                 try {
                     new MaDAO().syncCk(readUserId(), MainActivity.this);
                 } catch (Exception e) {
-                    Toast.makeText(this,"同步入库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"同步出库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.imageViewsupplement:
@@ -160,4 +160,5 @@ public class MainActivity extends AutoLayoutActivity {
         return getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).getString(MaConstants.PARA_USERID, "");
 
     }
+
 }

@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/order_no"
                 android:textSize="16sp"/>
 
@@ -71,7 +71,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/supplier"
                 android:textSize="16sp"/>
 
@@ -99,7 +99,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/build"
                 android:textSize="16sp"/>
 
@@ -155,7 +155,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.61"
                 android:text="@string/getter"
                 android:layout_gravity="center_vertical"
                 android:id="@+id/tv_dir_out_get"
@@ -166,7 +166,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:textColor="@color/black"
-                android:id="@+id/sp_dir_out_get"></Spinner>
+                android:textSize="16sp"
+                android:id="@+id/sp_dir_out_get"/>
         </LinearLayout>
 
     </LinearLayout>

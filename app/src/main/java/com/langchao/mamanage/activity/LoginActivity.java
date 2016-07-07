@@ -48,6 +48,10 @@ public class LoginActivity extends AutoLayoutActivity {
         x.view().inject(this);
 
         checkAutoLogin(readAutoLogin());
+
+        if(null == readIp() || readIp().trim().length() == 0){
+            saveIp(MaConstants.DEAULT_IP);
+        }
     }
 
     private void checkAutoLogin(boolean auto) {
@@ -150,5 +154,18 @@ public class LoginActivity extends AutoLayoutActivity {
     private boolean readAutoLogin(){
         return getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).getBoolean(MaConstants.PARA_AUTOLOGIN,false);
 
+    }
+
+    private String readIp(){
+        return getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).getString(MaConstants.PARA_IP,"");
+
+    }
+
+    private void saveIp(String ip){
+        SharedPreferences.Editor editor = getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).edit();
+        // 存入键值对
+        editor.putString("ip", ip);
+        // 将内存中的数据写到XML文件中去
+        editor.commit();
     }
 }

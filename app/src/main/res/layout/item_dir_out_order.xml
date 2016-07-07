@@ -16,10 +16,14 @@
             android:id="@+id/tv_dir_out_order_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:text="1234567890"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:layout_alignTop="@+id/imageView4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="37dp"
+            android:layout_marginStart="37dp" />
 
         <TextView
             android:id="@+id/tv_dir_out_order_time"
@@ -29,6 +33,15 @@
             android:text="2016-06-26 11:01:11"
             android:textColor="@color/gray_66"
             android:textSize="14sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView4"
+            android:src="@mipmap/itemlogo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
     <View

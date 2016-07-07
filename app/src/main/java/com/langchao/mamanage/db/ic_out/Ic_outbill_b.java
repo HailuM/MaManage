@@ -108,6 +108,17 @@ public class Ic_outbill_b implements Serializable {
     @Column(name = "receivebid")
     private String receivebid;
 
+    @Column(name = "wareentryid")
+    private String wareentryid;
+
+    public String getWareentryid() {
+        return wareentryid;
+    }
+
+    public void setWareentryid(String wareentryid) {
+        this.wareentryid = wareentryid;
+    }
+
     public String getReceiveid() {
         return receiveid;
     }
