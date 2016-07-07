@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MaManage</string>
+    <string name="app_name">物资管理</string>
 
     <string name="no_internet">网络连接错误~！</string>
     <string name="generic_server_down">连接服务器失败~！</string>
