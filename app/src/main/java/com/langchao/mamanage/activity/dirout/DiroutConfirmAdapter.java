@@ -14,6 +14,7 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.AlertForResult;
+import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.dialog.PopCallBack;
 import com.langchao.mamanage.utils.MathUtils;
 
@@ -83,6 +84,7 @@ public class DiroutConfirmAdapter extends BaseAdapter {
                 public void setNum(double num) {
                     if(num > (pu_order_b.getLimitQty() - pu_order_b.getCkQty())){
                         num = pu_order_b.getLimitQty() - pu_order_b.getCkQty();
+                        MessageDialog.show(context,"已经达到上限");
                     }
                     if(num > 0) {
                         pu_order_b.setCurQty(num);
@@ -100,6 +102,11 @@ public class DiroutConfirmAdapter extends BaseAdapter {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
 
+            }else{
+
+                pu_order_b.setCurQty(pu_order_b.getLimitQty()-pu_order_b.getCkQty());
+                baseAdapter.notifyDataSetChanged();
+                MessageDialog.show(context,"已经达到上限");
             }
         }
 

@@ -7,11 +7,13 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.AlertForResult;
+import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.dialog.PopCallBack;
 import com.langchao.mamanage.utils.MathUtils;
 
@@ -87,12 +89,13 @@ public class IcinMaterialAdapter extends BaseAdapter {
             AlertForResult.popUp(pu_order_b.getCurQty(), context, new PopCallBack() {
                 @Override
                 public void setNum(double num) {
-                    if (num > pu_order_b.getLimitQty()) {
-                        num = pu_order_b.getLimitQty();
-                    }
+//                    if (num > pu_order_b.getLimitQty()) {
+//                        num = pu_order_b.getLimitQty();
+//                    }
                     if (num > 0) {
                         if (num > (pu_order_b.getLimitQty() - pu_order_b.getRkQty())) {
                             num = pu_order_b.getLimitQty() - pu_order_b.getRkQty();
+                            MessageDialog.show(context,"已经达到上限");
                         }
                         pu_order_b.setCurQty(num);
 
@@ -107,6 +110,10 @@ public class IcinMaterialAdapter extends BaseAdapter {
             if (pu_order_b.getCurQty() < (pu_order_b.getLimitQty() - pu_order_b.getRkQty())) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
                 baseAdapter.notifyDataSetChanged();
+            }else{
+                pu_order_b.setCurQty(pu_order_b.getLimitQty() - pu_order_b.getRkQty());
+                baseAdapter.notifyDataSetChanged();
+                MessageDialog.show(context,"已经达到上限");
             }
         }
 
@@ -197,7 +204,7 @@ public class IcinMaterialAdapter extends BaseAdapter {
         Pu_order_b order_b = blist.get(position);
         _Holder.tvBrand.setText(order_b.getBrand());
 //        _Holder.leftQty.setText(MathUtils.scaleDouble(order_b.getSourceQty() - order_b.getRkQty() - order_b.getCurQty()));
-        _Holder.leftQty.setText(MathUtils.scaleDouble(order_b.getSourceQty() - order_b.getRkQty() - order_b.getCurQty())+"/" + MathUtils.scaleDouble(order_b.getLimitQty()-order_b.getRkQty()-order_b.getCurQty()) );
+        _Holder.leftQty.setText(MathUtils.scaleDouble(order_b.getSourceQty() - order_b.getRkQty() - order_b.getCurQty()));
         _Holder.tvModel.setText(order_b.getModel());
         _Holder.tvName.setText(order_b.getName());
         _Holder.tvNum.setText(MathUtils.scaleDouble(order_b.getCurQty()));
