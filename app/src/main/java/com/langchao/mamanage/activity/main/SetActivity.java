@@ -1,5 +1,7 @@
 package com.langchao.mamanage.activity.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import com.langchao.mamanage.activity.LoginActivity;
 import com.langchao.mamanage.activity.ServiceActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
+import com.langchao.mamanage.dialog.MessageDialog;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
@@ -51,7 +54,7 @@ public class SetActivity extends AutoLayoutActivity {
     }
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set,R.id.logOut,R.id.textViewClear}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set,R.id.logOut,R.id.textViewClear,R.id.textView22}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -78,6 +81,19 @@ public class SetActivity extends AutoLayoutActivity {
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
+                break;
+            case R.id.textView22: //提示版本
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("版本："+MaConstants.VERSION);
+                builder.setTitle("版本信息");
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                builder.create().show();
                 break;
         }
     }

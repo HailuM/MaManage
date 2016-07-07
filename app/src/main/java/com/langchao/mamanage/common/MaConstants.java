@@ -30,4 +30,6 @@ public class MaConstants {
     public final static String PRINT_LINESTART = "/*****************************/";
 
     public final static String PRINT_LINEBLANK="/- - - - - - - - - - - - - /";
+
+    public static String VERSION = "V1.0";
 }
