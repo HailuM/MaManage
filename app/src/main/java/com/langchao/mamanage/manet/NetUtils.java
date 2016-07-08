@@ -549,6 +549,7 @@ public class NetUtils {
         jo.put("receiveid", bill.getOrderid());  //生成的入库单主表ID  我使用的是UUID
         jo.put("qty", bill.getSourceQty()); //入库单行的数量
 
+        jo.put("wareentryid", bill.getOrderentryid()); //入库单行ID    UUID生成
 
         xml = xml.replace("(userOID)", userId);  //用户ID
         xml = xml.replace("(rktokenStr)", rkToken); //上次下载订单后的  入库TOKEN
@@ -606,7 +607,7 @@ public class NetUtils {
         jo.put("qty", bill.getSourceQty()); //出库数量
         jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("receiveid",bill.getReceiveid()); //来源的入库单的 主表ID
-        jo.put("receiverOID",head.getReceiverOID()); //来源的入库单的 主表ID
+        jo.put("receiverOID",head.getReceiverOID()); //领用商ID
         jo.put("wareentryid",bill.getWareentryid()); //来源的入库单的 子表ID
 
 

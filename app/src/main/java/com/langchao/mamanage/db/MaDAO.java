@@ -226,7 +226,7 @@ public class MaDAO {
 
         DbManager db = x.getDb(daoConfig);
 
-        List<Pu_order> a_orders = db.findAll(Pu_order.class);
+        List<Pu_order> a_orders = db.findAll(Pu_order.class) == null ? new ArrayList<Pu_order>() : db.findAll(Pu_order.class);
         int a_orderssize = 0;
         if(null != a_orders && a_orders.size() > 0){
             a_orderssize = a_orders.size();
@@ -268,14 +268,14 @@ public class MaDAO {
                 }
             }
         }
-        MaDAO.innum = ic_inbill_bs_t.size();
+        MaDAO.innum = ic_inbill_bs_new.size();
 
         final   List<Ic_inbill_b> ic_inbill_bs = ic_inbill_bs_new;
         size = size + ic_diroutbill_bs.size() + ic_inbill_bs.size();
 
         String ckToken = MethodUtil.getCkToken(mainActivity);
 
-        List<Ic_outbill_b> ic_outbill_bs = null;
+        List<Ic_outbill_b> ic_outbill_bs = new ArrayList<>();
         int outSize = 0;
         if (null == ckToken || ckToken.trim().length() == 0) {
             //没有出库TOKEN的时候  一起上传出库单

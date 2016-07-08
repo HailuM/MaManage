@@ -172,8 +172,8 @@ public class IcoutConfirmAdapter extends BaseAdapter {
         _Holder.tvNum.setText(MathUtils.scaleDouble(order_b.getCurQty()));
         _Holder.tvNote.setText(order_b.getNote());
         _Holder.tvUnit.setText(order_b.getUnit());
-        _Holder.tvleft.setVisibility(View.INVISIBLE);
-        _Holder.leftQty.setVisibility(View.INVISIBLE);
+        //_Holder.tvleft.setVisibility(View.INVISIBLE);
+        //_Holder.leftQty.setVisibility(View.INVISIBLE);
         _Holder.inbill_b = order_b;
         _Holder.baseAdapter = this;
         return convertView;

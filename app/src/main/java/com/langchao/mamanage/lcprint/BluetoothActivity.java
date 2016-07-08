@@ -10,11 +10,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.langchao.mamanage.R;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.x;
 
-public class BluetoothActivity extends Activity {
+public class BluetoothActivity extends AutoLayoutActivity {
     private Context context = null;
 
     @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
