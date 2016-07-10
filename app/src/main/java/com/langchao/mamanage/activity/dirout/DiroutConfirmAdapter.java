@@ -171,7 +171,7 @@ public class DiroutConfirmAdapter extends BaseAdapter {
         Pu_order_b order_b = blist.get(position);
         _Holder.tvBrand.setText(order_b.getBrand());
         _Holder.imgAdd.setImageResource(R.mipmap.del);
-        //_Holder.leftQty.setText((order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() )+"" );
+        _Holder.leftQty.setText(MathUtils.scaleDouble4(order_b.getSourceQty()-order_b.getCkQty()-order_b.getCurQty() ) );
         _Holder.tvModel.setText(order_b.getModel());
         _Holder.tvName.setText(order_b.getName());
         _Holder.tvNum.setText(MathUtils.scaleDouble(order_b.getCurQty()));

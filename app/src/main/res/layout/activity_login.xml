@@ -30,7 +30,7 @@
         android:layout_width="600px"
         android:layout_height="300px"
         android:id="@+id/imageView"
-        android:src="@mipmap/logo"
+        android:src="@mipmap/logo5"
         android:layout_above="@+id/relativeLayout2"
         android:layout_centerHorizontal="true" />
 
