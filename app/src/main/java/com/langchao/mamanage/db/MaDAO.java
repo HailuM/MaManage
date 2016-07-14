@@ -309,7 +309,7 @@ public class MaDAO {
             public void run() {
                 try {
 
-                    Toast.makeText(mainActivity,"本次上传入库单"+innum+"张 出库单"+outnum+"张 直入直出"+ditnum+"张",Toast.LENGTH_LONG).show();
+                    Toast.makeText(mainActivity,"本次上传入库单明细"+innum+"条 出库单明细"+outnum+"条 直入直出明细"+ditnum+"条",Toast.LENGTH_LONG).show();
 
 
                     // 无数据上传  增加弹框 判断是否下载
@@ -688,7 +688,7 @@ public class MaDAO {
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
-                    Toast.makeText(mainActivity, "本次上传出库单" + outnum + "张", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mainActivity, "本次上传出库单明细" + outnum + "条", Toast.LENGTH_LONG).show();
 
                     // 无数据上传  增加弹框 判断是否下载
                     if(MaDAO.outnum == 0 && finalA_iclistsize > 0){

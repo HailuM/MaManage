@@ -1,10 +1,11 @@
 package com.langchao.mamanage.lcprint;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -12,11 +13,21 @@ import com.langchao.mamanage.R;
 import com.langchao.mamanage.dialog.MessageDialog;
 import com.zhy.autolayout.AutoLayoutActivity;
 
+import org.xutils.view.annotation.Event;
+import org.xutils.x;
+
 public class PrintDataActivity extends AutoLayoutActivity {
     private Context context = null;
-  
+
+    @Event(value = {R.id.imageViewBack}, type = View.OnClickListener.class)
+    private void back(View v) {
+        this.finish();
+
+    }
+
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);  
+        super.onCreate(savedInstanceState);
+        x.view().inject(this);
         this.setTitle("蓝牙打印");  
         this.setContentView(R.layout.printdata_layout);
         this.context = this;
@@ -31,7 +42,16 @@ public class PrintDataActivity extends AutoLayoutActivity {
         printdata.setText(data);
         printdata.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-        this.initListener();  
+        this.initListener();
+
+//        ImageView backView = (ImageView) this
+//                .findViewById(R.id.imageViewBack);
+//        backView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
     }  
   
     /** 
