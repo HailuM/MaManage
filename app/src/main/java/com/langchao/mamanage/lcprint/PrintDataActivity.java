@@ -19,11 +19,11 @@ import org.xutils.x;
 public class PrintDataActivity extends AutoLayoutActivity {
     private Context context = null;
 
-    @Event(value = {R.id.imageViewBack}, type = View.OnClickListener.class)
-    private void back(View v) {
-        this.finish();
-
-    }
+//    @Event(value = {R.id.imageViewBack}, type = View.OnClickListener.class)
+//    private void back(View v) {
+//        this.finish();
+//
+//    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +44,16 @@ public class PrintDataActivity extends AutoLayoutActivity {
 
         this.initListener();
 
-//        ImageView backView = (ImageView) this
-//                .findViewById(R.id.imageViewBack);
-//        backView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
+        ImageView backView = (ImageView) this
+                .findViewById(R.id.imageViewBack);
+        if(null != backView) {
+            backView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+        }
     }  
   
     /** 
