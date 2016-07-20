@@ -209,10 +209,10 @@ public class PrintUtil {
             buffer.append("\n");
             buffer.append("出库数量："+detail.getSourceQty());
             buffer.append("\n");
-            buffer.append("物料单价："+ MathUtils.scaleDouble4(detail.getPrice()));
-            buffer.append("\n");
-            buffer.append("金額："+MathUtils.scaleDouble4(detail.getPrice() * detail.getSourceQty()));
-            buffer.append("\n");
+//            buffer.append("物料单价："+ MathUtils.scaleDouble4(detail.getPrice()));
+//            buffer.append("\n");
+//            buffer.append("金額："+MathUtils.scaleDouble4(detail.getPrice() * detail.getSourceQty()));
+//            buffer.append("\n");
             buffer.append("备注："+detail.getNote());
             buffer.append("\n");
             buffer.append(MaConstants.PRINT_LINEBLANK);

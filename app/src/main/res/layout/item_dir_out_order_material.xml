@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/gray"
-                android:text="材料名称" />
+                android:text="材料名称:" />
 
             <TextView
                 android:id="@+id/tv_dir_out_order_m_name"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/gray"
-                android:text="单位"
+                android:text="单位:"
                 android:id="@+id/textView28" />
 
             <TextView
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="规格型号"
+                android:text="规格型号:"
                 android:textColor="@color/gray" />
 
             <TextView
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/gray"
-                android:text="品牌"
+                android:text="品牌:"
                 android:id="@+id/textView30" />
 
             <TextView
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/gray"
-                android:text="备        注"
+                android:text="备        注:"
                 android:gravity="center_vertical" />
 
             <TextView

@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/supplier"
+            android:text="供方:"
             android:textSize="16sp"
             android:textColor="@color/black"/>
         <TextView
@@ -79,7 +79,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_material"
+            android:text="主要材料:"
             android:textSize="16sp"
             android:textColor="@color/black"/>
         <TextView
@@ -102,7 +102,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/building"
+            android:text="楼栋:"
             android:textSize="16sp"
             android:textColor="@color/black"/>
         <TextView
