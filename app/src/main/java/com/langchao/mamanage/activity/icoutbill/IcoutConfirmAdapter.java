@@ -90,10 +90,14 @@ public class IcoutConfirmAdapter extends BaseAdapter {
         private void add(View v){
             if(inbill_b.getCurQty() < (inbill_b.getSourceQty()-inbill_b.getCkQty())) {
                 inbill_b.setCurQty(inbill_b.getCurQty() + 1);
+                if(inbill_b.getCurQty() > (inbill_b.getSourceQty()-inbill_b.getCkQty())){
+                    inbill_b.setCurQty(inbill_b.getSourceQty()-inbill_b.getCkQty());
+                }
                 baseAdapter.notifyDataSetChanged();
 
             }
         }
+
 
 
         @Event(value = {R.id.tv_dir_out_order_m_del }, type = View.OnClickListener.class)

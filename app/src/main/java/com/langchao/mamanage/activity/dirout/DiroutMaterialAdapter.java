@@ -100,6 +100,7 @@ public class DiroutMaterialAdapter extends BaseAdapter {
         private void add(View v){
             if(pu_order_b.getCurQty() < (pu_order_b.getLimitQty() - pu_order_b.getCkQty() )) {
                 pu_order_b.setCurQty(pu_order_b.getCurQty() + 1);
+                checkCurMax();
                 baseAdapter.notifyDataSetChanged();
             }else{
                 pu_order_b.setCurQty(pu_order_b.getLimitQty() - pu_order_b.getCkQty());
@@ -120,6 +121,13 @@ public class DiroutMaterialAdapter extends BaseAdapter {
                 }
 
 
+            }
+        }
+
+        void checkCurMax(){
+            if(pu_order_b.getCurQty() > (pu_order_b.getLimitQty() - pu_order_b.getCkQty())){
+                pu_order_b.setCurQty( pu_order_b.getLimitQty() - pu_order_b.getCkQty());
+                MessageDialog.show(context,"已经达到上限");
             }
         }
 
