@@ -135,6 +135,7 @@
                 android:orientation="horizontal"
                 android:layout_width="350px"
                 android:layout_height="match_parent"
+                android:id="@+id/service1"
                 android:gravity="center">
 
                 <ImageView
