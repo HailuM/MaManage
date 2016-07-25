@@ -490,7 +490,10 @@ public class MaDAO {
         //下载前调用确认完成
 
         String rkTokenOld = MethodUtil.getRkToken(mainActivity);
-        NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
+        if(null != rkTokenOld && rkTokenOld.trim().length() > 0)
+        {
+            NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
+        }
 
 
         DbManager db = x.getDb(daoConfig);
@@ -828,7 +831,10 @@ public class MaDAO {
 
         //调用上传完成
         String ckTokenOld = MethodUtil.getCkToken(mainActivity);
-        NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
+        if(null != ckTokenOld && ckTokenOld.trim().length() > 0)
+        {
+            NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
+        }
 
 
 
