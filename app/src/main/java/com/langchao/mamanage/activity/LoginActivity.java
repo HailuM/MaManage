@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.common.MaConstants;
+import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.manet.MaCallback;
 import com.langchao.mamanage.manet.NetUtils;
 import com.zhy.autolayout.AutoLayoutActivity;
@@ -69,7 +70,7 @@ public class LoginActivity extends AutoLayoutActivity {
     }
 
     //点击事件
-    @Event(value = {R.id.service,R.id.outStorage,R.id.logIn}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service,R.id.outStorage,R.id.logIn,R.id.textViewForgot}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -80,6 +81,10 @@ public class LoginActivity extends AutoLayoutActivity {
             case R.id.logIn:
 
                 this.doLogin();
+                break;
+            case R.id.textViewForgot:
+
+                MessageDialog.show(this,"手机端暂不支持此功能，请联系系统管理员!");
                 break;
         }
     }
