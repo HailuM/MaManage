@@ -449,18 +449,19 @@ public class MaDAO {
                     }
 
 
-                    try {
-                        NetUtils.Mobile_uploadrkComplete(userId, rkToken, ic_diroutbill_bs.size(), ic_inbill_bs.size(), finalIc_outbill_bs.size());
-                    } catch (Throwable throwable) {
-
-                        Message errmsg = new Message();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("err", throwable.getMessage());
-                        errmsg.setData(bundle);
-                        errmsg.what = -1;
-                        handler.sendMessage(errmsg);
-                        return;
-                    }
+//                    try {
+//                        NetUtils.Mobile_uploadrkComplete(userId, rkToken, ic_diroutbill_bs.size(), ic_inbill_bs.size(), finalIc_outbill_bs.size());
+//                    } catch (Throwable throwable) {
+//
+//                        Message errmsg = new Message();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("err", throwable.getMessage());
+//                        errmsg.setData(bundle);
+//                        errmsg.what = -1;
+//                        handler.sendMessage(errmsg);
+//                        return;
+//                    }
+                    //修改为 点击确认后调用
 
                     handler.sendEmptyMessage(100);
                     return;
@@ -485,6 +486,13 @@ public class MaDAO {
 
 
     public void downLoadOrder(final String userId, final MainActivity mainActivity, boolean delout) throws Throwable {
+
+        //下载前调用确认完成
+
+        String rkTokenOld = MethodUtil.getRkToken(mainActivity);
+        NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
+
+
         DbManager db = x.getDb(daoConfig);
         db.dropTable(Pu_order.class);
         db.dropTable(Pu_order_b.class);
@@ -780,19 +788,19 @@ public class MaDAO {
                         }
                     }
 
-
-                    try {
-                        NetUtils.Mobile_uploadckComplete(userId, ckToken, finalIc_outbill_bs.size());
-                    } catch (Throwable throwable) {
-
-                        Message errmsg = new Message();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("err", throwable.getMessage());
-                        errmsg.setData(bundle);
-                        errmsg.what = -1;
-                        handler.sendMessage(errmsg);
-                        return;
-                    }
+//修改为确认下载后调用
+//                    try {
+//                        NetUtils.Mobile_uploadckComplete(userId, ckToken, finalIc_outbill_bs.size());
+//                    } catch (Throwable throwable) {
+//
+//                        Message errmsg = new Message();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("err", throwable.getMessage());
+//                        errmsg.setData(bundle);
+//                        errmsg.what = -1;
+//                        handler.sendMessage(errmsg);
+//                        return;
+//                    }
 
                     handler.sendEmptyMessage(100);
                     return;
@@ -817,6 +825,13 @@ public class MaDAO {
 
 
     public void downLoadReceive(final String userId, final MainActivity mainActivity) throws Throwable {
+
+        //调用上传完成
+        String ckTokenOld = MethodUtil.getCkToken(mainActivity);
+        NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
+
+
+
         DbManager db = x.getDb(daoConfig);
 
         db.dropTable(Ic_outbill.class);
