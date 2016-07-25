@@ -70,7 +70,7 @@ public class LoginActivity extends AutoLayoutActivity {
     }
 
     //点击事件
-    @Event(value = {R.id.service,R.id.outStorage,R.id.logIn,R.id.textViewForgot}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service,R.id.outStorage,R.id.logIn,R.id.service1}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -82,7 +82,7 @@ public class LoginActivity extends AutoLayoutActivity {
 
                 this.doLogin();
                 break;
-            case R.id.textViewForgot:
+            case R.id.service1:
 
                 MessageDialog.show(this,"手机端暂不支持此功能，请联系系统管理员!");
                 break;
