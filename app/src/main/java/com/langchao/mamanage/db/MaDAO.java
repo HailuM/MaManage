@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.deserializer.EnumDeserializer;
 import com.langchao.mamanage.activity.MainActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.consumer.Consumer;
@@ -240,8 +241,12 @@ public class MaDAO {
 
             //20160726 不全部删除  保留下载的单子
 
-            db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '"+MaConstants.TYPE_SYNC+"'");
+            try {
+                db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
+                db.executeUpdateDelete("delete from consumer where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
+            }catch (Exception e){
 
+            }
 
 //            db.dropTable(Ic_inbill.class);
 //            db.dropTable(Ic_inbill_b.class);
@@ -508,7 +513,19 @@ public class MaDAO {
         db.dropTable(Pu_order_b.class);
 
         //不全部删除
-        db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '"+MaConstants.TYPE_SYNC+"'");
+        try {
+            int num1 =  db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
+
+        }catch (Exception e){
+
+        }
+
+        try {
+
+            int num2 =  db.executeUpdateDelete("delete from consumer where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
+        }catch (Exception e){
+
+        }
 
 //        db.dropTable(Ic_inbill.class);
 //        db.dropTable(Ic_inbill_b.class);
@@ -519,7 +536,7 @@ public class MaDAO {
 
         db.dropTable(Ic_diroutbill.class);
         db.dropTable(Ic_diroutbill_b.class);
-        db.dropTable(Consumer.class);
+//        db.dropTable(Consumer.class);
 
         JSONObject jsonObject = NetUtils.Mobile_DownloadOrderInfo(userId);
 
@@ -970,6 +987,9 @@ public class MaDAO {
                                     new MaDAO().save(ic_inbill, list);
                                     if (null != consumerArray) {
                                         List<Consumer> consumerList = JSON.parseArray(consumerArray.toJSONString(), Consumer.class);
+                                        for(Consumer consumer : consumerList){
+                                            consumer.setCreateType(MaConstants.TYPE_SYNC);
+                                        }
                                         new MaDAO().save(consumerList);
                                     }
 //                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
