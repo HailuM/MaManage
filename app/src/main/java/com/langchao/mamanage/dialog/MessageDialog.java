@@ -22,7 +22,6 @@ public class MessageDialog {
          });
 
         AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
     }
 
