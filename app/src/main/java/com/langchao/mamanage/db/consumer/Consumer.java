@@ -102,7 +102,16 @@ public class Consumer {
     @Column(name = "Orderid" /*, property = "UNIQUE"//如果是一对一加上唯一约束*/)
     private String Orderid; // 外键表id
 
+    public String getCreateType() {
+        return createType;
+    }
 
+    public void setCreateType(String createType) {
+        this.createType = createType;
+    }
+
+    @Column(name = "createType")
+    private String createType;
 
 
     public Pu_order getParent(DbManager db) throws DbException {
