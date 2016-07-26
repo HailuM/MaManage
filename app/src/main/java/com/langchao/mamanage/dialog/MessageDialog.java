@@ -12,6 +12,7 @@ public class MessageDialog {
     public static void show(Context context,String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
           builder.setMessage(message);
+
          builder.setTitle("提示");
          builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
              @Override
@@ -20,7 +21,9 @@ public class MessageDialog {
              }
          });
 
-         builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
     }
 
 }
