@@ -33,6 +33,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -161,6 +162,9 @@ public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
         public ConsumerAdapter(Context pContext, List<Consumer> pList) {
             this.mContext = pContext;
             this.mList = pList;
+            if(null == this.mList){
+                this.mList = new ArrayList<>();
+            }
         }
 
         @Override
