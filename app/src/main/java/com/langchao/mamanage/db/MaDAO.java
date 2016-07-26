@@ -237,8 +237,14 @@ public class MaDAO {
         if (null == rkToken || rkToken.trim().length() == 0) {
             db.dropTable(Ic_diroutbill.class);
             db.dropTable(Ic_diroutbill_b.class);
-            db.dropTable(Ic_inbill.class);
-            db.dropTable(Ic_inbill_b.class);
+
+            //20160726 不全部删除  保留下载的单子
+
+            db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '"+MaConstants.TYPE_SYNC+"'");
+
+
+//            db.dropTable(Ic_inbill.class);
+//            db.dropTable(Ic_inbill_b.class);
         }
 
 
@@ -500,8 +506,12 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
         db.dropTable(Pu_order.class);
         db.dropTable(Pu_order_b.class);
-        db.dropTable(Ic_inbill.class);
-        db.dropTable(Ic_inbill_b.class);
+
+        //不全部删除
+        db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '"+MaConstants.TYPE_SYNC+"'");
+
+//        db.dropTable(Ic_inbill.class);
+//        db.dropTable(Ic_inbill_b.class);
         if (delout) {
             db.dropTable(Ic_outbill.class);
             db.dropTable(Ic_outbill_b.class);
