@@ -302,6 +302,7 @@ public class MaDAO {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
         progressDialog.setMax(size + outSize);
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         final int finalA_orderssize = a_orderssize;
@@ -360,7 +361,7 @@ public class MaDAO {
                     MessageDialog.show(mainActivity, err);
                     return;
                 }
-                if (msg.what >= 100) {
+                if (msg.what >= 10000) {
                     afterThread.run();
                     progressDialog.cancel();
                     progressDialog.dismiss();
@@ -380,7 +381,7 @@ public class MaDAO {
 
 
                     if (null == rkToken || rkToken.trim().length() == 0) {
-                        handler.sendEmptyMessage(100);
+                        handler.sendEmptyMessage(10000);
 
                         return;
                     }
@@ -463,7 +464,7 @@ public class MaDAO {
 //                    }
                     //修改为 点击确认后调用
 
-                    handler.sendEmptyMessage(100);
+                    handler.sendEmptyMessage(10000);
                     return;
 
                     // ///
@@ -525,6 +526,7 @@ public class MaDAO {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
             progressDialog.setMax(orderArray.size());
+            progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
 
@@ -553,7 +555,7 @@ public class MaDAO {
                         MessageDialog.show(mainActivity, err);
                         return;
                     }
-                    if (msg.what > 100) {
+                    if (msg.what >= 10000) {
                         afterThread.run();
                         progressDialog.cancel();
                         progressDialog.dismiss();
@@ -627,7 +629,7 @@ public class MaDAO {
                             handler.sendEmptyMessage(i);
 
                         }
-                        handler.sendEmptyMessage(101);
+                        handler.sendEmptyMessage(10000);
                     } catch (Exception e) {
                         Message errmsg = new Message();
                         Bundle bundle = new Bundle();
@@ -693,6 +695,7 @@ public class MaDAO {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
         progressDialog.setMax(ic_outbill_bs.size());
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         final int finalA_iclistsize = a_iclistsize;
@@ -749,7 +752,7 @@ public class MaDAO {
                     MessageDialog.show(mainActivity, err);
                     return;
                 }
-                if (msg.what >= 100) {
+                if (msg.what >= 10000) {
                     afterThread.run();
                     progressDialog.cancel();
                     progressDialog.dismiss();
@@ -767,7 +770,7 @@ public class MaDAO {
                 try {
 
                     if (null == ckToken || ckToken.trim().length() == 0 ) {
-                        handler.sendEmptyMessage(100);
+                        handler.sendEmptyMessage(10000);
                         return;
                     }
 
@@ -805,7 +808,7 @@ public class MaDAO {
 //                        return;
 //                    }
 
-                    handler.sendEmptyMessage(100);
+                    handler.sendEmptyMessage(10000);
                     return;
 
                     // ///
@@ -865,6 +868,7 @@ public class MaDAO {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
             progressDialog.setMax(orderArray.size());
+            progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
             final Runnable afterThread = new Runnable() {
@@ -893,7 +897,7 @@ public class MaDAO {
                             MessageDialog.show(mainActivity, err);
                             return;
                         }
-                        if (msg.what >= 100) {
+                        if (msg.what >= 10000) {
                             afterThread.run();
                             progressDialog.cancel();
                             progressDialog.dismiss();
@@ -974,7 +978,7 @@ public class MaDAO {
                             }
                             NetUtils.Mobile_DownLoadReceiveComplete(userId, ckToken);
                             receivenum = orderArray.size();
-                            handler.sendEmptyMessage(101);
+                            handler.sendEmptyMessage(10000);
                             return;
 
                             // ///
