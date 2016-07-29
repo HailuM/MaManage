@@ -566,6 +566,7 @@ public class MaDAO {
                             Toast.makeText(mainActivity, "本次下载订单" + ordernum + "张", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
+
                         MessageDialog.show(mainActivity, e.getMessage());
                     } catch (Throwable throwable) {
                         MessageDialog.show(mainActivity, throwable.getMessage());
