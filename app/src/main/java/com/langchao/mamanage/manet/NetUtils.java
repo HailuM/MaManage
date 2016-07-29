@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class NetUtils {
 
-    public static String getIp (){
-          return "http://"+x.app().getSharedPreferences(MaConstants.FILENAME, 0).getString(MaConstants.PARA_IP,"58.221.4.34:9310");
-         
+    public static String getIp() {
+        return "http://" + x.app().getSharedPreferences(MaConstants.FILENAME, 0).getString(MaConstants.PARA_IP, "58.221.4.34:9310");
+
     }
 
 
@@ -61,7 +61,6 @@ public class NetUtils {
     public static String URL_MOBILE_UPLOADRKCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadrkComplete";
 
     public static String URL_MOBILE_UPLOADCKCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadckComplete";
-
 
 
     /**
@@ -153,11 +152,11 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderInfoResult", result);
         if (xmlrs.startsWith("false")) {
 
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
 
         } else {
 
@@ -199,11 +198,11 @@ public class NetUtils {
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
 
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderMaterialResult", result);
         if (xmlrs.startsWith("false")) {
 
-              throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
 
         } else {
 
@@ -211,7 +210,7 @@ public class NetUtils {
             if (array.size() > 0) {
                 return array;
             } else {
-              // System.out.println(array.size()  + "///" +  xmlrs);
+                // System.out.println(array.size()  + "///" +  xmlrs);
                 return null;
             }
         }
@@ -288,11 +287,11 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadOrderconsumerResult", result);
         if (xmlrs.startsWith("false")) {
 
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
 
         } else {
 
@@ -335,7 +334,7 @@ public class NetUtils {
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
         String result = null;
         try {
-            result = x.http().postSync(params, String.class);
+            result = callForResult(params);
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }
@@ -345,7 +344,7 @@ public class NetUtils {
         String xmlrs = NetUtils.getValueFromXML("Mobile_downloadReceiveInfoResult", result);
         if (xmlrs.startsWith("false")) {
 
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
 
         } else {
 
@@ -387,7 +386,7 @@ public class NetUtils {
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
         String result = null;
         try {
-            result = x.http().postSync(params, String.class);
+            result = callForResult(params);
         } catch (Throwable throwable) {
             return null;
         }
@@ -397,7 +396,7 @@ public class NetUtils {
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadReceiveMaterialResult", result);
         if (xmlrs.startsWith("false")) {
 
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
 
         } else {
 
@@ -440,19 +439,18 @@ public class NetUtils {
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
         try {
-            String result = x.http().postSync(params, String.class);
+            String result = callForResult(params);
             String xmlrs = NetUtils.getValueFromXML("Mobile_DownloadReceiveconsumerResult", result);
             if (xmlrs.startsWith("false")) {
 
-                throw new RuntimeException(xmlrs.replace("false:",""));
+                throw new RuntimeException(xmlrs.replace("false:", ""));
 
-            }
-            else {
+            } else {
                 JSONArray array = JSON.parseArray(xmlrs);
                 return array;
             }
         } catch (Throwable throwable) {
-          throw throwable;
+            throw throwable;
         }
 
     }
@@ -460,13 +458,14 @@ public class NetUtils {
 
     /**
      * 直入直出上传
+     *
      * @param bill
      * @param rkToken
      * @param userId
      * @return
      * @throws Throwable
      */
-    public  static boolean uploadZrzc(Ic_diroutbill_b bill, String rkToken, String userId) throws Throwable {
+    public static boolean uploadZrzc(Ic_diroutbill_b bill, String rkToken, String userId) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
                 "    <Mobile_uploadZRZCInfo xmlns=\"http://tempuri.org/\">\n" +
@@ -486,10 +485,10 @@ public class NetUtils {
         jo.put("orderEntryid", bill.getSourcebId()); //来源订单子表ID
         jo.put("zrzcid", bill.getOrderentryid());//生成的直入直出ID  UUID
         jo.put("qty", bill.getSourceQty());//数量
-        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
+        jo.put("printcount", bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("deliverNo", head.getNumber()); //生成的出库单号
 
-        jo.put("receiverOID",head.getReceiverOID()); //来源的入库单的 主表ID
+        jo.put("receiverOID", head.getReceiverOID()); //来源的入库单的 主表ID
 
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(rktokenStr)", rkToken);
@@ -503,14 +502,14 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_uploadZRZCInfoResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
         }
     }
 
@@ -524,6 +523,7 @@ public class NetUtils {
 
     /**
      * 上传入库单
+     *
      * @param bill
      * @param rkToken
      * @param userId
@@ -563,20 +563,21 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_uploadrkInfoResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
         }
     }
 
 
     /**
      * 上传出库单
+     *
      * @param bill
      * @param ckToken
      * @param userId
@@ -605,11 +606,13 @@ public class NetUtils {
         jo.put("orderEntryid", bill.getSourcebId()); //来源订单子表ID 从订单带到入库单带到出库单
         jo.put("deliverid", bill.getOrderentryid()); //生成的出库单子表ID
         jo.put("qty", bill.getSourceQty()); //出库数量
-        jo.put("printcount",bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
-        jo.put("receiveid",bill.getReceiveid()); //来源的入库单的 主表ID
-        jo.put("receiverOID",head.getReceiverOID()); //领用商ID
-        jo.put("wareentryid",bill.getWareentryid()); //来源的入库单的 子表ID
+        jo.put("printcount", bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
+        jo.put("receiveid", bill.getReceiveid()); //来源的入库单的 主表ID
 
+        // jo.put("inbillid",bill.getReceiveid()); //来源的入库单的 主表ID
+
+        jo.put("receiverOID", head.getReceiverOID()); //领用商ID
+        jo.put("wareentryid", bill.getWareentryid()); //来源的入库单的 子表ID
 
 
         xml = xml.replace("(userOID)", userId);
@@ -625,18 +628,18 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_uploadckInfoResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
         }
     }
 
-    public static boolean Mobile_DownLoadOrderComplete(String userId,String rktokenStr) throws Throwable {
+    public static boolean Mobile_DownLoadOrderComplete(String userId, String rktokenStr) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
                 "    <Mobile_DownLoadOrderComplete xmlns=\"http://tempuri.org/\">\n" +
@@ -645,7 +648,6 @@ public class NetUtils {
                 "    </Mobile_DownLoadOrderComplete>\n" +
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
-
 
 
         xml = xml.replace("(userOID)", userId);
@@ -659,20 +661,20 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownLoadOrderCompleteResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
         }
 
     }
 
 
-    public static boolean Mobile_DownLoadReceiveComplete(String userId,String cktokenStr) throws Throwable {
+    public static boolean Mobile_DownLoadReceiveComplete(String userId, String cktokenStr) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
                 "    <Mobile_DownLoadReceiveComplete xmlns=\"http://tempuri.org/\">\n" +
@@ -681,7 +683,6 @@ public class NetUtils {
                 "    </Mobile_DownLoadReceiveComplete>\n" +
                 "  </soap:Body>\n" +
                 "</soap:Envelope>";
-
 
 
         xml = xml.replace("(userOID)", userId);
@@ -695,21 +696,20 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_DownLoadReceiveCompleteResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
         }
 
     }
 
 
-
-    public static boolean Mobile_uploadrkComplete(String userId,String rktokenStr,int zrzcBillCount,int rkBillCount,int ckBillCount) throws Throwable {
+    public static boolean Mobile_uploadrkComplete(String userId, String rktokenStr, int zrzcBillCount, int rkBillCount, int ckBillCount) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
                 "    <Mobile_uploadrkComplete xmlns=\"http://tempuri.org/\">\n" +
@@ -723,12 +723,11 @@ public class NetUtils {
                 "</soap:Envelope>";
 
 
-
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(rktokenStr)", rktokenStr);
-        xml = xml.replace("(zrzcBillCount)", zrzcBillCount+"");
-        xml = xml.replace("(rkBillCount)", rkBillCount+"");
-        xml = xml.replace("(ckBillCount)", ckBillCount+"");
+        xml = xml.replace("(zrzcBillCount)", zrzcBillCount + "");
+        xml = xml.replace("(rkBillCount)", rkBillCount + "");
+        xml = xml.replace("(ckBillCount)", ckBillCount + "");
 
         String url = getIp() + URL_MOBILE_UPLOADRKCOMPLETE;
 
@@ -738,22 +737,20 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
         String xmlrs = NetUtils.getValueFromXML("Mobile_uploadrkCompleteResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
         }
 
     }
 
 
-
-
-    public static boolean Mobile_uploadckComplete(String userId,String cktokenStr,int ckBillCount) throws Throwable {
+    public static boolean Mobile_uploadckComplete(String userId, String cktokenStr, int ckBillCount) throws Throwable {
         String xml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
                 "    <Mobile_uploadckComplete xmlns=\"http://tempuri.org/\">\n" +
@@ -765,10 +762,9 @@ public class NetUtils {
                 "</soap:Envelope>";
 
 
-
         xml = xml.replace("(userOID)", userId);
         xml = xml.replace("(cktokenStr)", cktokenStr);
-        xml = xml.replace("(ckBillCount)", ckBillCount+"");
+        xml = xml.replace("(ckBillCount)", ckBillCount + "");
 
         String url = getIp() + URL_MOBILE_UPLOADCKCOMPLETE;
 
@@ -778,14 +774,27 @@ public class NetUtils {
                 "data",
                 xml,
                 "text/xml"); // 如果文件没有扩展名, 最好设置contentType参数.
-        String result = x.http().postSync(params, String.class);
+        String result = callForResult(params);
+
         String xmlrs = NetUtils.getValueFromXML("Mobile_uploadckCompleteResult", result);
         if (xmlrs.contains("true")) {
 
             return true;
             //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
         } else {
-            throw new RuntimeException(xmlrs.replace("false:",""));
+            throw new RuntimeException(xmlrs.replace("false:", ""));
+        }
+
+    }
+
+    public static String callForResult(RequestParams params) throws Exception {
+
+        try {
+            String result = callForResult(params);
+            return result;
+        } catch (Throwable throwable) {
+            throw new Exception("当前网络连接不可用，请检查网络连接！");
+
         }
 
     }
