@@ -790,7 +790,7 @@ public class NetUtils {
     public static String callForResult(RequestParams params) throws Exception {
 
         try {
-            String result = callForResult(params);
+            String result = x.http().postSync(params, String.class);
             return result;
         } catch (Throwable throwable) {
             throw new Exception("当前网络连接不可用，请检查网络连接！");
