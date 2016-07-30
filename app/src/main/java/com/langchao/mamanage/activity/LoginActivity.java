@@ -125,7 +125,7 @@ public class LoginActivity extends AutoLayoutActivity {
 
                 @Override
                 public void onError(Throwable ex) {
-                    Toast.makeText(x.app(),  ex.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(x.app(),  "登录失败，请检查网络连接！", Toast.LENGTH_LONG).show();
                 }
             });
         }
