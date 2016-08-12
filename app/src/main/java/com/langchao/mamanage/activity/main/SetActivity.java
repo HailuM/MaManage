@@ -39,7 +39,6 @@ public class SetActivity extends AutoLayoutActivity {
     private TextView ip;
 
 
-
     Intent intent = new Intent();
 
     @Override
@@ -54,7 +53,7 @@ public class SetActivity extends AutoLayoutActivity {
     }
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set,R.id.logOut,R.id.textViewClear,R.id.textView22}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set, R.id.logOut, R.id.textViewClear, R.id.textView22}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -84,7 +83,7 @@ public class SetActivity extends AutoLayoutActivity {
                 break;
             case R.id.textView22: //提示版本
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("版本："+MaConstants.VERSION);
+                builder.setMessage("版本：" + MaConstants.VERSION);
                 builder.setTitle("版本信息");
                 builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
@@ -100,20 +99,20 @@ public class SetActivity extends AutoLayoutActivity {
 
     private void clearUserInfo() {
 
-            SharedPreferences.Editor editor = getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).edit();
-            // 存入键值对
-            editor.remove(MaConstants.PARA_USERNAME);
-            editor.remove(MaConstants.PARA_USERID);
-            editor.remove(MaConstants.PARA_AUTOLOGIN);
-
-            // 将内存中的数据写到XML文件中去
-            editor.commit();
+        SharedPreferences.Editor editor = getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).edit();
+        // 存入键值对
+        editor.remove(MaConstants.PARA_USERNAME);
+        editor.remove(MaConstants.PARA_USERID);
+        editor.remove(MaConstants.PARA_AUTOLOGIN);
+        editor.remove(MaConstants.PARA_REALNAME);
+        // 将内存中的数据写到XML文件中去
+        editor.commit();
 
     }
 
 
     private String readUserName() {
-        return getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).getString(MaConstants.PARA_USERNAME, "");
+        return getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).getString(MaConstants.PARA_REALNAME, "");
 
     }
 
