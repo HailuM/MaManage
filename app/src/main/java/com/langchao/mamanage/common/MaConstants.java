@@ -18,6 +18,8 @@ public class MaConstants {
 
     public static String PARA_USERNAME = "username";
 
+    public static String PARA_REALNAME = "realname";
+
     public static String PARA_USERID = "userid";
 
     public static String PARA_AUTOLOGIN = "autologin";
