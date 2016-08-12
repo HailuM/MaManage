@@ -116,8 +116,8 @@ public class LoginActivity extends AutoLayoutActivity {
         } else {
             NetUtils.ToLogin(userName, pwd, new MaCallback.ToLoginCallBack() {
                 @Override
-                public void onSuccess(String userId) {
-                    saveUserInfo(userName,userId,autoLoginBox.isChecked());
+                public void onSuccess(String userId,String realName) {
+                    saveUserInfo(userName,userId,realName,autoLoginBox.isChecked());
                     LoginActivity.this.finish();
                     intent.setClass(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
@@ -134,10 +134,11 @@ public class LoginActivity extends AutoLayoutActivity {
 
     }
 
-    private void saveUserInfo(String userName,String userId,boolean autoLogin){
+    private void saveUserInfo(String userName,String userId,String realName,boolean autoLogin){
         SharedPreferences.Editor editor = getSharedPreferences(MaConstants.FILENAME, MODE_PRIVATE).edit();
         // 存入键值对
         editor.putString(MaConstants.PARA_USERNAME, userName);
+        editor.putString(MaConstants.PARA_REALNAME, realName);
         editor.putString(MaConstants.PARA_USERID, userId);
         editor.putBoolean(MaConstants.PARA_AUTOLOGIN,autoLogin);
 
