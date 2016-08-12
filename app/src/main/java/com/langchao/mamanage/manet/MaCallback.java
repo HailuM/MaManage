@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 public interface MaCallback {
 
     public interface ToLoginCallBack extends  MaCallback{
-        void onSuccess(String userId);
+        void onSuccess(String userId,String realName);
 
         void onError(Throwable ex);
 

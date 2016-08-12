@@ -98,7 +98,7 @@ public class NetUtils {
                 String xmlrs = NetUtils.getValueFromXML("ToLoginResult", result);
                 if (xmlrs.contains(userName)) {
 
-                    callback.onSuccess(xmlrs.split(";")[0]);
+                    callback.onSuccess(xmlrs.split(";")[0],xmlrs.split(";")[2]);
                     //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
                 } else {
                     callback.onError(new RuntimeException("登录失败"));
