@@ -47,17 +47,74 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:id="@+id/imageViewTbrk"
+                    android:id="@+id/imageViewSjsc"
+                    android:src="@mipmap/rkxz" />
+
+                <TextView
+                    android:layout_width="67dp"
+                    android:layout_height="wrap_content"
+                    android:text="数据上传"
+                    android:gravity="center"
+                    android:textSize="@dimen/textsize"
+                    android:id="@+id/textView2" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="150px"
+                android:layout_margin="30px"
+                android:gravity="center"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:layout_width="130px"
+                    android:layout_height="130px"
+                    android:id="@+id/imageViewRkxz"
+                    android:src="@mipmap/syncout" />
+
+                <TextView
+                    android:layout_width="67dp"
+                    android:layout_height="wrap_content"
+                    android:text="入库下载"
+                    android:gravity="center"
+                    android:textSize="@dimen/textsize"
+                    android:id="@+id/textView7" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="150px"
+                android:layout_margin="30px"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="130px"
+                    android:layout_height="130px"
+                    android:id="@+id/imageViewCkxz"
                     android:src="@mipmap/syncin" />
 
                 <TextView
                     android:layout_width="67dp"
                     android:layout_height="wrap_content"
-                    android:text="同步入库"
+                    android:text="出库下载"
                     android:gravity="center"
                     android:textSize="@dimen/textsize"
-                    android:id="@+id/textView2" />
+                    android:id="@+id/textView13" />
             </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content" >
+
+
 
             <LinearLayout
                 android:orientation="vertical"
@@ -103,36 +160,6 @@
                     android:id="@+id/textView6" />
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content" >
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="150px"
-                android:layout_margin="30px"
-                android:gravity="center"
-                android:layout_height="match_parent" >
-
-                <ImageView
-                    android:layout_width="130px"
-                    android:layout_height="130px"
-                    android:id="@+id/imageViewsyncout"
-                    android:src="@mipmap/syncout" />
-
-                <TextView
-                    android:layout_width="67dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Syncin"
-                    android:gravity="center"
-                    android:textSize="@dimen/textsize"
-                    android:id="@+id/textView7" />
-            </LinearLayout>
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="150px"
@@ -155,6 +182,17 @@
                     android:id="@+id/textView8" />
             </LinearLayout>
 
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content" >
+
+
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="150px"
@@ -176,13 +214,6 @@
                     android:textSize="@dimen/textsize"
                     android:id="@+id/textView9" />
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content" >
 
             <LinearLayout
                 android:orientation="vertical"
@@ -207,28 +238,7 @@
                     android:id="@+id/textView11" />
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="150px"
-                android:layout_margin="30px"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                android:visibility="invisible">
 
-                <ImageView
-                    android:layout_width="130px"
-                    android:layout_height="130px"
-                    android:id="@+id/imageView14"
-                    android:src="@mipmap/outstorage" />
-
-                <TextView
-                    android:layout_width="67dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/outstorage"
-                    android:gravity="center"
-                    android:textSize="@dimen/textsize"
-                    android:id="@+id/textView13" />
-            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
