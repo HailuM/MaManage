@@ -100,7 +100,7 @@ public class MaDAO {
             supplier = "";
         }
 
-            List<String> orderIdList = new ArrayList<>();
+        List<String> orderIdList = new ArrayList<>();
         try {
             Cursor cursor = db.execQuery("select distinct orderId from pu_order_b where sourceQty > ckQty and rkQty = 0");
             while (cursor.moveToNext()) {
@@ -108,7 +108,7 @@ public class MaDAO {
                 orderIdList.add(orderId);
             }
             cursor.close();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -140,7 +140,7 @@ public class MaDAO {
                 orderIdList.add(orderId);
             }
             cursor.close();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -149,7 +149,7 @@ public class MaDAO {
         List<Pu_order> list = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("id", "in", orderIdList.toArray(new String[]{})).orderBy("number").findAll();
 
         //List<Pu_order> list2 = db.selector(Pu_order.class).where("number", "like", "%" + orderno + "%").and("supplier", "like", "%" + supplier + "%").and("type", "=", "rk").and("id", "in", orderIdList.toArray(new String[]{})).findAll();
-       // list.addAll(list2);
+        // list.addAll(list2);
         return list;
     }
 
@@ -204,7 +204,7 @@ public class MaDAO {
 
     public static int receivenum = 0;
 
-    public static void cleanNums(){
+    public static void cleanNums() {
         innum = 0;
         outnum = 0;
         ditnum = 0;
@@ -221,15 +221,13 @@ public class MaDAO {
     public void syncRk(final String userId, final MainActivity mainActivity) throws DbException {
 
 
-
-
         cleanNums();
 
         DbManager db = x.getDb(daoConfig);
 
         List<Pu_order> a_orders = db.findAll(Pu_order.class) == null ? new ArrayList<Pu_order>() : db.findAll(Pu_order.class);
         int a_orderssize = 0;
-        if(null != a_orders && a_orders.size() > 0){
+        if (null != a_orders && a_orders.size() > 0) {
             a_orderssize = a_orders.size();
         }
 
@@ -244,7 +242,7 @@ public class MaDAO {
             try {
                 db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
                 db.executeUpdateDelete("delete from consumer where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -259,9 +257,8 @@ public class MaDAO {
         //存在入库TOKEN  上传直入直出数据
         final List<Ic_diroutbill_b> ic_diroutbill_bs = db.selector(Ic_diroutbill_b.class).where("status", "=", MaConstants.STATUS_NORMAL).findAll() == null ? new ArrayList<Ic_diroutbill_b>() : db.selector(Ic_diroutbill_b.class).where("status", "=", MaConstants.STATUS_NORMAL).findAll();
 
-        if(null != ic_diroutbill_bs && ic_diroutbill_bs.size() > 0){
-            for(Ic_diroutbill_b ib : ic_diroutbill_bs)
-            {
+        if (null != ic_diroutbill_bs && ic_diroutbill_bs.size() > 0) {
+            for (Ic_diroutbill_b ib : ic_diroutbill_bs) {
                 String billid = ib.getOrderid();
                 Ic_diroutbill head = queryNewHeadDir(billid);
                 ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
@@ -269,19 +266,19 @@ public class MaDAO {
         }
         MaDAO.ditnum = ic_diroutbill_bs.size();
 
-          List<Ic_inbill_b> ic_inbill_bs_t = db.selector(Ic_inbill_b.class).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).findAll();
+        List<Ic_inbill_b> ic_inbill_bs_t = db.selector(Ic_inbill_b.class).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).findAll();
 
         List<Ic_inbill_b> ic_inbill_bs_new = new ArrayList<>();
-        if(ic_inbill_bs_t.size() > 0){
-            for(Ic_inbill_b ib : ic_inbill_bs_t){
-                if(null == ib.getCreateType()){
+        if (ic_inbill_bs_t.size() > 0) {
+            for (Ic_inbill_b ib : ic_inbill_bs_t) {
+                if (null == ib.getCreateType()) {
                     ic_inbill_bs_new.add(ib);
                 }
             }
         }
         MaDAO.innum = ic_inbill_bs_new.size();
 
-        final   List<Ic_inbill_b> ic_inbill_bs = ic_inbill_bs_new;
+        final List<Ic_inbill_b> ic_inbill_bs = ic_inbill_bs_new;
         size = size + ic_diroutbill_bs.size() + ic_inbill_bs.size();
 
         String ckToken = MethodUtil.getCkToken(mainActivity);
@@ -296,9 +293,8 @@ public class MaDAO {
 
             MaDAO.outnum = outSize;
 
-            if(null != ic_outbill_bs && ic_outbill_bs.size() > 0){
-                for(Ic_outbill_b ib : ic_outbill_bs)
-                {
+            if (null != ic_outbill_bs && ic_outbill_bs.size() > 0) {
+                for (Ic_outbill_b ib : ic_outbill_bs) {
                     String billid = ib.getOrderid();
                     Ic_outbill head = queryNewHead(billid);
                     ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
@@ -308,7 +304,7 @@ public class MaDAO {
 
         final boolean delOut = (null == ckToken || ckToken.trim().length() == 0);
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
-        progressDialog.setTitle("同步入库");
+        progressDialog.setTitle("数据上传");
         progressDialog.setMessage("上传数据中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
@@ -321,38 +317,48 @@ public class MaDAO {
             public void run() {
                 try {
 
-                    Toast.makeText(mainActivity,"本次上传入库单明细"+innum+"条 出库单明细"+outnum+"条 直入直出明细"+ditnum+"条",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(mainActivity, "本次上传入库单明细" + innum + "条 出库单明细" + outnum + "条 直入直出明细" + ditnum + "条", Toast.LENGTH_LONG).show();
+                    DbManager db = x.getDb(daoConfig);
+                    if (delOut) {
+                        db.dropTable(Ic_outbill.class);
+                        db.dropTable(Ic_outbill_b.class);
+                    }
+                    db.dropTable(Ic_inbill.class);
+                    db.dropTable(Ic_inbill_b.class);
+                    db.dropTable(Ic_diroutbill.class);
+                    db.dropTable(Ic_diroutbill_b.class);
+                    //开始上传出库
+                    syncCk(userId, mainActivity);
 
                     // 无数据上传  增加弹框 判断是否下载
-                    if(MaDAO.innum == 0 && MaDAO.outnum == 0 && MaDAO.ditnum == 0 && finalA_orderssize > 0){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-                        builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
-                        builder.setTitle("确认下载");
-
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                try {
-                                    downLoadOrder(userId, mainActivity, delOut);
-                                } catch (Throwable throwable) {
-                                    MessageDialog.show(mainActivity, throwable.getMessage());
-                                }
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int i) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        AlertDialog alertDialog = builder.create();
-
-                        alertDialog.setCancelable(false);
-                        alertDialog.show();
-                    }else{
-                        downLoadOrder(userId, mainActivity, delOut);
-                    }
+//                    if(MaDAO.innum == 0 && MaDAO.outnum == 0 && MaDAO.ditnum == 0 && finalA_orderssize > 0){
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+//                        builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
+//                        builder.setTitle("确认下载");
+//
+//                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                try {
+//                                    downLoadOrder(userId, mainActivity, delOut);
+//                                } catch (Throwable throwable) {
+//                                    MessageDialog.show(mainActivity, throwable.getMessage());
+//                                }
+//                            }
+//                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int i) {
+//                                dialog.dismiss();
+//                            }
+//                        });
+//
+//                        AlertDialog alertDialog = builder.create();
+//
+//                        alertDialog.setCancelable(false);
+//                        alertDialog.show();
+//                    }else{
+//                        downLoadOrder(userId, mainActivity, delOut);
+//                    }
 
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
@@ -502,8 +508,7 @@ public class MaDAO {
         //下载前调用确认完成
 
         String rkTokenOld = MethodUtil.getRkToken(mainActivity);
-        if(null != rkTokenOld && rkTokenOld.trim().length() > 0)
-        {
+        if (null != rkTokenOld && rkTokenOld.trim().length() > 0) {
             NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
         }
 
@@ -514,28 +519,28 @@ public class MaDAO {
 
         //不全部删除
         try {
-            int num1 =  db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
+            int num1 = db.executeUpdateDelete("delete from ic_inbill_b where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
         try {
 
-            int num2 =  db.executeUpdateDelete("delete from consumer where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
-        }catch (Exception e){
+            int num2 = db.executeUpdateDelete("delete from consumer where  createType is null or createType != '" + MaConstants.TYPE_SYNC + "'");
+        } catch (Exception e) {
 
         }
 
 //        db.dropTable(Ic_inbill.class);
 //        db.dropTable(Ic_inbill_b.class);
-        if (delout) {
-            db.dropTable(Ic_outbill.class);
-            db.dropTable(Ic_outbill_b.class);
-        }
-
-        db.dropTable(Ic_diroutbill.class);
-        db.dropTable(Ic_diroutbill_b.class);
+//        if (delout) {
+//            db.dropTable(Ic_outbill.class);
+//            db.dropTable(Ic_outbill_b.class);
+//        }
+//
+//        db.dropTable(Ic_diroutbill.class);
+//        db.dropTable(Ic_diroutbill_b.class);
 //        db.dropTable(Consumer.class);
 
         JSONObject jsonObject = NetUtils.Mobile_DownloadOrderInfo(userId);
@@ -548,7 +553,7 @@ public class MaDAO {
 
         if (orderArray.size() > 0) {
             final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
-            progressDialog.setTitle("同步入库");
+            progressDialog.setTitle("入库下载");
             progressDialog.setMessage("下载订单中");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
@@ -560,9 +565,9 @@ public class MaDAO {
             final Runnable afterThread = new Runnable() {
                 public void run() {
                     try {
-                        NetUtils.Mobile_DownLoadOrderComplete(userId,rkToken);
+                        NetUtils.Mobile_DownLoadOrderComplete(userId, rkToken);
                         MessageDialog.show(mainActivity, "同步入库成功");
-                        if(ordernum > 0) {
+                        if (ordernum > 0) {
                             Toast.makeText(mainActivity, "本次下载订单" + ordernum + "张", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
@@ -612,7 +617,7 @@ public class MaDAO {
                                     // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
                                     Message errmsg = new Message();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("err", pu_order.getNumber()+"未能获取订单物料");
+                                    bundle.putString("err", pu_order.getNumber() + "未能获取订单物料");
                                     errmsg.setData(bundle);
                                     errmsg.what = -1;
                                     handler.sendMessage(errmsg);
@@ -627,7 +632,7 @@ public class MaDAO {
                                     // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
                                     Message errmsg = new Message();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("err", pu_order.getNumber()+"未能获取订单领料商");
+                                    bundle.putString("err", pu_order.getNumber() + "未能获取订单领料商");
                                     errmsg.setData(bundle);
                                     errmsg.what = -1;
                                     handler.sendMessage(errmsg);
@@ -688,8 +693,8 @@ public class MaDAO {
      */
     public void syncCk(final String userId, final MainActivity mainActivity) throws DbException {
 
-        if(isExistInBill()){
-            MessageDialog.show(mainActivity,"存在未上传的入库单，请先同步入库！");
+        if (isExistInBill()) {
+            MessageDialog.show(mainActivity, "存在未上传的入库单，请先同步入库！");
             return;
         }
 
@@ -698,18 +703,17 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
 
 
-        List<Ic_inbill> a_iclist =  db.findAll(Ic_inbill.class);
+        List<Ic_inbill> a_iclist = db.findAll(Ic_inbill.class);
         int a_iclistsize = 0;
-        if(null != a_iclist && a_iclist.size() > 0){
+        if (null != a_iclist && a_iclist.size() > 0) {
             a_iclistsize = a_iclist.size();
         }
 
         final String ckToken = MethodUtil.getCkToken(mainActivity);
 
         List<Ic_outbill_b> ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
-        if(null != ic_outbill_bs && ic_outbill_bs.size() > 0){
-            for(Ic_outbill_b ib : ic_outbill_bs)
-            {
+        if (null != ic_outbill_bs && ic_outbill_bs.size() > 0) {
+            for (Ic_outbill_b ib : ic_outbill_bs) {
                 String billid = ib.getOrderid();
                 Ic_outbill head = queryNewHead(billid);
                 ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
@@ -718,7 +722,7 @@ public class MaDAO {
         outnum = ic_outbill_bs.size();
 
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
-        progressDialog.setTitle("同步出库");
+        progressDialog.setTitle("数据上传");
         progressDialog.setMessage("上传数据中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
@@ -731,36 +735,44 @@ public class MaDAO {
             public void run() {
                 try {
                     Toast.makeText(mainActivity, "本次上传出库单明细" + outnum + "条", Toast.LENGTH_LONG).show();
+                    DbManager db = x.getDb(daoConfig);
 
+                    db.dropTable(Ic_outbill.class);
+                    db.dropTable(Ic_outbill_b.class);
+
+                    db.dropTable(Ic_inbill.class);
+                    db.dropTable(Ic_inbill_b.class);
+
+                    MessageDialog.show(mainActivity, "上传数据成功!");
                     // 无数据上传  增加弹框 判断是否下载
-                    if(MaDAO.outnum == 0 && finalA_iclistsize > 0){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-                        builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
-                        builder.setTitle("确认下载");
-
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                try {
-                                    downLoadReceive(userId, mainActivity);
-                                } catch (Throwable throwable) {
-                                    MessageDialog.show(mainActivity, throwable.getMessage());
-                                }
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int i) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        AlertDialog alertDialog = builder.create();
-
-                        alertDialog.setCancelable(false);
-                        alertDialog.show();
-                    }else{
-                        downLoadReceive(userId, mainActivity);
-                    }
+//                    if(MaDAO.outnum == 0 && finalA_iclistsize > 0){
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+//                        builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
+//                        builder.setTitle("确认下载");
+//
+//                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                try {
+//                                    downLoadReceive(userId, mainActivity);
+//                                } catch (Throwable throwable) {
+//                                    MessageDialog.show(mainActivity, throwable.getMessage());
+//                                }
+//                            }
+//                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int i) {
+//                                dialog.dismiss();
+//                            }
+//                        });
+//
+//                        AlertDialog alertDialog = builder.create();
+//
+//                        alertDialog.setCancelable(false);
+//                        alertDialog.show();
+//                    }else{
+//                        downLoadReceive(userId, mainActivity);
+//                    }
 
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
@@ -797,7 +809,7 @@ public class MaDAO {
             public void run() {
                 try {
 
-                    if (null == ckToken || ckToken.trim().length() == 0 ) {
+                    if (null == ckToken || ckToken.trim().length() == 0) {
                         handler.sendEmptyMessage(10000);
                         return;
                     }
@@ -862,11 +874,9 @@ public class MaDAO {
 
         //调用上传完成
         String ckTokenOld = MethodUtil.getCkToken(mainActivity);
-        if(null != ckTokenOld && ckTokenOld.trim().length() > 0)
-        {
+        if (null != ckTokenOld && ckTokenOld.trim().length() > 0) {
             NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
         }
-
 
 
         DbManager db = x.getDb(daoConfig);
@@ -884,14 +894,14 @@ public class MaDAO {
 
         final JSONArray orderArray = jsonObject.getJSONArray("details");
 
-        if(null == orderArray || orderArray.size() == 0){
-            MessageDialog.show(mainActivity,"没有待下载的入库单");
+        if (null == orderArray || orderArray.size() == 0) {
+            MessageDialog.show(mainActivity, "没有待下载的入库单");
             return;
         }
 
         if (orderArray.size() > 0) {
             final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
-            progressDialog.setTitle("同步出库");
+            progressDialog.setTitle("出库下载");
             progressDialog.setMessage("下载入库单中");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
@@ -902,7 +912,7 @@ public class MaDAO {
             final Runnable afterThread = new Runnable() {
                 public void run() {
                     try {
-                       // NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
+                        // NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
                         MessageDialog.show(mainActivity, "同步出库成功");
                         Toast.makeText(mainActivity, "本次下载入库单" + receivenum + "张", Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
@@ -914,128 +924,125 @@ public class MaDAO {
             };
 
 
-
-
-                final Handler handler = new Handler() {
-                    public void handleMessage(Message msg) {
-                        if (msg.what == -1) {
-                            progressDialog.cancel();
-                            progressDialog.dismiss();
-                            String err = msg.getData().getString("err");
-                            MessageDialog.show(mainActivity, err);
-                            return;
-                        }
-                        if (msg.what >= 10000) {
-                            afterThread.run();
-                            progressDialog.cancel();
-                            progressDialog.dismiss();
-                        }
-                        progressDialog.setProgress(msg.what);
-                        super.handleMessage(msg);
+            final Handler handler = new Handler() {
+                public void handleMessage(Message msg) {
+                    if (msg.what == -1) {
+                        progressDialog.cancel();
+                        progressDialog.dismiss();
+                        String err = msg.getData().getString("err");
+                        MessageDialog.show(mainActivity, err);
+                        return;
                     }
-                };
+                    if (msg.what >= 10000) {
+                        afterThread.run();
+                        progressDialog.cancel();
+                        progressDialog.dismiss();
+                    }
+                    progressDialog.setProgress(msg.what);
+                    super.handleMessage(msg);
+                }
+            };
 
 
-                Runnable doThread = new Runnable() {
-                    Integer count = 0;
+            Runnable doThread = new Runnable() {
+                Integer count = 0;
 
-                    public void run() {
-                        try {
-                            // Looper.loop();
-                            for (int i = 0; i < orderArray.size(); i++) {
-                                JSONObject receive = (JSONObject) orderArray.get(i);
-
-
-                                  Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
-                                try {
-                                    JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveMaterial(userId, ic_inbill.getId(), ckToken);
+                public void run() {
+                    try {
+                        // Looper.loop();
+                        for (int i = 0; i < orderArray.size(); i++) {
+                            JSONObject receive = (JSONObject) orderArray.get(i);
 
 
-                                    if (null == jsonArray) {
-
-                                        Message errmsg = new Message();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("err", ic_inbill.getNumber()+"未能获取入库单物料");
-                                        errmsg.setData(bundle);
-                                        errmsg.what = -1;
-                                        handler.sendMessage(errmsg);
-                                        return;
-                                    }
-                                    List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
-                                    for(Ic_inbill_b b : list){
-                                        b.setSourceId(ic_inbill.getOrderId());
-                                        if(null == b.getOrderentryid())
-                                        {
-                                            b.setOrderentryid(b.getWareentryid());
-
-                                        }
-                                        b.setCreateType(MaConstants.TYPE_SYNC);
-                                    }
+                            Ic_inbill ic_inbill = JSON.parseObject(receive.toJSONString(), Ic_inbill.class);
+                            try {
+                                JSONArray jsonArray = NetUtils.Mobile_DownloadReceiveMaterial(userId, ic_inbill.getId(), ckToken);
 
 
-                                    JSONArray consumerArray = NetUtils.Mobile_DownloadReceiveconsumer(userId, ic_inbill.getId(), ckToken);
-                                    if (null == consumerArray || consumerArray.size() == 0) {
-                                        // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
-                                        Message errmsg = new Message();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("err", ic_inbill.getNumber()+"未能获取入库单领料商");
-                                        errmsg.setData(bundle);
-                                        errmsg.what = -1;
-                                        handler.sendMessage(errmsg);
-                                        return;
-                                    }
-                                    //保存
-                                    new MaDAO().save(ic_inbill, list);
-                                    if (null != consumerArray) {
-                                        List<Consumer> consumerList = JSON.parseArray(consumerArray.toJSONString(), Consumer.class);
-                                        for(Consumer consumer : consumerList){
-                                            consumer.setCreateType(MaConstants.TYPE_SYNC);
-                                        }
-                                        new MaDAO().save(consumerList);
-                                    }
-//                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
-
-
-                                } catch (Throwable throwable) {
+                                if (null == jsonArray) {
 
                                     Message errmsg = new Message();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("err", throwable.getMessage());
+                                    bundle.putString("err", ic_inbill.getNumber() + "未能获取入库单物料");
                                     errmsg.setData(bundle);
                                     errmsg.what = -1;
                                     handler.sendMessage(errmsg);
                                     return;
                                 }
-                            }
-                            NetUtils.Mobile_DownLoadReceiveComplete(userId, ckToken);
-                            receivenum = orderArray.size();
-                            handler.sendEmptyMessage(10000);
-                            return;
+                                List<Ic_inbill_b> list = JSON.parseArray(jsonArray.toJSONString(), Ic_inbill_b.class);
+                                for (Ic_inbill_b b : list) {
+                                    b.setSourceId(ic_inbill.getOrderId());
+                                    if (null == b.getOrderentryid()) {
+                                        b.setOrderentryid(b.getWareentryid());
 
-                            // ///
-                        } catch (Exception e) {
-                            Message errmsg = new Message();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("err", e.getMessage());
-                            errmsg.setData(bundle);
-                            errmsg.what = -1;
-                            handler.sendMessage(errmsg);
-                            return;
-                        } catch (Throwable throwable) {
-                            Message errmsg = new Message();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("err", throwable.getMessage());
-                            errmsg.setData(bundle);
-                            errmsg.what = -1;
-                            handler.sendMessage(errmsg);
-                            return;
-                        } finally {
-                            progressDialog.cancel();
-                            progressDialog.dismiss();
+                                    }
+                                    b.setCreateType(MaConstants.TYPE_SYNC);
+                                }
+
+
+                                JSONArray consumerArray = NetUtils.Mobile_DownloadReceiveconsumer(userId, ic_inbill.getId(), ckToken);
+                                if (null == consumerArray || consumerArray.size() == 0) {
+                                    // Toast.makeText(x.app(), "下载明细失败", Toast.LENGTH_LONG).show();
+                                    Message errmsg = new Message();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("err", ic_inbill.getNumber() + "未能获取入库单领料商");
+                                    errmsg.setData(bundle);
+                                    errmsg.what = -1;
+                                    handler.sendMessage(errmsg);
+                                    return;
+                                }
+                                //保存
+                                new MaDAO().save(ic_inbill, list);
+                                if (null != consumerArray) {
+                                    List<Consumer> consumerList = JSON.parseArray(consumerArray.toJSONString(), Consumer.class);
+                                    for (Consumer consumer : consumerList) {
+                                        consumer.setCreateType(MaConstants.TYPE_SYNC);
+                                    }
+                                    new MaDAO().save(consumerList);
+                                }
+//                            Toast.makeText(x.app(),"开始同步领料商:"+consumerList.size()+"条",Toast.LENGTH_LONG).show();
+
+
+                            } catch (Throwable throwable) {
+
+                                Message errmsg = new Message();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("err", throwable.getMessage());
+                                errmsg.setData(bundle);
+                                errmsg.what = -1;
+                                handler.sendMessage(errmsg);
+                                return;
+                            }
                         }
+                        NetUtils.Mobile_DownLoadReceiveComplete(userId, ckToken);
+                        receivenum = orderArray.size();
+                        handler.sendEmptyMessage(10000);
+                        return;
+
+                        // ///
+                    } catch (Exception e) {
+                        Message errmsg = new Message();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("err", e.getMessage());
+                        errmsg.setData(bundle);
+                        errmsg.what = -1;
+                        handler.sendMessage(errmsg);
+                        return;
+                    } catch (Throwable throwable) {
+                        Message errmsg = new Message();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("err", throwable.getMessage());
+                        errmsg.setData(bundle);
+                        errmsg.what = -1;
+                        handler.sendMessage(errmsg);
+                        return;
+                    } finally {
+                        progressDialog.cancel();
+                        progressDialog.dismiss();
                     }
-                };
-                new Thread(doThread).start();
+                }
+            };
+            new Thread(doThread).start();
 
 
         }
@@ -1324,7 +1331,7 @@ public class MaDAO {
             cursor.close();
             for (String orderId : orderIdList) {
                 db.executeUpdateDelete("update pu_order_b set ckQty = 0 where orderid = '" + orderId + "'");
-               // db.executeUpdateDelete("update pu_order set type = null where orderid = '" + orderId + "'");
+                // db.executeUpdateDelete("update pu_order set type = null where orderid = '" + orderId + "'");
             }
         } catch (Exception e) {
 
@@ -1398,23 +1405,22 @@ public class MaDAO {
     }
 
 
-
-    public  void  addPrintCount(String billid) throws DbException {
-        String sql = "update ic_outbill set printcount = (printcount+1) where id = '"+billid+"'";
+    public void addPrintCount(String billid) throws DbException {
+        String sql = "update ic_outbill set printcount = (printcount+1) where id = '" + billid + "'";
         DbManager db = x.getDb(daoConfig);
-        Ic_outbill outbill =  db.findById(Ic_outbill.class,billid);
+        Ic_outbill outbill = db.findById(Ic_outbill.class, billid);
 
-        if(null != outbill){
+        if (null != outbill) {
             Integer count = outbill.getPrintcount() == null ? 0 : outbill.getPrintcount();
-            outbill.setPrintcount(count+1);
+            outbill.setPrintcount(count + 1);
             db.saveOrUpdate(outbill);
         }
 
-        Ic_diroutbill diroutbill =  db.findById(Ic_diroutbill.class,billid);
+        Ic_diroutbill diroutbill = db.findById(Ic_diroutbill.class, billid);
 
-        if(null != diroutbill){
+        if (null != diroutbill) {
             Integer count = diroutbill.getPrintcount() == null ? 0 : diroutbill.getPrintcount();
-            diroutbill.setPrintcount(count+1);
+            diroutbill.setPrintcount(count + 1);
             db.saveOrUpdate(diroutbill);
         }
     }
@@ -1422,22 +1428,22 @@ public class MaDAO {
     public List<Ic_outbill_b> queryDetailForPrint(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
         //db.findAll(Ic_outbill_b.class);
-        return db.selector(Ic_outbill_b.class).where("orderid","=",id).findAll();
+        return db.selector(Ic_outbill_b.class).where("orderid", "=", id).findAll();
     }
 
     public List<Ic_diroutbill_b> queryDetailForPrintDir(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        return db.selector(Ic_diroutbill_b.class).where("orderid","=",id).findAll();
+        return db.selector(Ic_diroutbill_b.class).where("orderid", "=", id).findAll();
     }
 
     public Ic_outbill queryNewHead(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        return db.findById(Ic_outbill.class,id);
+        return db.findById(Ic_outbill.class, id);
     }
 
     public Ic_diroutbill queryNewHeadDir(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        return db.findById(Ic_diroutbill.class,id);
+        return db.findById(Ic_diroutbill.class, id);
     }
 
     public boolean isExistInBill() {
@@ -1447,22 +1453,87 @@ public class MaDAO {
         try {
             ic_inbill_bs_t = db.selector(Ic_inbill_b.class).findAll() == null ? new ArrayList<Ic_inbill_b>() : db.selector(Ic_inbill_b.class).findAll();
         } catch (DbException e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
         }
 
         List<Ic_inbill_b> ic_inbill_bs_new = new ArrayList<>();
-        if(ic_inbill_bs_t.size() > 0){
-            for(Ic_inbill_b ib : ic_inbill_bs_t){
-                if(null == ib.getCreateType()){
+        if (ic_inbill_bs_t.size() > 0) {
+            for (Ic_inbill_b ib : ic_inbill_bs_t) {
+                if (null == ib.getCreateType()) {
                     ic_inbill_bs_new.add(ib);
                 }
             }
         }
-        if(ic_inbill_bs_new.size() > 0){
+        if (ic_inbill_bs_new.size() > 0) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
+
+    public boolean isExistOutBill() {
+        DbManager db = x.getDb(daoConfig);
+
+        List<Ic_outbill_b> ic_outbill_bs = new ArrayList<Ic_outbill_b>();
+        List<Ic_diroutbill_b> ic_diroutbill_bs = new ArrayList<>();
+        try {
+            ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
+            ic_diroutbill_bs = db.selector(Ic_diroutbill_b.class).where("status", "=", MaConstants.STATUS_NORMAL).findAll() == null ? new ArrayList<Ic_diroutbill_b>() : db.selector(Ic_diroutbill_b.class).where("status", "=", MaConstants.STATUS_NORMAL).findAll();
+
+        } catch (DbException e) {
+            // e.printStackTrace();
+        }
+
+
+        if (ic_outbill_bs.size() > 0 || ic_diroutbill_bs.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 数据上传
+     *
+     * @param s
+     * @param activity
+     */
+    public void Sjsc(String userid, MainActivity activity) throws DbException {
+        syncRk(userid, activity);
+    }
+
+    /**
+     * 出库下载
+     *
+     * @param s
+     * @param activity
+     */
+    public void Ckxz(String userid, MainActivity activity) throws Throwable {
+        if (!checkCanDownload(activity)) {
+            return;
+        }
+        downLoadReceive(userid, activity);
+    }
+
+    /**
+     * 入库下载
+     *
+     * @param s
+     * @param activity
+     */
+    public void Rkxz(String userid, MainActivity activity) throws Throwable {
+        if (!checkCanDownload(activity)) {
+            return;
+        }
+        downLoadOrder(userid, activity, false);
+    }
+
+    public boolean checkCanDownload(MainActivity activity) {
+        if (isExistInBill() || isExistOutBill()) {
+            MessageDialog.show(activity, "当前手机有待上传数据，请先数据上传，或清除离线数据!");
+            return false;
+        }
+        return true;
+    }
+
 }
