@@ -55,8 +55,7 @@ import java.util.logging.Handler;
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AutoLayoutActivity {
 
-    @ViewInject(R.id.imageViewTbrk)
-    private ImageView imageViewTbrk;
+
 
     Intent intent = new Intent();
     private long exitTime = 0;
@@ -86,7 +85,7 @@ public class MainActivity extends AutoLayoutActivity {
     ProgressDialog progressDialog = null;
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set, R.id.imageViewTbrk, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewsyncout,R.id.imageViewsupplement}, type = View.OnClickListener.class)
+    @Event(value = {R.id.service, R.id.set, R.id.imageViewSjsc, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewRkxz,R.id.imageViewCkxz,R.id.imageViewsupplement}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -97,15 +96,15 @@ public class MainActivity extends AutoLayoutActivity {
                 intent.setClass(this, SetActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.imageViewTbrk:
+            case R.id.imageViewSjsc:
 
                 //ProgressDialog.show(this,"同步入库数据","开始同步",false,true);
 
 
                 try {
-                    new MaDAO().syncRk(readUserId(), MainActivity.this);
+                    new MaDAO().Sjsc(readUserId(), MainActivity.this);
                 } catch (Exception e) {
-                   Toast.makeText(this,"同步入库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
+                   Toast.makeText(this,"数据上传失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.imageViewdirectout:
@@ -121,12 +120,24 @@ public class MainActivity extends AutoLayoutActivity {
                 intent.setClass(this, IcoutListActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.imageViewsyncout:
+            case R.id.imageViewRkxz:
 
                 try {
-                    new MaDAO().syncCk(readUserId(), MainActivity.this);
+                    new MaDAO().Rkxz(readUserId(), MainActivity.this);
                 } catch (Exception e) {
-                    Toast.makeText(this,"同步出库失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"入库下载失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
+                } catch (Throwable throwable) {
+                    Toast.makeText(this,"入库下载失败:"+throwable.getMessage(),Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.imageViewCkxz:
+
+                try {
+                    new MaDAO().Ckxz(readUserId(), MainActivity.this);
+                } catch (Exception e) {
+                    Toast.makeText(this,"出库下载失败:"+e.getMessage(),Toast.LENGTH_LONG).show();
+                } catch (Throwable throwable) {
+                    Toast.makeText(this,"出库下载失败:"+throwable.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.imageViewsupplement:
