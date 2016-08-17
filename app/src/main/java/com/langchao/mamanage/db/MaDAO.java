@@ -221,8 +221,8 @@ public class MaDAO {
     public void syncRk(final String userId, final MainActivity mainActivity) throws DbException {
 
 
-        if(!isExistInBill() && !isExistOutBill()){
-            MessageDialog.show(mainActivity,"没有需要上传的数据!");
+        if (!isExistInBill() && !isExistOutBill()) {
+            MessageDialog.show(mainActivity, "没有需要上传的数据!");
             return;
         }
 
@@ -328,8 +328,7 @@ public class MaDAO {
                     if (null != rkTokenOld && rkTokenOld.trim().length() > 0) {
                         NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
                     }
-                    if((innum+outnum+ditnum)>0)
-                    {
+                    if ((innum + outnum + ditnum) > 0) {
                         Toast.makeText(mainActivity, "本次上传入库单明细" + innum + "条 出库单明细" + outnum + "条 直入直出明细" + ditnum + "条", Toast.LENGTH_LONG).show();
                     }
                     DbManager db = x.getDb(daoConfig);
@@ -520,7 +519,10 @@ public class MaDAO {
     public void downLoadOrder(final String userId, final MainActivity mainActivity, boolean delout) throws Throwable {
 
 
-
+        String rkTokenOld = MethodUtil.getRkToken(mainActivity);
+        if (null != rkTokenOld && rkTokenOld.trim().length() > 0) {
+            NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, 0, 0, 0);
+        }
 
         DbManager db = x.getDb(daoConfig);
         db.dropTable(Pu_order.class);
@@ -748,8 +750,7 @@ public class MaDAO {
                         NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
                     }
 
-                    if(outnum > 0)
-                    {
+                    if (outnum > 0) {
                         Toast.makeText(mainActivity, "本次上传出库单明细" + outnum + "条", Toast.LENGTH_LONG).show();
                     }
                     DbManager db = x.getDb(daoConfig);
@@ -889,8 +890,12 @@ public class MaDAO {
 
     public void downLoadReceive(final String userId, final MainActivity mainActivity) throws Throwable {
 
-        //调用上传完成
 
+        //调用上传完成
+        String ckTokenOld = MethodUtil.getCkToken(mainActivity);
+        if (null != ckTokenOld && ckTokenOld.trim().length() > 0) {
+            NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, 0);
+        }
 
         DbManager db = x.getDb(daoConfig);
 
@@ -1521,11 +1526,38 @@ public class MaDAO {
      * @param s
      * @param activity
      */
-    public void Ckxz(String userid, MainActivity activity) throws Throwable {
+    public void Ckxz(final String userid, final MainActivity activity) throws Throwable {
         if (!checkCanDownload(activity)) {
             return;
         }
-        downLoadReceive(userid, activity);
+        if (isExistReceiveBill()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
+            builder.setTitle("提示");
+
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    try {
+                        downLoadReceive(userid, activity);
+                    } catch (Throwable throwable) {
+                        MessageDialog.show(activity, throwable.getMessage());
+                    }
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+//
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } else {
+            downLoadReceive(userid, activity);
+        }
+
     }
 
     /**
@@ -1534,11 +1566,39 @@ public class MaDAO {
      * @param s
      * @param activity
      */
-    public void Rkxz(String userid, MainActivity activity) throws Throwable {
+    public void Rkxz(final String userid, final MainActivity activity) throws Throwable {
         if (!checkCanDownload(activity)) {
             return;
         }
-        downLoadOrder(userid, activity, false);
+
+
+        if (isExistOrderBill()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage("您想重新下载数据吗？若是则会清除已下载数据");
+            builder.setTitle("提示");
+
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    try {
+                        downLoadOrder(userid, activity, false);
+                    } catch (Throwable throwable) {
+                        MessageDialog.show(activity, throwable.getMessage());
+                    }
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+//
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } else {
+            downLoadOrder(userid, activity, false);
+        }
     }
 
     public boolean checkCanDownload(MainActivity activity) {
@@ -1549,4 +1609,32 @@ public class MaDAO {
         return true;
     }
 
+
+    public boolean isExistReceiveBill() {
+        DbManager db = x.getDb(daoConfig);
+
+        try {
+            List<Ic_inbill_b> list = db.findAll(Ic_inbill_b.class);
+            if (null != list && list.size() > 0) {
+                return true;
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isExistOrderBill() {
+        DbManager db = x.getDb(daoConfig);
+
+        try {
+            List<Pu_order_b> list = db.findAll(Pu_order_b.class);
+            if (null != list && list.size() > 0) {
+                return true;
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
