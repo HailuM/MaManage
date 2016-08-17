@@ -221,6 +221,11 @@ public class MaDAO {
     public void syncRk(final String userId, final MainActivity mainActivity) throws DbException {
 
 
+        if(!isExistInBill() && !isExistOutBill()){
+            MessageDialog.show(mainActivity,"没有需要上传的数据!");
+            return;
+        }
+
         cleanNums();
 
         DbManager db = x.getDb(daoConfig);
@@ -305,7 +310,7 @@ public class MaDAO {
         final boolean delOut = (null == ckToken || ckToken.trim().length() == 0);
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setTitle("数据上传");
-        progressDialog.setMessage("上传数据中");
+        progressDialog.setMessage("正在上传入库单数据");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
         progressDialog.setMax(size + outSize);
@@ -317,7 +322,16 @@ public class MaDAO {
             public void run() {
                 try {
 
-                    Toast.makeText(mainActivity, "本次上传入库单明细" + innum + "条 出库单明细" + outnum + "条 直入直出明细" + ditnum + "条", Toast.LENGTH_LONG).show();
+                    //下载前调用确认完成
+
+                    String rkTokenOld = MethodUtil.getRkToken(mainActivity);
+                    if (null != rkTokenOld && rkTokenOld.trim().length() > 0) {
+                        NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
+                    }
+                    if((innum+outnum+ditnum)>0)
+                    {
+                        Toast.makeText(mainActivity, "本次上传入库单明细" + innum + "条 出库单明细" + outnum + "条 直入直出明细" + ditnum + "条", Toast.LENGTH_LONG).show();
+                    }
                     DbManager db = x.getDb(daoConfig);
                     if (delOut) {
                         db.dropTable(Ic_outbill.class);
@@ -505,12 +519,7 @@ public class MaDAO {
 
     public void downLoadOrder(final String userId, final MainActivity mainActivity, boolean delout) throws Throwable {
 
-        //下载前调用确认完成
 
-        String rkTokenOld = MethodUtil.getRkToken(mainActivity);
-        if (null != rkTokenOld && rkTokenOld.trim().length() > 0) {
-            NetUtils.Mobile_uploadrkComplete(userId, rkTokenOld, ditnum, innum, outnum);
-        }
 
 
         DbManager db = x.getDb(daoConfig);
@@ -723,7 +732,7 @@ public class MaDAO {
 
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setTitle("数据上传");
-        progressDialog.setMessage("上传数据中");
+        progressDialog.setMessage("正在上传出库单数据");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
         progressDialog.setMax(ic_outbill_bs.size());
@@ -734,7 +743,15 @@ public class MaDAO {
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
-                    Toast.makeText(mainActivity, "本次上传出库单明细" + outnum + "条", Toast.LENGTH_LONG).show();
+                    String ckTokenOld = MethodUtil.getCkToken(mainActivity);
+                    if (null != ckTokenOld && ckTokenOld.trim().length() > 0) {
+                        NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
+                    }
+
+                    if(outnum > 0)
+                    {
+                        Toast.makeText(mainActivity, "本次上传出库单明细" + outnum + "条", Toast.LENGTH_LONG).show();
+                    }
                     DbManager db = x.getDb(daoConfig);
 
                     db.dropTable(Ic_outbill.class);
@@ -873,10 +890,6 @@ public class MaDAO {
     public void downLoadReceive(final String userId, final MainActivity mainActivity) throws Throwable {
 
         //调用上传完成
-        String ckTokenOld = MethodUtil.getCkToken(mainActivity);
-        if (null != ckTokenOld && ckTokenOld.trim().length() > 0) {
-            NetUtils.Mobile_uploadckComplete(userId, ckTokenOld, outnum);
-        }
 
 
         DbManager db = x.getDb(daoConfig);
