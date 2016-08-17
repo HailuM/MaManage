@@ -48,7 +48,7 @@
                     android:layout_width="130px"
                     android:layout_height="130px"
                     android:id="@+id/imageViewSjsc"
-                    android:src="@mipmap/rkxz" />
+                    android:src="@mipmap/sjsc" />
 
                 <TextView
                     android:layout_width="67dp"
