@@ -78,7 +78,7 @@ public class MaConvert {
             outbill_b.setSourceId(inbill_b.getSourceId());
         }
         outbill_b.setNumber(number);
-
+        outbill_b.setCreateType(inbill_b.getCreateType());
         outbill_b.setNote(inbill_b.getNote());
         outbill_b.setBrand(inbill_b.getBrand());
         outbill_b.setModel(inbill_b.getModel());
@@ -102,7 +102,7 @@ public class MaConvert {
 
     public static Ic_inbill_agg convertOrderToInbill(Context content, Pu_order_agg orderAgg) {
 
-        String id = UUID.randomUUID().toString();
+        String id =  UUID.randomUUID().toString();
         Ic_inbill_agg agg = new Ic_inbill_agg();
         Ic_inbill head = new Ic_inbill();
         Pu_order orderHead = orderAgg.getPu_order();

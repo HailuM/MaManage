@@ -154,6 +154,17 @@ public class Ic_outbill_b implements Serializable {
     @Column(name = "number")
     private String number;
 
+    public String getCreateType() {
+        return createType;
+    }
+
+    public void setCreateType(String createType) {
+        this.createType = createType;
+    }
+
+    @Column(name = "createType")
+    private String createType;
+
     public String getConsumerId() {
         return consumerId;
     }

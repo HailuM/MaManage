@@ -600,6 +600,9 @@ public class NetUtils {
 
         JSONObject jo = new JSONObject();
         jo.put("orderid", bill.getSourceId());  //来源订单主表ID   从订单带到入库单 带到出库单
+        if(null == bill.getCreateType() || !bill.getCreateType().equals(MaConstants.TYPE_SYNC)){
+           // type = "rkck";
+        }
         jo.put("preparertime", MaConvert.formatData(bill.getTime())); //制单时间  yyyy-mm-dd hh:mm:ss
         jo.put("deliverNo", bill.getNumber()); //生成的出库单号  打印的时候有个单号 用来和系统对应  我使用的年月日+自增长+纳秒后5位   2016-02-03-1*****
         jo.put("consumerid", head.getConsumerid());//领料商ID  界面选择的

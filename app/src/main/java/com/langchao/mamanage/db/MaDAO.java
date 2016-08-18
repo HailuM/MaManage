@@ -290,23 +290,26 @@ public class MaDAO {
 
         List<Ic_outbill_b> ic_outbill_bs = new ArrayList<>();
         int outSize = 0;
-        if (null == ckToken || ckToken.trim().length() == 0) {
-            //没有出库TOKEN的时候  一起上传出库单
 
-            ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
-            outSize = ic_outbill_bs.size();
 
-            MaDAO.outnum = outSize;
+        List<Ic_outbill_b>  ic_outbill_bs1 = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
 
-            if (null != ic_outbill_bs && ic_outbill_bs.size() > 0) {
-                for (Ic_outbill_b ib : ic_outbill_bs) {
+
+
+
+            if (null != ic_outbill_bs1 && ic_outbill_bs1.size() > 0) {
+                for (Ic_outbill_b ib : ic_outbill_bs1) {
                     String billid = ib.getOrderid();
                     Ic_outbill head = queryNewHead(billid);
                     ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
+                    if(ib.getCreateType() == null || ib.getCreateType().trim().length() == 0){
+                        ic_outbill_bs.add(ib);
+                    }
                 }
             }
-        }
 
+        outSize = ic_outbill_bs.size();
+        MaDAO.outnum = outSize;
         final boolean delOut = (null == ckToken || ckToken.trim().length() == 0);
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setTitle("数据上传");
@@ -332,10 +335,10 @@ public class MaDAO {
                         Toast.makeText(mainActivity, "本次上传入库单明细" + innum + "条 出库单明细" + outnum + "条 直入直出明细" + ditnum + "条", Toast.LENGTH_LONG).show();
                     }
                     DbManager db = x.getDb(daoConfig);
-                    if (delOut) {
-                        db.dropTable(Ic_outbill.class);
-                        db.dropTable(Ic_outbill_b.class);
-                    }
+//                    if (delOut) {
+//                        db.dropTable(Ic_outbill.class);
+//                        db.dropTable(Ic_outbill_b.class);
+//                    }
                     db.dropTable(Ic_inbill.class);
                     db.dropTable(Ic_inbill_b.class);
                     db.dropTable(Ic_diroutbill.class);
@@ -577,7 +580,7 @@ public class MaDAO {
                 public void run() {
                     try {
                         NetUtils.Mobile_DownLoadOrderComplete(userId, rkToken);
-                        MessageDialog.show(mainActivity, "同步入库成功");
+                        MessageDialog.show(mainActivity, "入库下载成功");
                         if (ordernum > 0) {
                             Toast.makeText(mainActivity, "本次下载订单" + ordernum + "张", Toast.LENGTH_LONG).show();
                         }
@@ -722,12 +725,17 @@ public class MaDAO {
 
         final String ckToken = MethodUtil.getCkToken(mainActivity);
 
-        List<Ic_outbill_b> ic_outbill_bs = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
-        if (null != ic_outbill_bs && ic_outbill_bs.size() > 0) {
-            for (Ic_outbill_b ib : ic_outbill_bs) {
+        List<Ic_outbill_b> ic_outbill_bs1 = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
+
+        List<Ic_outbill_b> ic_outbill_bs = new ArrayList<>();
+        if (null != ic_outbill_bs1 && ic_outbill_bs1.size() > 0) {
+            for (Ic_outbill_b ib : ic_outbill_bs1) {
                 String billid = ib.getOrderid();
                 Ic_outbill head = queryNewHead(billid);
                 ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
+                if(null != ib.getCreateType() && ib.getCreateType().equals(MaConstants.TYPE_SYNC)){
+                    ic_outbill_bs.add(ib);
+                }
             }
         }
         outnum = ic_outbill_bs.size();
@@ -931,7 +939,7 @@ public class MaDAO {
                 public void run() {
                     try {
                         // NetUtils.Mobile_DownLoadReceiveComplete(userId,ckToken);
-                        MessageDialog.show(mainActivity, "同步出库成功");
+                        MessageDialog.show(mainActivity, "出库下载成功");
                         Toast.makeText(mainActivity, "本次下载入库单" + receivenum + "张", Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         MessageDialog.show(mainActivity, e.getMessage());
