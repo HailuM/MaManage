@@ -910,6 +910,8 @@ public class MaDAO {
         db.dropTable(Ic_outbill.class);
         db.dropTable(Ic_outbill_b.class);
 
+        db.delete(Consumer.class,WhereBuilder.b("createType","=",MaConstants.TYPE_SYNC));
+
         db.dropTable(Ic_inbill.class);
         db.dropTable(Ic_inbill_b.class);
 
@@ -1622,11 +1624,11 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
 
         try {
-            List<Ic_inbill_b> list = db.findAll(Ic_inbill_b.class);
+            List<Ic_inbill> list = queryInbillForCk(null,null);
             if (null != list && list.size() > 0) {
                 return true;
             }
-        } catch (DbException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -1636,11 +1638,11 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
 
         try {
-            List<Pu_order_b> list = db.findAll(Pu_order_b.class);
+            List<Pu_order> list = queryPuOrderForRk(null,null);
             if (null != list && list.size() > 0) {
                 return true;
             }
-        } catch (DbException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
