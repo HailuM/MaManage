@@ -276,9 +276,10 @@ public class MaDAO {
         List<Ic_inbill_b> ic_inbill_bs_new = new ArrayList<>();
         if (ic_inbill_bs_t.size() > 0) {
             for (Ic_inbill_b ib : ic_inbill_bs_t) {
-                if (null == ib.getCreateType()) {
+                //20160831 全部上传  不区分类型
+                //if (null == ib.getCreateType()) {
                     ic_inbill_bs_new.add(ib);
-                }
+               // }
             }
         }
         MaDAO.innum = ic_inbill_bs_new.size();
@@ -768,6 +769,9 @@ public class MaDAO {
 
                     db.dropTable(Ic_inbill.class);
                     db.dropTable(Ic_inbill_b.class);
+                    //20160831 订单也删除
+                    db.dropTable(Pu_order.class);
+                    db.dropTable(Pu_order_b.class);
 
                     MessageDialog.show(mainActivity, "上传数据成功!");
                     // 无数据上传  增加弹框 判断是否下载
