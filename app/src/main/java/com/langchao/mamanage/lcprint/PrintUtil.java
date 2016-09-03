@@ -106,7 +106,7 @@ public class PrintUtil {
 
         buffer.append("\n");
         Integer count = bill.getPrintcount() == null ? 0 : bill.getPrintcount();
-        buffer.append("第"+(count+1)+"次打印");
+        buffer.append("打印次数："+(count+1)+"");
 
         buffer.append("\n");
 
@@ -179,7 +179,7 @@ public class PrintUtil {
 
         buffer.append("\n");
         Integer count = bill.getPrintcount() == null ? 0 : bill.getPrintcount();
-        buffer.append("第"+(count+1)+"次打印");
+        buffer.append("打印次数："+(count+1)+"");
 
         buffer.append("\n");
 
