@@ -150,6 +150,7 @@ public class Ic_outbill_b implements Serializable {
         this.number = number;
     }
 
+
     //领料商名称
     @Column(name = "number")
     private String number;
