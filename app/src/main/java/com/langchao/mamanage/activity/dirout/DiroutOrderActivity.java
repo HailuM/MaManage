@@ -104,7 +104,7 @@ public class DiroutOrderActivity extends AutoLayoutActivity {
     @Event(value = {R.id.back_image}, type = View.OnClickListener.class)
     private void back(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("已经保存并打印的出库单将失效!是否确认返回？");
+        builder.setMessage("该直入直出未完毕，请点击取消后继续进行“直入直出”操作；如果只需要部分入库或出库，请点击确认按钮，退出“直入直出”功能，进入“入库”或“出库”功能，原直入直出已保存的入库、出库单据，打印的出库单将失效，是否确认返回。");
         builder.setTitle("确认返回");
 
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -132,7 +132,7 @@ public class DiroutOrderActivity extends AutoLayoutActivity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("已经保存并打印的出库单将失效!是否确认返回？");
+        builder.setMessage("该直入直出未完毕，请点击取消后继续进行“直入直出”操作；如果只需要部分入库或出库，请点击确认按钮，退出“直入直出”功能，进入“入库”或“出库”功能，原直入直出已保存的入库、出库单据，打印的出库单将失效，是否确认返回。");
         builder.setTitle("确认返回");
 
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
