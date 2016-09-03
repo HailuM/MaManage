@@ -82,9 +82,24 @@ public class Pu_order_b implements Serializable{
     @Column(name = "ckQty")
     private double ckQty;
 
+
+
     //已入库数量
     @Column(name = "rkQty")
     private double rkQty;
+
+    @Column(name = "xsxh")
+    private int xsxh;
+
+
+    public int getXsxh() {
+        return xsxh;
+    }
+
+    public void setXsxh(int xsxh) {
+        this.xsxh = xsxh;
+    }
+
 
     private int position;//当前位置 LIST中
 
