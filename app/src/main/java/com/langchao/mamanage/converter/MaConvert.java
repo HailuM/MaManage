@@ -54,7 +54,7 @@ public class MaConvert {
         ic_inbill_b.setUnit(pu_order_b.getUnit());
         ic_inbill_b.setName(pu_order_b.getName());
         ic_inbill_b.setPrice(pu_order_b.getPrice());
-
+        ic_inbill_b.setXsxh(pu_order_b.getXsxh());
         ic_inbill_b.setSourceQty(num);
 
 
