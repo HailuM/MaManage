@@ -1,8 +1,14 @@
 package com.langchao.mamanage.activity.dirout;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.activity.SelectPicPopupWindow;
 import com.langchao.mamanage.converter.MaConvert;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.consumer.Consumer;
@@ -33,7 +40,13 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by wongsuechang on 2016/6/26.
@@ -120,6 +133,91 @@ public class DiroutOrderConfirmActivity extends AutoLayoutActivity {
         }
     }
 
+
+    public String getRealPathFromURI(Uri contentUri) {
+        String res = null;
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){;
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (resultCode) {
+            case 1:
+                if (data != null) {
+                    String imagePath = null;
+                    //取得返回的Uri,基本上选择照片的时候返回的是以Uri形式，但是在拍照中有得机子呢Uri是空的，所以要特别注意
+                    Uri mImageCaptureUri = data.getData();
+                    //返回的Uri不为空时，那么图片信息数据都会在Uri中获得。如果为空，那么我们就进行下面的方式获取
+                    if (mImageCaptureUri != null) {
+
+                        imagePath = getRealPathFromURI(mImageCaptureUri);
+                        Bitmap image;
+                        try {
+                            //这个方法是根据Uri获取Bitmap图片的静态方法
+                            image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageCaptureUri);
+                            if (image != null) {
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Bundle extras = data.getExtras();
+                        if (extras != null) {
+                            //这里是有些拍照后的图片是直接存放到Bundle中的所以我们可以从这里面获取Bitmap图片
+                            Bitmap image = extras.getParcelable("data");
+                            if (image != null) {
+                                String name = DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
+                                FileOutputStream b = null;
+                                File file = new File("/sdcard/Image/");
+                                file.mkdirs();// 创建文件夹
+                                String fileName = "/sdcard/Image/"+name;
+
+                                try {
+                                    b = new FileOutputStream(fileName);
+                                    image.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    try {
+                                        b.flush();
+                                        b.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                imagePath = fileName;
+                            }
+                        }
+                    }
+                    File f = new File(imagePath);
+                    if(f.exists())
+                    {
+                        MessageDialog.show(this,imagePath+f.length());
+                    }
+
+
+                }
+                break;
+            default:
+                break;
+
+        }
+        PrintUtil.print(this,PrintUtil.chgBillToString(printData.getIc_diroutbill(),printData.getIc_diroutbill_bs()),printData.getIc_diroutbill().getId());
+    }
+
+
+
+    private Ic_diroutbill_agg printData = null;
+
     private void buildOutBill() throws DbException {
 
 
@@ -138,8 +236,12 @@ public class DiroutOrderConfirmActivity extends AutoLayoutActivity {
         setResult(RESULT_OK);
         Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
         this.finish();
+        printData = outbillAgg;
+
+        startActivityForResult(new Intent(DiroutOrderConfirmActivity.this,
+                SelectPicPopupWindow.class), 1);
         //MessageDialog.show(this,"准备打印");
-        PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_diroutbill(),outbillAgg.getIc_diroutbill_bs()),outbillAgg.getIc_diroutbill().getId());
+//        PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_diroutbill(),outbillAgg.getIc_diroutbill_bs()),outbillAgg.getIc_diroutbill().getId());
     }
 
     public class ConsumerAdapter extends BaseAdapter {
