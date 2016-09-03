@@ -155,7 +155,7 @@ public class MaDAO {
 
     public List<Pu_order_b> queryOrderDetail(String orderId) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).orderBy("name").findAll();
+        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).orderBy("xsxh").findAll();
         List<Pu_order_b> newlist = new ArrayList<>();
         for (Pu_order_b orderb : list) {
             if (orderb.getSourceQty() - orderb.getCkQty() > 0) {
@@ -168,7 +168,7 @@ public class MaDAO {
 
     public List<Pu_order_b> queryOrderDetailForIn(String orderId) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).orderBy("name").findAll();
+        List<Pu_order_b> list = db.selector(Pu_order_b.class).where("orderid", "=", orderId).orderBy("xsxh").findAll();
         List<Pu_order_b> newlist = new ArrayList<>();
         for (Pu_order_b orderb : list) {
             if (orderb.getSourceQty() - orderb.getRkQty() > 0) {
@@ -182,7 +182,7 @@ public class MaDAO {
 
     public List<Ic_inbill_b> queryInbillDetail(String id) throws DbException {
         DbManager db = x.getDb(daoConfig);
-        List<Ic_inbill_b> list = db.selector(Ic_inbill_b.class).where("orderid", "=", id).orderBy("name").findAll();
+        List<Ic_inbill_b> list = db.selector(Ic_inbill_b.class).where("orderid", "=", id).orderBy("xsxh").findAll();
         List<Ic_inbill_b> newlist = new ArrayList<>();
         for (Ic_inbill_b orderb : list) {
             if (orderb.getSourceQty() - orderb.getCkQty() > 0) {
@@ -1266,7 +1266,7 @@ public class MaDAO {
         MethodUtil.saveRkToken(context, "");
         MethodUtil.saveCkToken(context, "");
 
-        MessageDialog.show(context, "清除离线数据成功");
+        MessageDialog.show(context, "清除离线数据成功，请到PC端清除Token");
     }
 
     public List<Consumer> findConsumers(String id) throws DbException {
