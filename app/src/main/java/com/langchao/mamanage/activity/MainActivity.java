@@ -8,10 +8,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Message;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,6 +29,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langchao.mamanage.R;
 import com.langchao.mamanage.activity.dirout.DiroutListActivity;
+import com.langchao.mamanage.activity.dirout.DiroutOrderConfirmActivity;
 import com.langchao.mamanage.activity.icinbill.IcinListActivity;
 import com.langchao.mamanage.activity.icoutbill.IcoutListActivity;
 import com.langchao.mamanage.activity.main.PrintActivity;
@@ -34,6 +40,7 @@ import com.langchao.mamanage.db.consumer.Consumer;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.MessageDialog;
+import com.langchao.mamanage.lcprint.PrintUtil;
 import com.langchao.mamanage.manet.MaCallback;
 import com.langchao.mamanage.manet.NetUtils;
 import com.zhy.autolayout.AutoLayoutActivity;
@@ -44,7 +51,13 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Handler;
 
 /**
@@ -141,6 +154,9 @@ public class MainActivity extends AutoLayoutActivity {
                 }
                 break;
             case R.id.imageViewsupplement:
+
+//                startActivityForResult(new Intent(MainActivity.this,
+//                        SelectPicPopupWindow.class), 1);
                 intent.setClass(this, PrintActivity.class);
                 startActivity(intent);
                 break;
