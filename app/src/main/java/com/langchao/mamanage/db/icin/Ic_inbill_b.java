@@ -130,6 +130,18 @@ public class Ic_inbill_b implements Serializable {
     }
 
 
+    @Column(name = "xsxh")
+    private int xsxh;
+
+
+    public int getXsxh() {
+        return xsxh;
+    }
+
+    public void setXsxh(int xsxh) {
+        this.xsxh = xsxh;
+    }
+
     @Column(name = "price")
     private double price;
 
