@@ -9,6 +9,8 @@ public class MaConstants {
     public static final String FRESH = "FRESH";
 
     public static final String TYPE_SYNC = "SYNC";
+
+    public static final int REQUEST_IMAGE = 50;
     /**
      * 参数保存文件名
      */

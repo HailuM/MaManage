@@ -1,5 +1,6 @@
 package com.langchao.mamanage.db;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -26,6 +27,7 @@ import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
 import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
+import com.langchao.mamanage.db.image.BillImage;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
@@ -278,8 +280,8 @@ public class MaDAO {
             for (Ic_inbill_b ib : ic_inbill_bs_t) {
                 //20160831 全部上传  不区分类型
                 //if (null == ib.getCreateType()) {
-                    ic_inbill_bs_new.add(ib);
-               // }
+                ic_inbill_bs_new.add(ib);
+                // }
             }
         }
         MaDAO.innum = ic_inbill_bs_new.size();
@@ -293,21 +295,19 @@ public class MaDAO {
         int outSize = 0;
 
 
-        List<Ic_outbill_b>  ic_outbill_bs1 = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
+        List<Ic_outbill_b> ic_outbill_bs1 = db.findAll(Ic_outbill_b.class) == null ? new ArrayList<Ic_outbill_b>() : db.findAll(Ic_outbill_b.class);
 
 
-
-
-            if (null != ic_outbill_bs1 && ic_outbill_bs1.size() > 0) {
-                for (Ic_outbill_b ib : ic_outbill_bs1) {
-                    String billid = ib.getOrderid();
-                    Ic_outbill head = queryNewHead(billid);
-                    ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
-                    if(ib.getCreateType() == null || ib.getCreateType().trim().length() == 0){
-                        ic_outbill_bs.add(ib);
-                    }
+        if (null != ic_outbill_bs1 && ic_outbill_bs1.size() > 0) {
+            for (Ic_outbill_b ib : ic_outbill_bs1) {
+                String billid = ib.getOrderid();
+                Ic_outbill head = queryNewHead(billid);
+                ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
+                if (ib.getCreateType() == null || ib.getCreateType().trim().length() == 0) {
+                    ic_outbill_bs.add(ib);
                 }
             }
+        }
 
         outSize = ic_outbill_bs.size();
         MaDAO.outnum = outSize;
@@ -734,7 +734,7 @@ public class MaDAO {
                 String billid = ib.getOrderid();
                 Ic_outbill head = queryNewHead(billid);
                 ib.setPrintcount(head.getPrintcount() == null ? 0 : head.getPrintcount());
-                if(null != ib.getCreateType() && ib.getCreateType().equals(MaConstants.TYPE_SYNC)){
+                if (null != ib.getCreateType() && ib.getCreateType().equals(MaConstants.TYPE_SYNC)) {
                     ic_outbill_bs.add(ib);
                 }
             }
@@ -914,7 +914,7 @@ public class MaDAO {
         db.dropTable(Ic_outbill.class);
         db.dropTable(Ic_outbill_b.class);
 
-        db.delete(Consumer.class,WhereBuilder.b("createType","=",MaConstants.TYPE_SYNC));
+        db.delete(Consumer.class, WhereBuilder.b("createType", "=", MaConstants.TYPE_SYNC));
 
         db.dropTable(Ic_inbill.class);
         db.dropTable(Ic_inbill_b.class);
@@ -1628,7 +1628,7 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
 
         try {
-            List<Ic_inbill> list = queryInbillForCk(null,null);
+            List<Ic_inbill> list = queryInbillForCk(null, null);
             if (null != list && list.size() > 0) {
                 return true;
             }
@@ -1642,7 +1642,7 @@ public class MaDAO {
         DbManager db = x.getDb(daoConfig);
 
         try {
-            List<Pu_order> list = queryPuOrderForRk(null,null);
+            List<Pu_order> list = queryPuOrderForRk(null, null);
             if (null != list && list.size() > 0) {
                 return true;
             }
@@ -1650,5 +1650,109 @@ public class MaDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void save(BillImage billImage) throws DbException {
+        DbManager db = x.getDb(daoConfig);
+        db.save(billImage);
+    }
+
+    public void uploadImages(final Activity mainActivity) throws DbException {
+
+        DbManager db = x.getDb(daoConfig);
+        final List<BillImage>   images = db.findAll(BillImage.class);
+
+        if(null == images || images.size() == 0)
+            return;
+
+        final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
+        progressDialog.setTitle("照片上传");
+        progressDialog.setMessage("正在上传照片");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.setMax(images.size());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+
+        final Runnable afterThread = new Runnable() {
+            public void run() {
+                try {
+                    MessageDialog.show(mainActivity, "照片上传成功！");
+                } catch (Exception e) {
+                    MessageDialog.show(mainActivity, e.getMessage());
+                } catch (Throwable throwable) {
+                    MessageDialog.show(mainActivity, throwable.getMessage());
+                }
+            }
+        };
+
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what == -1) {
+
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                    String err = msg.getData().getString("err");
+                    MessageDialog.show(mainActivity, err);
+                    return;
+                }
+                if (msg.what >= 10000) {
+                    afterThread.run();
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                }
+                progressDialog.setProgress(msg.what);
+                super.handleMessage(msg);
+            }
+        };
+
+
+        Runnable doThread = new Runnable() {
+            Integer count = 0;
+
+            public void run() {
+                try {
+
+
+                    if (null != images && images.size() > 0) {
+                        for (BillImage image : images) {
+                            try {
+                                count = count + 1;
+                                NetUtils.uploadImage(mainActivity,image);
+
+                                handler.sendEmptyMessage(count);
+                            } catch (Throwable throwable) {
+
+                                Message errmsg = new Message();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("err", throwable.getMessage());
+                                errmsg.setData(bundle);
+                                errmsg.what = -1;
+                                handler.sendMessage(errmsg);
+                                return;
+                            }
+                        }
+                    }
+
+                    handler.sendEmptyMessage(10000);
+                    return;
+
+                    // ///
+                } catch (Exception e) {
+                    Message errmsg = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("err", e.getMessage());
+                    errmsg.setData(bundle);
+                    errmsg.what = -1;
+                    handler.sendMessage(errmsg);
+                    return;
+                } finally {
+                    progressDialog.cancel();
+                    progressDialog.dismiss();
+                }
+            }
+        };
+        new Thread(doThread).start();
     }
 }

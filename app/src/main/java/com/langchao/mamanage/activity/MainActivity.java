@@ -37,12 +37,14 @@ import com.langchao.mamanage.activity.main.SetActivity;
 import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.consumer.Consumer;
+import com.langchao.mamanage.db.image.BillImage;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.lcprint.PrintUtil;
 import com.langchao.mamanage.manet.MaCallback;
 import com.langchao.mamanage.manet.NetUtils;
+import com.langchao.mamanage.utils.ImageHelper;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
@@ -59,6 +61,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
+
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
  * @author fei
@@ -155,10 +160,9 @@ public class MainActivity extends AutoLayoutActivity {
                 break;
             case R.id.imageViewsupplement:
 
-//                startActivityForResult(new Intent(MainActivity.this,
-//                        SelectPicPopupWindow.class), 1);
-                intent.setClass(this, PrintActivity.class);
-                startActivity(intent);
+                MultiImageSelector.create().start(this,MaConstants.REQUEST_IMAGE);
+//                intent.setClass(this, PrintActivity.class);
+//                startActivity(intent);
                 break;
 
         }
@@ -188,4 +192,43 @@ public class MainActivity extends AutoLayoutActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == MaConstants.REQUEST_IMAGE){
+            if(resultCode == RESULT_OK){
+                // Get the result list of select image paths
+                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if(paths != null && paths.size() > 0 && null != "111"){
+                    for(String path : paths){
+
+                        ImageHelper.saveCompressBitmap(ImageHelper.createImage(path),new File(path));
+
+                        BillImage billImage = new BillImage();
+                        billImage.setBillid("111");
+                        billImage.setImagePath(path);
+                        billImage.setLx("rk");
+                        try {
+                            new MaDAO().save(billImage);
+
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                try {
+                    new MaDAO().uploadImages(MainActivity.this);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }else{
+
+            }
+            setResult(RESULT_OK);
+
+        }
+    }
 }

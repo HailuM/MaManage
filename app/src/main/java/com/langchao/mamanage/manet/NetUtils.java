@@ -2,6 +2,9 @@ package com.langchao.mamanage.manet;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -15,13 +18,18 @@ import com.langchao.mamanage.db.ic_dirout.Ic_diroutbill_b;
 import com.langchao.mamanage.db.ic_out.Ic_outbill;
 import com.langchao.mamanage.db.ic_out.Ic_outbill_b;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
+import com.langchao.mamanage.db.image.BillImage;
+import com.langchao.mamanage.dialog.MessageDialog;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by miaohl on 2016/6/24.
@@ -63,6 +71,8 @@ public class NetUtils {
 
     public static String URL_MOBILE_UPLOADCKCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadckComplete";
 
+    public static String URL_MOBILE_UPLOADIMAGEE = "/ReceiveImg/ReceiveImg.ashx?";
+
 
     /**
      * 登录接口
@@ -99,7 +109,7 @@ public class NetUtils {
                 String xmlrs = NetUtils.getValueFromXML("ToLoginResult", result);
                 if (xmlrs.contains(userName)) {
 
-                    callback.onSuccess(xmlrs.split(";")[0],xmlrs.split(";")[2]);
+                    callback.onSuccess(xmlrs.split(";")[0], xmlrs.split(";")[2]);
                     //Toast.makeText(x.app(),  xmlrs.split(";")[0], Toast.LENGTH_LONG).show();
                 } else {
                     callback.onError(new RuntimeException("登录失败"));
@@ -601,8 +611,8 @@ public class NetUtils {
 
         JSONObject jo = new JSONObject();
         jo.put("orderid", bill.getSourceId());  //来源订单主表ID   从订单带到入库单 带到出库单
-        if(null == bill.getCreateType() || !bill.getCreateType().equals(MaConstants.TYPE_SYNC)){
-           // type = "rkck";
+        if (null == bill.getCreateType() || !bill.getCreateType().equals(MaConstants.TYPE_SYNC)) {
+            // type = "rkck";
         }
         jo.put("preparertime", MaConvert.formatData(bill.getTime())); //制单时间  yyyy-mm-dd hh:mm:ss
         jo.put("deliverNo", bill.getNumber()); //生成的出库单号  打印的时候有个单号 用来和系统对应  我使用的年月日+自增长+纳秒后5位   2016-02-03-1*****
@@ -804,5 +814,79 @@ public class NetUtils {
 
         }
 
+    }
+
+    public static void uploadImage(final Context context, BillImage billImage) throws Exception {
+
+        String url = "http://58.221.4.34:5598/ReceiveImg/ReceiveImg.ashx?" + "id=" + UUID.randomUUID().toString() + "&lx=" + billImage.getLx();
+//        String url = getIp() + URL_MOBILE_UPLOADIMAGEE+"id="+billImage.getBillid()+"&lx="+billImage.getLx();
+        RequestParams params = new RequestParams(url);
+        File image = new File(billImage.getImagePath());
+        if(!image.exists())
+            return;
+
+//        Toast.makeText(context,image.length()+"",Toast.LENGTH_SHORT).show();
+//       String path =   saveCroppedImage(BitmapFactory.decodeFile(billImage.getImagePath()));
+//        File image2 = new File(path);
+//        Toast.makeText(context,image2.length()+"",Toast.LENGTH_SHORT).show();
+//        if(!image2.exists()){
+//            return;
+//
+//        }
+        params.addBodyParameter("file2", image);
+        //  MessageDialog.show(context,callForResult(params));
+        callForResult(params);
+//
+//        Callback.Cancelable result = x.http().post(params, new Callback.CommonCallback<String>() {
+//
+//
+//            @Override
+//            public void onSuccess(String result) {
+//                MessageDialog.show(context, result);
+//            }
+//
+//            @Override
+//            public void onError(Throwable ex, boolean isOnCallback) {
+//                //MessageDialog.show(context, "onError");
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException cex) {
+//               // MessageDialog.show(context, "onCancelled");
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//
+//                //MessageDialog.show(context, "onFinished");
+//            }
+//        });
+    }
+
+    private static String saveCroppedImage(Bitmap bmp) {
+        File file = new File("/sdcard/myFolder");
+        if (!file.exists())
+            file.mkdir();
+
+        file = new File("/sdcard/temp.jpg".trim());
+        String fileName = file.getName();
+        String mName = fileName.substring(0, fileName.lastIndexOf("."));
+        String sName = fileName.substring(fileName.lastIndexOf("."));
+
+        // /sdcard/myFolder/temp_cropped.jpg
+        String newFilePath = "/sdcard/myFolder" + "/" + mName + "_cropped" + sName;
+        file = new File(newFilePath);
+        try {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            fos.flush();
+            fos.close();
+            return file.getPath();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
     }
 }
