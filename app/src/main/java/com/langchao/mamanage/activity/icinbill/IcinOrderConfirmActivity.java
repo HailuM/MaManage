@@ -25,6 +25,7 @@ import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.db.order.Pu_order_b;
 import com.langchao.mamanage.manet.NetUtils;
+import com.langchao.mamanage.utils.ImageHelper;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
@@ -33,6 +34,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
@@ -190,6 +192,7 @@ public class IcinOrderConfirmActivity extends AutoLayoutActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == MaConstants.REQUEST_IMAGE){
             if(resultCode == RESULT_OK){
@@ -197,13 +200,16 @@ public class IcinOrderConfirmActivity extends AutoLayoutActivity {
                 List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if(paths != null && paths.size() > 0 && null != billid){
                     for(String path : paths){
+
+                        ImageHelper.saveCompressBitmap(ImageHelper.createImage(path),new File(path));
+
                         BillImage billImage = new BillImage();
                         billImage.setBillid(billid);
                         billImage.setImagePath(path);
                         billImage.setLx("rk");
                         try {
                             new MaDAO().save(billImage);
-                            NetUtils.uploadImage(this,billImage);
+
                         } catch (DbException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
@@ -211,6 +217,7 @@ public class IcinOrderConfirmActivity extends AutoLayoutActivity {
                         }
                     }
                 }
+
             }else{
 
             }

@@ -1,6 +1,7 @@
 package com.langchao.mamanage.activity.icoutbill;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.langchao.mamanage.R;
+import com.langchao.mamanage.common.MaConstants;
 import com.langchao.mamanage.converter.MaConvert;
 import com.langchao.mamanage.db.MaDAO;
 import com.langchao.mamanage.db.consumer.Consumer;
@@ -21,10 +23,12 @@ import com.langchao.mamanage.db.ic_out.Ic_outbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill;
 import com.langchao.mamanage.db.icin.Ic_inbill_agg;
 import com.langchao.mamanage.db.icin.Ic_inbill_b;
+import com.langchao.mamanage.db.image.BillImage;
 import com.langchao.mamanage.db.order.Pu_order;
 import com.langchao.mamanage.db.order.Pu_order_agg;
 import com.langchao.mamanage.dialog.MessageDialog;
 import com.langchao.mamanage.lcprint.PrintUtil;
+import com.langchao.mamanage.utils.ImageHelper;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.xutils.ex.DbException;
@@ -33,8 +37,12 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
  * Created by wongsuechang on 2016/6/26.
@@ -88,6 +96,11 @@ public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
         this.finish();
 
     }
+
+    public String billid;
+
+    Ic_outbill_agg printData;
+
     private void buildOutBill() throws DbException {
 
 
@@ -102,13 +115,18 @@ public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
         }
 
         new MaDAO().saveOutBill(outbillAgg, this.inbillAgg);
-        setResult(RESULT_OK);
+        billid = outbillAgg.getIc_outbill().getId();
+        printData = outbillAgg;
         Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
-        this.finish();
-
-        MessageDialog.show(this,"准备打印");
-
-        PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_outbill(),outbillAgg.getIc_outbill_bs()),outbillAgg.getIc_outbill().getId());
+        MultiImageSelector.create()
+                .start(this, MaConstants.REQUEST_IMAGE);
+//        setResult(RESULT_OK);
+//        Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
+//        this.finish();
+//
+//        MessageDialog.show(this,"准备打印");
+//
+//        PrintUtil.print(this,PrintUtil.chgBillToString(outbillAgg.getIc_outbill(),outbillAgg.getIc_outbill_bs()),outbillAgg.getIc_outbill().getId());
     }
 
     @Override
@@ -196,6 +214,47 @@ public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
 
             }
             return convertView;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == MaConstants.REQUEST_IMAGE){
+            if(resultCode == RESULT_OK){
+                // Get the result list of select image paths
+                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if(paths != null && paths.size() > 0 && null != billid){
+                    for(String path : paths){
+
+                        ImageHelper.saveCompressBitmap(ImageHelper.createImage(path),new File(path));
+
+                        BillImage billImage = new BillImage();
+                        billImage.setBillid(billid);
+                        billImage.setImagePath(path);
+                        billImage.setLx("ck");
+                        try {
+                            new MaDAO().save(billImage);
+
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }else{
+
+            }
+            setResult(RESULT_OK);
+            //Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
+            this.finish();
+            MessageDialog.show(this,"准备打印");
+            PrintUtil.print(this,PrintUtil.chgBillToString(printData.getIc_outbill(),printData.getIc_outbill_bs()),printData.getIc_outbill().getId());
+
         }
     }
 }

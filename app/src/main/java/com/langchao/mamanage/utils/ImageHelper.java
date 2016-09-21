@@ -102,7 +102,7 @@ public class ImageHelper {
 		opts.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(filePath, opts);
 
-		opts.inSampleSize = computeSampleSize(opts, -1, 800 * 480);
+		opts.inSampleSize = computeSampleSize(opts, -1, 1024 * 768);
 		opts.inJustDecodeBounds = false;
 
 		try {

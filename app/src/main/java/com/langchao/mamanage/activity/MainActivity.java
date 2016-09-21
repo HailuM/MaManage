@@ -160,9 +160,9 @@ public class MainActivity extends AutoLayoutActivity {
                 break;
             case R.id.imageViewsupplement:
 
-                MultiImageSelector.create().start(this,MaConstants.REQUEST_IMAGE);
-//                intent.setClass(this, PrintActivity.class);
-//                startActivity(intent);
+               // MultiImageSelector.create().start(this,MaConstants.REQUEST_IMAGE);
+                intent.setClass(this, PrintActivity.class);
+                startActivity(intent);
                 break;
 
         }

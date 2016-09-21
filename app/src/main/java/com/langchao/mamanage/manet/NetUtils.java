@@ -818,8 +818,8 @@ public class NetUtils {
 
     public static void uploadImage(final Context context, BillImage billImage) throws Exception {
 
-        String url = "http://58.221.4.34:5598/ReceiveImg/ReceiveImg.ashx?" + "id=" + UUID.randomUUID().toString() + "&lx=" + billImage.getLx();
-//        String url = getIp() + URL_MOBILE_UPLOADIMAGEE+"id="+billImage.getBillid()+"&lx="+billImage.getLx();
+//        String url = "http://58.221.4.34:5598/ReceiveImg/ReceiveImg.ashx?" + "id=" + UUID.randomUUID().toString() + "&lx=" + billImage.getLx();
+        String url = getIp() + URL_MOBILE_UPLOADIMAGEE+"id="+billImage.getBillid()+"&lx="+billImage.getLx();
         RequestParams params = new RequestParams(url);
         File image = new File(billImage.getImagePath());
         if(!image.exists())

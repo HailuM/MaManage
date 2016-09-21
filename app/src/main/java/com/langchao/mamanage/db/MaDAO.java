@@ -773,7 +773,9 @@ public class MaDAO {
                     db.dropTable(Pu_order.class);
                     db.dropTable(Pu_order_b.class);
 
-                    MessageDialog.show(mainActivity, "上传数据成功!");
+                    //MessageDialog.show(mainActivity, "上传数据成功!");
+                    //上传图片
+                    uploadImages(mainActivity);
                     // 无数据上传  增加弹框 判断是否下载
 //                    if(MaDAO.outnum == 0 && finalA_iclistsize > 0){
 //                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
@@ -1532,6 +1534,7 @@ public class MaDAO {
      */
     public void Sjsc(String userid, MainActivity activity) throws DbException {
         syncRk(userid, activity);
+
     }
 
     /**
@@ -1659,11 +1662,14 @@ public class MaDAO {
 
     public void uploadImages(final Activity mainActivity) throws DbException {
 
-        DbManager db = x.getDb(daoConfig);
+        final DbManager db = x.getDb(daoConfig);
         final List<BillImage>   images = db.findAll(BillImage.class);
 
         if(null == images || images.size() == 0)
+        {
+            MessageDialog.show(mainActivity, "上传数据成功!");
             return;
+        }
 
         final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setTitle("照片上传");
@@ -1678,7 +1684,8 @@ public class MaDAO {
         final Runnable afterThread = new Runnable() {
             public void run() {
                 try {
-                    MessageDialog.show(mainActivity, "照片上传成功！");
+                    MessageDialog.show(mainActivity, "数据上传成功！");
+                    db.executeUpdateDelete("delete from billimage where 1=1");
                 } catch (Exception e) {
                     MessageDialog.show(mainActivity, e.getMessage());
                 } catch (Throwable throwable) {
