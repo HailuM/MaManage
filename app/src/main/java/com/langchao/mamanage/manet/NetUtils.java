@@ -28,6 +28,7 @@ import org.xutils.x;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.UUID;
 
@@ -819,10 +820,10 @@ public class NetUtils {
     public static void uploadImage(final Context context, BillImage billImage) throws Exception {
 
 //        String url = "http://58.221.4.34:5598/ReceiveImg/ReceiveImg.ashx?" + "id=" + UUID.randomUUID().toString() + "&lx=" + billImage.getLx();
-        String url = getIp() + URL_MOBILE_UPLOADIMAGEE+"id="+billImage.getBillid()+"&lx="+billImage.getLx();
+        String url = getIp() + URL_MOBILE_UPLOADIMAGEE + "id=" + billImage.getBillid() + "&lx=" + billImage.getLx();
         RequestParams params = new RequestParams(url);
         File image = new File(billImage.getImagePath());
-        if(!image.exists())
+        if (!image.exists())
             return;
 
 //        Toast.makeText(context,image.length()+"",Toast.LENGTH_SHORT).show();
@@ -835,7 +836,8 @@ public class NetUtils {
 //        }
         params.addBodyParameter("file2", image);
         //  MessageDialog.show(context,callForResult(params));
-        callForResult(params);
+        String result = callForResult(params);
+        System.out.println(result);
 //
 //        Callback.Cancelable result = x.http().post(params, new Callback.CommonCallback<String>() {
 //
