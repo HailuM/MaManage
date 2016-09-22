@@ -57,11 +57,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
 
+import me.iwf.photopicker.PhotoPicker;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -160,7 +162,7 @@ public class MainActivity extends AutoLayoutActivity {
                 break;
             case R.id.imageViewsupplement:
 
-               // MultiImageSelector.create().start(this,MaConstants.REQUEST_IMAGE);
+
                 intent.setClass(this, PrintActivity.class);
                 startActivity(intent);
                 break;
@@ -196,36 +198,13 @@ public class MainActivity extends AutoLayoutActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == MaConstants.REQUEST_IMAGE){
-            if(resultCode == RESULT_OK){
-                // Get the result list of select image paths
-                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                if(paths != null && paths.size() > 0 && null != "111"){
-                    for(String path : paths){
+        {
+            if (resultCode == RESULT_OK && requestCode == PhotoPicker.REQUEST_CODE) {
+                if (data != null) {
+                    ArrayList<String> photos =
+                            data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
 
-                        ImageHelper.saveCompressBitmap(ImageHelper.createImage(path),new File(path));
-
-                        BillImage billImage = new BillImage();
-                        billImage.setBillid("111");
-                        billImage.setImagePath(path);
-                        billImage.setLx("rk");
-                        try {
-                            new MaDAO().save(billImage);
-
-                        } catch (DbException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
-                try {
-                    new MaDAO().uploadImages(MainActivity.this);
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-            }else{
-
             }
             setResult(RESULT_OK);
 
