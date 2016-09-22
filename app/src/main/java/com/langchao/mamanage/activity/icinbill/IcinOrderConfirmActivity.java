@@ -35,8 +35,10 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import me.iwf.photopicker.PhotoPicker;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -105,8 +107,12 @@ public class IcinOrderConfirmActivity extends AutoLayoutActivity {
         billid = inbillAgg.getIc_inbill().getId();
         Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
 
-        MultiImageSelector.create()
-                .start(this, MaConstants.REQUEST_IMAGE);
+        PhotoPicker.builder()
+                .setPhotoCount(9)
+                .setShowCamera(true)
+                .setShowGif(true)
+                .setPreviewEnabled(false)
+                .start(this, PhotoPicker.REQUEST_CODE);
     }
 
     @Override
@@ -194,10 +200,10 @@ public class IcinOrderConfirmActivity extends AutoLayoutActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == MaConstants.REQUEST_IMAGE){
-            if(resultCode == RESULT_OK){
-                // Get the result list of select image paths
-                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+        if (resultCode == RESULT_OK && requestCode == PhotoPicker.REQUEST_CODE) {
+            if (data != null) {
+                ArrayList<String> paths =
+                        data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                 if(paths != null && paths.size() > 0 && null != billid){
                     for(String path : paths){
 
