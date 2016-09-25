@@ -69,6 +69,11 @@ public class ImageHelper {
 	 * @return  true 保存成功 ，false 否则保存失败
 	 */
 	public static boolean saveCompressBitmap(Bitmap bitmap, File file) {
+
+		//暂时不压缩
+		if(1==1){
+			return true;
+		}
 		FileOutputStream fileOutputStream = null;
 		try {
 			fileOutputStream = new FileOutputStream(file);
