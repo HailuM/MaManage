@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -25,9 +26,16 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLOutput;
 import java.util.List;
 import java.util.UUID;
@@ -72,7 +80,7 @@ public class NetUtils {
 
     public static String URL_MOBILE_UPLOADCKCOMPLETE = "/ZNWZCRK/othersource/ZhongNanWuZiMobileServices.asmx?op=Mobile_uploadckComplete";
 
-    public static String URL_MOBILE_UPLOADIMAGEE = "/ReceiveImg/ReceiveImg.ashx?";
+    public static String URL_MOBILE_UPLOADIMAGEE = "/DataRoles/ReceiveImg.ashx?";
 
 
     /**
@@ -558,8 +566,8 @@ public class NetUtils {
         jo.put("preparertime", MaConvert.formatData(bill.getTime()));  //制单时间  格式 yyyy-mm-dd hh:mm:ss
 
         jo.put("orderEntryid", bill.getSourcebId()); //来源订单表体ID
-        jo.put("receiveid", bill.getOrderid());  //生成的入库单主表ID  我使用的是UUID
         jo.put("qty", bill.getSourceQty()); //入库单行的数量
+        jo.put("receiveid", bill.getOrderid());  //生成的入库单主表ID  我使用的是UUID
 
         jo.put("wareentryid", bill.getOrderentryid()); //入库单行ID    UUID生成
 
@@ -619,7 +627,8 @@ public class NetUtils {
         jo.put("deliverNo", bill.getNumber()); //生成的出库单号  打印的时候有个单号 用来和系统对应  我使用的年月日+自增长+纳秒后5位   2016-02-03-1*****
         jo.put("consumerid", head.getConsumerid());//领料商ID  界面选择的
         jo.put("orderEntryid", bill.getSourcebId()); //来源订单子表ID 从订单带到入库单带到出库单
-        jo.put("deliverid", bill.getOrderentryid()); //生成的出库单子表ID
+       // jo.put("deliverid", bill.getOrderentryid()); //生成的出库单子表ID
+        jo.put("deliverid", bill.getOrderid()); //生成的出库单子表ID
         jo.put("qty", bill.getSourceQty()); //出库数量
         jo.put("printcount", bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("receiveid", bill.getReceiveid()); //来源的入库单的 主表ID
@@ -834,10 +843,13 @@ public class NetUtils {
 //            return;
 //
 //        }
-        params.addBodyParameter("file2", image);
+        params.addBodyParameter("file2", image,"image/png");
+
         //  MessageDialog.show(context,callForResult(params));
-        String result = callForResult(params);
-        System.out.println(result);
+
+        uploadFile(image,url);
+//        String result = callForResult(params);
+//        System.out.println(result);
 //
 //        Callback.Cancelable result = x.http().post(params, new Callback.CommonCallback<String>() {
 //
@@ -891,4 +903,75 @@ public class NetUtils {
         }
         return "";
     }
+
+    private static final String TAG = "uploadFile";
+    private static final int TIME_OUT = 10*10000000; //超时时间
+    private static final String CHARSET = "utf-8"; //设置编码
+    public static final String SUCCESS="1"; public static final String FAILURE="0";
+
+    public static String uploadFile(File file,String RequestURL) {
+        String BOUNDARY = UUID.randomUUID().toString(); //边界标识 随机生成
+         String PREFIX = "--" , LINE_END = "\r\n";
+        String CONTENT_TYPE = "multipart/form-data"; //内容类型
+        try {
+            URL url = new URL(RequestURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection(); conn.setReadTimeout(TIME_OUT); conn.setConnectTimeout(TIME_OUT);
+            conn.setDoInput(true); //允许输入流
+            conn.setDoOutput(true); //允许输出流
+            conn.setUseCaches(false); //不允许使用缓存
+            conn.setRequestMethod("POST"); //请求方式
+            conn.setRequestProperty("Charset", CHARSET);
+            //设置编码
+            conn.setRequestProperty("connection", "keep-alive");
+            conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+            if(file!=null) {
+                /** * 当文件不为空，把文件包装并且上传 */
+                OutputStream outputSteam=conn.getOutputStream();
+                DataOutputStream dos = new DataOutputStream(outputSteam);
+                StringBuffer sb = new StringBuffer();
+                sb.append(PREFIX);
+                sb.append(BOUNDARY); sb.append(LINE_END);
+                /**
+                 * 这里重点注意：
+                 * name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+                 * filename是文件的名字，包含后缀名的 比如:abc.png
+                 */
+                sb.append("Content-Disposition: form-data; name=\"img\"; filename=\""+file.getName()+"\""+LINE_END);
+                sb.append("Content-Type: image/png; charset="+CHARSET+LINE_END);
+                sb.append(LINE_END);
+                dos.write(sb.toString().getBytes());
+                InputStream is = new FileInputStream(file);
+                byte[] bytes = new byte[1024];
+                int len = 0;
+                while((len=is.read(bytes))!=-1)
+                {
+                    dos.write(bytes, 0, len);
+                }
+                is.close();
+                dos.write(LINE_END.getBytes());
+                byte[] end_data = (PREFIX+BOUNDARY+PREFIX+LINE_END).getBytes();
+                dos.write(end_data);
+                dos.flush();
+                /**
+                 * 获取响应码 200=成功
+                 * 当响应成功，获取响应的流
+                 */
+                int res = conn.getResponseCode();
+
+                Log.e(TAG, "response code:"+res);
+                if(res==200)
+                {
+                    byte[] b1 = new byte[1024];
+                    int lens = conn.getInputStream().read(b1);
+                    String s = new String(b1);
+                    return SUCCESS;
+                }
+            }
+        } catch (MalformedURLException e)
+        { e.printStackTrace(); }
+        catch (IOException e)
+        { e.printStackTrace(); }
+        return FAILURE;
+    }
+
 }
