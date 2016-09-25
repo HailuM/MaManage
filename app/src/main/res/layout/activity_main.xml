@@ -214,7 +214,28 @@
                     android:textSize="@dimen/textsize"
                     android:id="@+id/textView9" />
             </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="150px"
+                android:layout_margin="30px"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:id="@+id/clear">
 
+                <ImageView
+                    android:layout_width="130px"
+                    android:layout_height="130px"
+                    android:id="@+id/clearData"
+                    android:src="@mipmap/deletebtn" />
+
+                <TextView
+                    android:layout_width="67dp"
+                    android:layout_height="wrap_content"
+                    android:text="清除\n离线数据"
+                    android:gravity="center"
+                    android:textSize="@dimen/textsize"
+                    android:id="@+id/textView81" />
+            </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="150px"
@@ -240,28 +261,7 @@
 
 
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="150px"
-                android:layout_margin="30px"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                android:visibility="invisible">
 
-                <ImageView
-                    android:layout_width="130px"
-                    android:layout_height="130px"
-                    android:id="@+id/imageView15"
-                    android:src="@mipmap/supplement" />
-
-                <TextView
-                    android:layout_width="67dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/supplement"
-                    android:gravity="center"
-                    android:textSize="@dimen/textsize"
-                    android:id="@+id/textView14" />
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

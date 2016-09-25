@@ -265,12 +265,13 @@ public class DiroutOrderConfirmActivity extends AutoLayoutActivity {
             }else{
 
             }
-            setResult(RESULT_OK);
-            Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
-            this.finish();
-            MessageDialog.show(this,"准备打印");
-            PrintUtil.print(this,PrintUtil.chgBillToString(printData.getIc_diroutbill(),printData.getIc_diroutbill_bs()),printData.getIc_diroutbill().getId());
 
         }
+        setResult(RESULT_OK);
+        Toast.makeText(this,"保存成功",Toast.LENGTH_LONG).show();
+        this.finish();
+        MessageDialog.show(this,"准备打印");
+        PrintUtil.print(this,PrintUtil.chgBillToString(printData.getIc_diroutbill(),printData.getIc_diroutbill_bs()),printData.getIc_diroutbill().getId());
+
     }
 }

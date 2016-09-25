@@ -105,7 +105,7 @@ public class MainActivity extends AutoLayoutActivity {
     ProgressDialog progressDialog = null;
 
     //点击事件
-    @Event(value = {R.id.service, R.id.set, R.id.imageViewSjsc, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewRkxz,R.id.imageViewCkxz,R.id.imageViewsupplement}, type = View.OnClickListener.class)
+    @Event(value = { R.id.clearData,R.id.service, R.id.set, R.id.imageViewSjsc, R.id.imageViewdirectout, R.id.imageViewinstorage, R.id.imageViewoutstorage,R.id.imageViewRkxz,R.id.imageViewCkxz,R.id.imageViewsupplement}, type = View.OnClickListener.class)
     private void onButtonClick(View v) {
         switch (v.getId()) {
             case R.id.service:
@@ -166,6 +166,16 @@ public class MainActivity extends AutoLayoutActivity {
                 intent.setClass(this, PrintActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.clearData:
+
+
+                try {
+                    new MaDAO().clearData(this);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                break;
+
 
         }
     }

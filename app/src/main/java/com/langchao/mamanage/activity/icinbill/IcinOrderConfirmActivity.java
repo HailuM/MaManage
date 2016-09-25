@@ -227,8 +227,9 @@ public class IcinOrderConfirmActivity extends AutoLayoutActivity {
             }else{
 
             }
-            setResult(RESULT_OK);
-            this.finish();
+
         }
+        setResult(RESULT_OK);
+        this.finish();
     }
 }

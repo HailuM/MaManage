@@ -503,8 +503,10 @@ public class NetUtils {
 
         jo.put("consumerid", head.getConsumerid());//领料商ID
         jo.put("orderEntryid", bill.getSourcebId()); //来源订单子表ID
-        jo.put("zrzcid", bill.getOrderentryid());//生成的直入直出ID  UUID
+//        jo.put("zrzcid", bill.getOrderentryid());//生成的直入直出ID  UUID
+        jo.put("zrzcid", bill.getOrderid());//生成的直入直出ID  UUID
         jo.put("qty", bill.getSourceQty());//数量
+
         jo.put("printcount", bill.getPrintcount() == null ? 0 : bill.getPrintcount()); //打印次数
         jo.put("deliverNo", head.getNumber()); //生成的出库单号
 
@@ -568,7 +570,7 @@ public class NetUtils {
         jo.put("orderEntryid", bill.getSourcebId()); //来源订单表体ID
         jo.put("qty", bill.getSourceQty()); //入库单行的数量
         jo.put("receiveid", bill.getOrderid());  //生成的入库单主表ID  我使用的是UUID
-
+//        jo.put("deliveryid", bill.getOrderid()); //入库单行ID    UUID生成
         jo.put("wareentryid", bill.getOrderentryid()); //入库单行ID    UUID生成
 
         xml = xml.replace("(userOID)", userId);  //用户ID

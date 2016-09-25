@@ -58,6 +58,13 @@
         <activity android:name=".lcprint.PrintDataActivity" />
         <activity android:name=".activity.SelectPicPopupWindow" />
         <activity android:name=".activity.main.InStorageActivity"></activity>
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
     </application>
 
 </manifest>
