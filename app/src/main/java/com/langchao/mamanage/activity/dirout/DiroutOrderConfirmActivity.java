@@ -250,7 +250,7 @@ public class DiroutOrderConfirmActivity extends AutoLayoutActivity {
                         BillImage billImage = new BillImage();
                         billImage.setBillid(billid);
                         billImage.setImagePath(path);
-                        billImage.setLx("ck");
+                        billImage.setLx("zrzc");
                         try {
                             new MaDAO().save(billImage);
 
