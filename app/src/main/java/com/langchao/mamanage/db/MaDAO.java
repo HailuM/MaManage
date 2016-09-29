@@ -1265,6 +1265,13 @@ public class MaDAO {
         db.dropTable(Ic_diroutbill.class);
         db.dropTable(Ic_diroutbill_b.class);
 
+        //20160929增加清除图片数据
+        try {
+            db.executeUpdateDelete("delete from billimage where 1=1");
+        }catch (Exception e){
+
+        }
+
         MethodUtil.saveRkToken(context, "");
         MethodUtil.saveCkToken(context, "");
 
