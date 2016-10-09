@@ -55,6 +55,10 @@ public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
     TextView tvOrderNo;//订单号
     @ViewInject(R.id.tv_dir_out_supply)
     TextView tvOrderSupply;//供方
+    @ViewInject(R.id.tv_item_number)
+    TextView tv_item_number;//出库单号
+
+
     @ViewInject(R.id.tv_dir_out_build)
     TextView tvOrderBuild;//楼栋
     @ViewInject(R.id.tv_dir_out_contact)
@@ -140,6 +144,7 @@ public class IcoutInbillConfirmActivity extends AutoLayoutActivity {
         x.view().inject(this);
 
         textViewTitle.setText("出库确认");
+        tv_item_number.setText("出库单号");
 
         inbillAgg = (Ic_inbill_agg) this.getIntent().getExtras().getSerializable("ic_inbill");
 

@@ -64,6 +64,7 @@ public class IcoutListActivity extends AutoLayoutActivity {
         x.view().inject(this);
         textViewTitle.setText("出库办理");
         lvOrder.requestFocus();
+        etSearch.setHint("请输入出库单号");
 
         try {
             ic_inbills = new MaDAO().queryInbillForCk(null,null);
